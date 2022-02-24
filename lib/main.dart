@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'login/start.dart';
+import 'package:googlesolutionchallenge/screens/start.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: const Login(),
+      home: const Start(),
     );
   }
 }

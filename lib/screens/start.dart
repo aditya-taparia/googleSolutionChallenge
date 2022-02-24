@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:lottie/lottie.dart';
-import 'login.dart';
+import 'login/login.dart';
 
 class Start extends StatefulWidget {
   const Start({Key? key}) : super(key: key);
