@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/login/start.dart';
-import 'login/login.dart';
+
+import 'login/start.dart';
 
 void main() {
   runApp(const MyApp());

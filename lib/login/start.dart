@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../home/home.dart';
+import 'package:lottie/lottie.dart';
+import 'login.dart';
 
 class Start extends StatefulWidget {
   const Start({Key? key}) : super(key: key);
@@ -14,6 +14,7 @@ class _StartState extends State<Start> {
   final pgcontroller = PageController();
   bool isLastPage = false;
   bool isFirstPage = true;
+  int numb = 0;
   @override
   void dispose() {
     pgcontroller.dispose();
@@ -28,6 +29,7 @@ class _StartState extends State<Start> {
         child: PageView(
           controller: pgcontroller,
           onPageChanged: (index) {
+            numb = index;
             setState(() => isLastPage = index == 2);
             setState(() => isFirstPage = index == 0);
           },
@@ -38,8 +40,9 @@ class _StartState extends State<Start> {
           ],
         ),
       ),
-      bottomSheet: SizedBox(
+      bottomSheet: Container(
         height: 80,
+        color: _setbottomcolor(numb),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -73,7 +76,7 @@ class _StartState extends State<Start> {
             isLastPage
                 ? TextButton(
                     onPressed: () => Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => const Home())),
+                        MaterialPageRoute(builder: (context) => const Login())),
                     child: const Text(
                       "Get Started",
                       style: TextStyle(fontSize: 18),
@@ -95,18 +98,97 @@ class _StartState extends State<Start> {
 
 Widget getstarted() {
   return Container(
-    color: Colors.blueAccent,
+    color: const Color.fromRGBO(198, 231, 255, 1),
+    child: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            Lottie.asset('assets/online.json'),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text("Connect with other linkers near you",
+                style: TextStyle(
+                  fontSize: 23,
+                )),
+          ],
+        ),
+      ),
+    ),
   );
 }
 
 Widget getstarted2() {
   return Container(
-    color: Colors.amber,
+    color: const Color.fromRGBO(209, 222, 252, 1),
+    child: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            Lottie.asset('assets/sbc.json'),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              "Lend, Borrow and Donate",
+              style: TextStyle(
+                fontSize: 23,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
   );
 }
 
 Widget getstarted3() {
   return Container(
-    color: Colors.red,
+    color: const Color.fromRGBO(221, 235, 255, 1),
+    child: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 80,
+            ),
+            Lottie.asset('assets/reach.json'),
+            const SizedBox(
+              height: 50,
+            ),
+            const Text(
+              "Ontime Delivery",
+              style: TextStyle(
+                fontSize: 23,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
   );
+}
+
+_setbottomcolor(int numb) {
+  if (numb == 0) {
+    return const Color.fromRGBO(198, 231, 255, 1);
+  } else if (numb == 1) {
+    return const Color.fromRGBO(209, 222, 252, 1);
+  } else {
+    return const Color.fromRGBO(221, 235, 255, 1);
+  }
 }
