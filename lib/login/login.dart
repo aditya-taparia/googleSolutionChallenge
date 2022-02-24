@@ -44,10 +44,8 @@ class _LoginState extends State<Login> {
           height = 450;
         }
         count++;
-        print(count);
       });
     } else {
-      print('all done');
       return null;
     }
 
@@ -63,7 +61,7 @@ class _LoginState extends State<Login> {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+            children: const [
               SizedBox(
                 height: 50,
               ),
