@@ -68,6 +68,7 @@ dev_dependencies:
 
   #animations
   lottie: ^1.2.2
+  particles_flutter: ^0.1.4
 
   #getstarted page
   smooth_page_indicator: ^1.0.0+2
