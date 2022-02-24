@@ -66,6 +66,12 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
+  #animations
+  lottie: ^1.2.2
+
+  #getstarted page
+  smooth_page_indicator: ^1.0.0+2
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

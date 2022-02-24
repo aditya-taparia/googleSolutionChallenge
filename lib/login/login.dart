@@ -12,6 +12,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   late Color color;
+  Color Themecolor = Colors.blueAccent;
   late double borderRadius;
   late double height;
   late double margin;
@@ -24,7 +25,7 @@ class _LoginState extends State<Login> {
   }
 
   Color rColor() {
-    return Colors.blue;
+    return Themecolor;
   }
 
   @override
@@ -41,7 +42,7 @@ class _LoginState extends State<Login> {
         if (count < 1) {
           height = 0;
         } else {
-          height = 450;
+          height = 400;
         }
         count++;
       });
@@ -56,7 +57,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Themecolor,
       body: Stack(
         children: [
           Column(
@@ -85,7 +86,7 @@ class _LoginState extends State<Login> {
                   child: Column(
                     children: [
                       const SizedBox(
-                        height: 60,
+                        height: 30,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -101,26 +102,26 @@ class _LoginState extends State<Login> {
                             ),
                             const SizedBox(height: 10),
                             IntlPhoneField(
-                              dropdownIcon: const Icon(
+                              dropdownIcon: Icon(
                                 Icons.arrow_drop_down_rounded,
-                                color: Color.fromRGBO(0, 92, 75, 1),
+                                color: Themecolor,
                               ),
                               pickerDialogStyle: PickerDialogStyle(),
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 hintText: 'Phone Number',
-                                border: OutlineInputBorder(
+                                border: const OutlineInputBorder(
                                   borderSide: BorderSide(),
                                 ),
-                                focusColor: Color.fromRGBO(0, 92, 75, 1),
+                                focusColor: Themecolor,
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromRGBO(0, 92, 75, 1),
+                                    color: Themecolor,
                                     width: 1.2,
                                   ),
                                 ),
                                 enabled: true,
                               ),
-                              cursorColor: const Color.fromRGBO(0, 92, 75, 1),
+                              cursorColor: Themecolor,
                               initialCountryCode: 'IN',
                               onChanged: (phone) {
                                 if (kDebugMode) {
@@ -137,7 +138,7 @@ class _LoginState extends State<Login> {
                             const SizedBox(height: 10),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: const Color.fromRGBO(0, 92, 75, 1),
+                                primary: Themecolor,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 20,
                                   vertical: 10,
@@ -159,7 +160,7 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 60),
+                      const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -183,7 +184,7 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       TextButton(
                         onPressed: () {},
                         child: Row(
