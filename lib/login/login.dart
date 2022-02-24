@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:particles_flutter/particles_flutter.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   late Color color;
-  Color Themecolor = Colors.blueAccent;
+  Color themecolor = const Color.fromRGBO(66, 103, 178, 1);
   late double borderRadius;
   late double height;
   late double margin;
@@ -25,7 +26,7 @@ class _LoginState extends State<Login> {
   }
 
   Color rColor() {
-    return Themecolor;
+    return themecolor;
   }
 
   @override
@@ -45,10 +46,8 @@ class _LoginState extends State<Login> {
           height = 400;
         }
         count++;
-        print(count);
       });
     } else {
-      print('all done');
       return null;
     }
 
@@ -59,17 +58,48 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Themecolor,
+      backgroundColor: themecolor,
       body: Stack(
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 50,
+          Container(
+            key: UniqueKey(),
+            child: Center(
+              child: CircularParticle(
+                awayRadius: 20,
+                numberOfParticles: 150,
+                speedOfParticles: 2,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                onTapAnimation: true,
+                particleColor: Colors.white12,
+                awayAnimationDuration: const Duration(milliseconds: 100),
+                maxParticleSize: 3,
+                isRandSize: true,
+                isRandomColor: false,
+                awayAnimationCurve: Curves.easeInOut,
+                enableHover: true,
+                hoverColor: Colors.white12,
+                hoverRadius: 90,
+                connectDots: true,
               ),
-              Text("Section 1")
-            ],
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 2,
+            width: MediaQuery.of(context).size.width,
+            child: const Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 150,
+                height: 350,
+                child: ClipRRect(
+                  child: Image(
+                    image: AssetImage('assets/splashScreenDark.png'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -106,7 +136,7 @@ class _LoginState extends State<Login> {
                             IntlPhoneField(
                               dropdownIcon: Icon(
                                 Icons.arrow_drop_down_rounded,
-                                color: Themecolor,
+                                color: themecolor,
                               ),
                               pickerDialogStyle: PickerDialogStyle(),
                               decoration: InputDecoration(
@@ -114,16 +144,16 @@ class _LoginState extends State<Login> {
                                 border: const OutlineInputBorder(
                                   borderSide: BorderSide(),
                                 ),
-                                focusColor: Themecolor,
+                                focusColor: themecolor,
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Themecolor,
+                                    color: themecolor,
                                     width: 1.2,
                                   ),
                                 ),
                                 enabled: true,
                               ),
-                              cursorColor: Themecolor,
+                              cursorColor: themecolor,
                               initialCountryCode: 'IN',
                               onChanged: (phone) {
                                 if (kDebugMode) {
@@ -140,7 +170,7 @@ class _LoginState extends State<Login> {
                             const SizedBox(height: 10),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: Themecolor,
+                                primary: themecolor,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 20,
                                   vertical: 10,
@@ -187,39 +217,42 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/google-icon.png',
-                              fit: BoxFit.scaleDown,
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Google',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextButton(
+                          onPressed: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/google-icon.png',
+                                fit: BoxFit.scaleDown,
                               ),
-                            ),
-                          ],
-                        ),
-                        style: TextButton.styleFrom(
-                          primary: Colors.grey[800],
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
+                              const SizedBox(width: 10),
+                              const Text(
+                                'Google',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Colors.grey[400]!,
-                              width: 1,
+                          style: TextButton.styleFrom(
+                            primary: Colors.grey[800],
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
                             ),
-                            borderRadius: BorderRadius.circular(10),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors.grey[400]!,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            fixedSize: const Size(500.0, 50.0),
                           ),
-                          fixedSize: const Size(500.0, 50.0),
                         ),
                       ),
                     ],
