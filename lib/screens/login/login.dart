@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
         if (count < 1) {
           height = 0;
         } else {
-          height = 400;
+          height = 450;
         }
         count++;
       });
@@ -51,7 +51,12 @@ class _LoginState extends State<Login> {
       return null;
     }
 
-    await Future.delayed(const Duration(seconds: 3), change);
+    await Future.delayed(const Duration(seconds: 1), change);
+  }
+
+  @override
+  dispose() {
+    super.dispose();
   }
 
   @override
@@ -67,7 +72,7 @@ class _LoginState extends State<Login> {
               child: CircularParticle(
                 awayRadius: 20,
                 numberOfParticles: 150,
-                speedOfParticles: 2,
+                speedOfParticles: 1.5,
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 onTapAnimation: true,
@@ -87,18 +92,32 @@ class _LoginState extends State<Login> {
           SizedBox(
             height: MediaQuery.of(context).size.height / 2,
             width: MediaQuery.of(context).size.width,
-            child: const Align(
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: 150,
-                height: 350,
-                child: ClipRRect(
-                  child: Image(
-                    image: AssetImage('assets/splashScreenDark.png'),
-                    fit: BoxFit.contain,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                SizedBox(
+                  width: 150,
+                  child: ClipRRect(
+                    child: Image(
+                      image: AssetImage('assets/splashScreenDark.png'),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
-              ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Earn . Lend . Donate',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ),
           Column(
@@ -119,6 +138,17 @@ class _LoginState extends State<Login> {
                     children: [
                       const SizedBox(
                         height: 30,
+                      ),
+                      Text(
+                        'Connect With Us',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: themecolor,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
