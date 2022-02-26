@@ -46,15 +46,18 @@ dependencies:
   # Splash Screen
   flutter_native_splash: ^2.0.1+1
 
-  # Telephone Field
-  intl_phone_field: ^3.0.1
-
   # Internet Connection
   connectivity_plus: ^2.2.0
 
   # Opening Settings
   app_settings: ^4.1.1
   percent_indicator: ^4.0.0
+
+  # Shared Preferences
+  shared_preferences: ^2.0.13
+
+  # Choose Location Page
+  side_header_list_view: ^1.0.0-nullsafety.0
 
 dev_dependencies:
   flutter_test:

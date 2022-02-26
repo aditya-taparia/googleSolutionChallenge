@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/country_picker_dialog.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:googlesolutionchallenge/widgets/phone_number.dart';
 import 'package:particles_flutter/particles_flutter.dart';
 
 class Login extends StatefulWidget {
@@ -140,9 +138,9 @@ class _LoginState extends State<Login> {
                         height: 30,
                       ),
                       Text(
-                        'Connect With Us',
+                        "Let's Link",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: themecolor,
                         ),
@@ -163,40 +161,7 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            IntlPhoneField(
-                              dropdownIcon: Icon(
-                                Icons.arrow_drop_down_rounded,
-                                color: themecolor,
-                              ),
-                              pickerDialogStyle: PickerDialogStyle(),
-                              decoration: InputDecoration(
-                                hintText: 'Phone Number',
-                                border: const OutlineInputBorder(
-                                  borderSide: BorderSide(),
-                                ),
-                                focusColor: themecolor,
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: themecolor,
-                                    width: 1.2,
-                                  ),
-                                ),
-                                enabled: true,
-                              ),
-                              cursorColor: themecolor,
-                              initialCountryCode: 'IN',
-                              onChanged: (phone) {
-                                if (kDebugMode) {
-                                  print(phone.completeNumber);
-                                }
-                              },
-                              validator: (validate) {
-                                if (validate!.isEmpty) {
-                                  return 'Please enter a valid phone number';
-                                }
-                                return null;
-                              },
-                            ),
+                            const PhoneNumber(),
                             const SizedBox(height: 10),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
