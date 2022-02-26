@@ -12,7 +12,7 @@ class PhoneNumber extends StatefulWidget {
 
 class _PhoneNumberState extends State<PhoneNumber> {
   String countryCode = '+91';
-  String country = 'India';
+  String country = 'IN';
   String phoneNumber = '';
 
   // Saving data from previous screen
@@ -110,7 +110,7 @@ class CountryList extends StatefulWidget {
 
 class _CountryListState extends State<CountryList> {
   String countryCode = '+91';
-  String country = 'India';
+  String country = 'IN';
 
   // Sending data back
   void _sendDataBack(BuildContext context, String cc, String c) {
