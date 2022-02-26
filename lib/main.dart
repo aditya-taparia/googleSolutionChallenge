@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'stepper/steps.dart';
 import 'package:googlesolutionchallenge/screens/start.dart';
 
@@ -14,7 +15,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(),
+      theme: ThemeData(
+        fontFamily: GoogleFonts.varelaRound().fontFamily,
+      ),
       home: const MyStepper(),
     );
   }
