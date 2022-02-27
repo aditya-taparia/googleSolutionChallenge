@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/widgets/phone_number.dart';
 import 'package:particles_flutter/particles_flutter.dart';
@@ -17,6 +19,7 @@ class _LoginState extends State<Login> {
   late double borderRadius;
   late double height;
   late double margin;
+  late Timer tim;
   int count = 0;
   int? stepsUsed;
 
@@ -39,7 +42,7 @@ class _LoginState extends State<Login> {
     change();
   }
 
-  void change() async {
+  void change() {
     if (count < 3) {
       setState(() {
         color = rColor();
@@ -55,12 +58,14 @@ class _LoginState extends State<Login> {
       return null;
     }
 
-    await Future.delayed(const Duration(seconds: 1), change);
+    tim = Timer(const Duration(seconds: 1), change);
+    tim;
   }
 
   @override
   dispose() {
     super.dispose();
+    tim.cancel();
   }
 
   @override
