@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/screens/home/home.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyStepper extends StatefulWidget {
   const MyStepper({Key? key}) : super(key: key);
@@ -25,6 +27,13 @@ class _MyStepperState extends State<MyStepper> {
   int current = 1;
   List<String> arr = ['Create Username', 'Location Access', 'Create Avatar'];
   String s = 'Finish';
+
+  _getStepperInfo() async {
+    int stepUsed = 0;
+    SharedPreferences prefs_2 = await SharedPreferences.getInstance();
+    await prefs_2.setInt('OnBoard', stepUsed);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,17 +64,17 @@ class _MyStepperState extends State<MyStepper> {
                         animation: true,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 50,
                     ),
                     Column(
                       children: [
                         Text(
                           arr[current - 1],
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 25, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text('Next Step : ${current < 3 ? arr[current] : s}'),
@@ -75,7 +84,7 @@ class _MyStepperState extends State<MyStepper> {
                 ),
               ),
             ),
-            switchcase(current, continueStep, previousStep)
+            switchcase(current, continueStep, previousStep, context)
           ]),
         ),
       ),
@@ -83,7 +92,7 @@ class _MyStepperState extends State<MyStepper> {
   }
 }
 
-Widget switchcase(value, continueStep, previousStep) {
+Widget switchcase(value, continueStep, previousStep, BuildContext context) {
   switch (value) {
     case 1:
       return Padding(
@@ -92,14 +101,14 @@ Widget switchcase(value, continueStep, previousStep) {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Welcome to LINK ',
+                const Text('Welcome to LINK ',
                     style: TextStyle(
                       fontSize: 25,
                       color: Color.fromRGBO(66, 103, 178, 1),
                       fontWeight: FontWeight.bold,
                     )),
                 SizedBox(height: 20),
-                Text("Get Linked to us by creating an username",
+                const Text("Get Linked to us by creating an username",
                     style: TextStyle(fontSize: 15)),
                 Padding(
                   padding: const EdgeInsets.only(top: 18.0),
@@ -250,7 +259,7 @@ Widget switchcase(value, continueStep, previousStep) {
                       onPressed: () {
                         previousStep();
                       },
-                      child: Text(
+                      child: const Text(
                         "Back",
                         style: TextStyle(
                           fontSize: 16,
@@ -268,7 +277,7 @@ Widget switchcase(value, continueStep, previousStep) {
                       onPressed: () {
                         continueStep();
                       },
-                      child: Text(
+                      child: const Text(
                         "Grant access and continue",
                         style: TextStyle(
                           fontSize: 16,
@@ -291,8 +300,8 @@ Widget switchcase(value, continueStep, previousStep) {
           padding: const EdgeInsets.only(top: 30.0),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 38, 8, 50),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(8.0, 38, 8, 50),
                 child: CircleAvatar(
                   child: Icon(
                     Icons.person,
@@ -314,7 +323,7 @@ Widget switchcase(value, continueStep, previousStep) {
                     onPressed: () {
                       previousStep();
                     },
-                    child: Text(
+                    child: const Text(
                       "Back",
                       style: TextStyle(
                         fontSize: 16,
@@ -329,8 +338,13 @@ Widget switchcase(value, continueStep, previousStep) {
                       // shadowColor: Colors.red,
                       elevation: 5,
                     ),
-                    onPressed: () {},
-                    child: Text(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Home()));
+                    },
+                    child: const Text(
                       "Skip & Continue",
                       style: TextStyle(
                         fontSize: 16,
