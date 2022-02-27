@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:lottie/lottie.dart';
 import 'auth/login.dart';
@@ -19,6 +20,12 @@ class _StartState extends State<Start> {
   void dispose() {
     pgcontroller.dispose();
     super.dispose();
+  }
+
+  _storeGetstartedInfo() async {
+    int isViewed = 0;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('OnBoard', isViewed);
   }
 
   @override
@@ -75,8 +82,13 @@ class _StartState extends State<Start> {
             ),
             isLastPage
                 ? TextButton(
-                    onPressed: () => Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => const Login())),
+                    onPressed: () async {
+                      await _storeGetstartedInfo();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()));
+                    },
                     child: const Text(
                       "Get Started",
                       style: TextStyle(fontSize: 18),
