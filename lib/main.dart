@@ -5,7 +5,7 @@ import 'package:googlesolutionchallenge/screens/auth/login.dart';
 import 'package:googlesolutionchallenge/screens/home/home.dart';
 import 'package:googlesolutionchallenge/screens/start.dart';
 import 'package:googlesolutionchallenge/services/auth.dart';
-import 'package:googlesolutionchallenge/stepper/steps.dart';
+import 'package:googlesolutionchallenge/screens/steps.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models/user.dart';
