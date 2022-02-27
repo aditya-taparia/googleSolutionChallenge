@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/widgets/phone_number.dart';
 import 'package:particles_flutter/particles_flutter.dart';
 
+import '../../services/auth.dart';
+
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -18,6 +20,9 @@ class _LoginState extends State<Login> {
   int count = 0;
 
   final Duration _duration = const Duration(seconds: 1);
+  final AuthService _auth = AuthService();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController codeController = TextEditingController();
 
   double rRadius() {
     return 30;
@@ -161,7 +166,10 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            const PhoneNumber(),
+                            PhoneNumber(
+                              phoneController: phoneController,
+                              codeController: codeController,
+                            ),
                             const SizedBox(height: 10),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -175,7 +183,17 @@ class _LoginState extends State<Login> {
                                 ),
                                 fixedSize: const Size(500.0, 50.0),
                               ),
-                              onPressed: () {},
+                              onPressed: () async {
+                                try {
+                                  String phone = codeController.text == ''
+                                      ? codeController.text +
+                                          phoneController.text
+                                      : '+91' + phoneController.text;
+                                  await _auth.verifyPhoneNumber(phone, context);
+                                } catch (e) {
+                                  throw e;
+                                }
+                              },
                               child: const Text(
                                 'Send Code',
                                 style: TextStyle(
@@ -215,7 +233,11 @@ class _LoginState extends State<Login> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              await _auth.signInWithGoogle();
+                            } catch (e) {}
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

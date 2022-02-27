@@ -1,10 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:googlesolutionchallenge/screens/auth/login.dart';
 import 'package:googlesolutionchallenge/screens/start.dart';
 import 'package:googlesolutionchallenge/widgets/phone_number.dart';
 
-void main() {
+void main() async {
+  // Important to connect app with firebase
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Call firebase from device
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

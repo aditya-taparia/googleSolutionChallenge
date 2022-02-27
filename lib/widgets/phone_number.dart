@@ -4,7 +4,11 @@ import 'package:googlesolutionchallenge/widgets/country_codes.dart';
 import 'package:side_header_list_view/side_header_list_view.dart';
 
 class PhoneNumber extends StatefulWidget {
-  const PhoneNumber({Key? key}) : super(key: key);
+  final TextEditingController phoneController;
+  final TextEditingController codeController;
+  const PhoneNumber(
+      {Key? key, required this.phoneController, required this.codeController})
+      : super(key: key);
 
   @override
   _PhoneNumberState createState() => _PhoneNumberState();
@@ -25,11 +29,16 @@ class _PhoneNumberState extends State<PhoneNumber> {
     ).then((value) {
       if (value != null) {
         setState(() {
+          widget.codeController.text = value['countryCode'];
           countryCode = value['countryCode'];
           country = value['country'];
         });
       }
     });
+  }
+
+  String getNumber() {
+    return countryCode + phoneNumber;
   }
 
   @override
@@ -65,6 +74,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
           child: TextFormField(
             keyboardType: TextInputType.number,
             maxLength: 10,
+            controller: widget.phoneController,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
@@ -76,6 +86,11 @@ class _PhoneNumberState extends State<PhoneNumber> {
             },
             onChanged: (value) {
               phoneNumber = value;
+            },
+            onFieldSubmitted: (value) {
+              print(countryCode);
+              widget.phoneController.text =
+                  countryCode + widget.phoneController.text;
             },
             cursorColor: const Color.fromRGBO(66, 103, 178, 1),
             style: const TextStyle(fontSize: 16),
