@@ -4,12 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:googlesolutionchallenge/screens/auth/login.dart';
 import 'package:googlesolutionchallenge/screens/home/home.dart';
 import 'package:googlesolutionchallenge/screens/start.dart';
+import 'package:googlesolutionchallenge/services/auth.dart';
 import 'package:googlesolutionchallenge/stepper/steps.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models/user.dart';
 
 int? isviewed;
+int? isstep;
 
 void main() async {
   //used to interact with the Flutter engine
@@ -20,6 +22,7 @@ void main() async {
   // Shared Preference
   SharedPreferences prefs = await SharedPreferences.getInstance();
   isviewed = prefs.getInt('onBoard');
+  isstep = prefs.getInt('onStep');
 
   runApp(const MyApp());
 }
@@ -46,10 +49,15 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: _theme,
-      home: isviewed != 0 ? const Start() : const Login(),
+    return StreamProvider<Users?>.value(
+      value: AuthService().user,
+      initialData: null,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: _theme,
+        debugShowCheckedModeBanner: false,
+        home: const Wrapper(),
+      ),
     );
   }
 }
@@ -84,7 +92,7 @@ class _WrapperState extends State<Wrapper> {
       if (user == null) {
         return isviewed != 0 ? Start() : Login();
       } else {
-        return Home();
+        return isstep != 0 ? MyStepper() : Home();
       }
     }
   }

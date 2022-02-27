@@ -28,12 +28,6 @@ class _MyStepperState extends State<MyStepper> {
   List<String> arr = ['Create Username', 'Location Access', 'Create Avatar'];
   String s = 'Finish';
 
-  _getStepperInfo() async {
-    int stepUsed = 0;
-    SharedPreferences prefs_2 = await SharedPreferences.getInstance();
-    await prefs_2.setInt('OnBoard', stepUsed);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -338,7 +332,14 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                       // shadowColor: Colors.red,
                       elevation: 5,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      print("Shared pref called");
+                      int isstep = 0;
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      await prefs.setInt('onStep', isstep);
+                      print(prefs.getInt('onStep'));
+
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
