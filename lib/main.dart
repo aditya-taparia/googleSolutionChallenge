@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:googlesolutionchallenge/screens/auth/login.dart';
 import 'package:googlesolutionchallenge/screens/start.dart';
+import 'package:googlesolutionchallenge/stepper/steps.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 int? isViewed;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/widgets/phone_number.dart';
 import 'package:particles_flutter/particles_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/auth.dart';
 
@@ -18,6 +19,7 @@ class _LoginState extends State<Login> {
   late double height;
   late double margin;
   int count = 0;
+  int? stepsUsed;
 
   final Duration _duration = const Duration(seconds: 1);
   final AuthService _auth = AuthService();
@@ -33,8 +35,10 @@ class _LoginState extends State<Login> {
   }
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
+    SharedPreferences prefs_2 = await SharedPreferences.getInstance();
+    stepsUsed = prefs_2.getInt('onBoard');
     change();
   }
 
