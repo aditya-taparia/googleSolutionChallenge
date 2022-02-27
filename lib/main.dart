@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:googlesolutionchallenge/screens/auth/login.dart';
 import 'package:googlesolutionchallenge/screens/start.dart';
-import 'package:googlesolutionchallenge/widgets/phone_number.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+int? isViewed;
 void main() async {
-  // Important to connect app with firebase
+  //used to interact with the Flutter engine
   WidgetsFlutterBinding.ensureInitialized();
-
   // Call firebase from device
   await Firebase.initializeApp();
+
+  // Shared Preference
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  isViewed = prefs.getInt('onBoard');
   runApp(const MyApp());
 }
 
@@ -39,7 +43,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: _theme,
-      home: const Login(),
+      home: isViewed != 0 ? const Start() : const Login(),
     );
   }
 }
