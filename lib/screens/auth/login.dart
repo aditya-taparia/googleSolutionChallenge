@@ -35,10 +35,8 @@ class _LoginState extends State<Login> {
   }
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    SharedPreferences prefs_2 = await SharedPreferences.getInstance();
-    stepsUsed = prefs_2.getInt('onBoard');
     change();
   }
 

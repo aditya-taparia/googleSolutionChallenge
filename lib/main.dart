@@ -2,11 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:googlesolutionchallenge/screens/auth/login.dart';
+import 'package:googlesolutionchallenge/screens/home/home.dart';
 import 'package:googlesolutionchallenge/screens/start.dart';
 import 'package:googlesolutionchallenge/stepper/steps.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'models/user.dart';
 
-int? isViewed;
+int? isviewed;
+
 void main() async {
   //used to interact with the Flutter engine
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +19,8 @@ void main() async {
 
   // Shared Preference
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  isViewed = prefs.getInt('onBoard');
+  isviewed = prefs.getInt('onBoard');
+
   runApp(const MyApp());
 }
 
@@ -44,7 +49,43 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: _theme,
-      home: isViewed != 0 ? const Start() : const Login(),
+      home: isviewed != 0 ? const Start() : const Login(),
     );
+  }
+}
+
+class Wrapper extends StatefulWidget {
+  const Wrapper({Key? key}) : super(key: key);
+
+  @override
+  State<Wrapper> createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoading = false;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<Users?>(context);
+    if (_isLoading) {
+      return Container();
+    } else {
+      if (user == null) {
+        return isviewed != 0 ? Start() : Login();
+      } else {
+        return Home();
+      }
+    }
   }
 }

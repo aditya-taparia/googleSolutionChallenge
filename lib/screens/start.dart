@@ -22,10 +22,12 @@ class _StartState extends State<Start> {
     super.dispose();
   }
 
-  _storeGetstartedInfo() async {
+  _storeOnboardInfo() async {
+    print("Shared pref called");
     int isViewed = 0;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('OnBoard', isViewed);
+    await prefs.setInt('onBoard', isViewed);
+    print(prefs.getInt('onBoard'));
   }
 
   @override
@@ -82,12 +84,10 @@ class _StartState extends State<Start> {
             ),
             isLastPage
                 ? TextButton(
-                    onPressed: () async {
-                      await _storeGetstartedInfo();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Login()));
+                    onPressed: () {
+                      _storeOnboardInfo();
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Login()));
                     },
                     child: const Text(
                       "Get Started",
