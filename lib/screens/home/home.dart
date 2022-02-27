@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
                     shape: BoxShape.circle,
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                        color: const Color.fromRGBO(51, 122, 105, 1)
+                        color: const Color.fromRGBO(66, 103, 178, 1)
                             .withOpacity(0.3),
                         blurRadius: 6.5,
                         spreadRadius: 1.0,
@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
                 "UserName",
                 style: TextStyle(
                   fontSize: 30,
-                  color: Color.fromRGBO(51, 122, 105, 1),
+                  color: Color.fromRGBO(66, 103, 178, 1),
                 ),
               ),
               const Text(
@@ -82,17 +82,17 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 13,
               ),
               Wrap(runSpacing: 16, children: [
                 Container(
                   decoration: const BoxDecoration(
-                      color: Color.fromRGBO(51, 122, 105, 1)),
+                      color: Color.fromRGBO(66, 103, 178, 1)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(20.0),
                         child: Image.asset(
                           'assets/splashScreenDark.png',
                           height: 40,
@@ -101,10 +101,8 @@ class _HomeState extends State<Home> {
                       const Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "45 Unity Points",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
+                          "45 Link Points",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       )
                     ],
@@ -127,7 +125,7 @@ class _HomeState extends State<Home> {
                         active = !active;
                       });
                     },
-                    activeColor: const Color.fromRGBO(51, 122, 105, 1),
+                    activeColor: const Color.fromRGBO(66, 103, 178, 1),
                     inactiveTrackColor: Colors.grey,
                     inactiveThumbColor: Colors.grey,
                   ),
