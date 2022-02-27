@@ -38,6 +38,14 @@
           }
         },
         {
+          "client_id": "275460434008-tdrun41uegf6q5fuobn1b2gamqvdh94i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.googlesolutionchallenge",
+            "certificate_hash": "265c649ae49b638716a1a159708c3232ca1311ad"
+          }
+        },
+        {
           "client_id": "275460434008-knecujpj572jvvqnjc6hngqlkv20amrj.apps.googleusercontent.com",
           "client_type": 3
         }
