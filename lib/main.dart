@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: _theme,
-      home: isViewed != 0 ? const MyStepper() : const Login(),
+      home: isViewed != 0 ? const Start() : const Login(),
     );
   }
 }
