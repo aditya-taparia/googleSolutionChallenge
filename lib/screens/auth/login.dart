@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/widgets/phone_number.dart';
 import 'package:particles_flutter/particles_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/auth.dart';
 
@@ -193,7 +192,7 @@ class _LoginState extends State<Login> {
                                       : '+91' + phoneController.text;
                                   await _auth.verifyPhoneNumber(phone, context);
                                 } catch (e) {
-                                  throw e;
+                                  rethrow;
                                 }
                               },
                               child: const Text(
@@ -238,7 +237,9 @@ class _LoginState extends State<Login> {
                           onPressed: () async {
                             try {
                               await _auth.signInWithGoogle();
-                            } catch (e) {}
+                            } catch (e) {
+                              rethrow;
+                            }
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

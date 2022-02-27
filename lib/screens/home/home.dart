@@ -9,16 +9,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
       ),
-      body: ElevatedButton(
-        onPressed: () => {_auth.signOut()},
-        child: Text('taparia chuthiya'),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => {_auth.signOut()},
+          child: const Text('Logout'),
+        ),
       ),
     );
   }

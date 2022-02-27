@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:googlesolutionchallenge/widgets/country_codes.dart';
@@ -88,7 +89,9 @@ class _PhoneNumberState extends State<PhoneNumber> {
               phoneNumber = value;
             },
             onFieldSubmitted: (value) {
-              print(countryCode);
+              if (kDebugMode) {
+                print(countryCode);
+              }
               widget.phoneController.text =
                   countryCode + widget.phoneController.text;
             },

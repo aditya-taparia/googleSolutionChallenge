@@ -75,7 +75,17 @@ class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
     super.initState();
+    getData();
     _isLoading = false;
+  }
+
+  getData() async {
+    // Shared Preference
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isviewed = prefs.getInt('onBoard');
+      isstep = prefs.getInt('onStep');
+    });
   }
 
   @override
@@ -87,12 +97,12 @@ class _WrapperState extends State<Wrapper> {
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
     if (_isLoading) {
-      return Container();
+      return const CircularProgressIndicator();
     } else {
       if (user == null) {
-        return isviewed != 0 ? Start() : Login();
+        return isviewed != 0 ? const Start() : const Login();
       } else {
-        return isstep != 0 ? MyStepper() : Home();
+        return isstep != 0 ? const MyStepper() : const Home();
       }
     }
   }

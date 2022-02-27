@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:lottie/lottie.dart';
-import 'auth/login.dart';
 
 class Start extends StatefulWidget {
   const Start({Key? key}) : super(key: key);
@@ -23,11 +24,15 @@ class _StartState extends State<Start> {
   }
 
   _storeOnboardInfo() async {
-    print("Shared pref called");
+    if (kDebugMode) {
+      print("Shared pref called");
+    }
     int isViewed = 0;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('onBoard', isViewed);
-    print(prefs.getInt('onBoard'));
+    if (kDebugMode) {
+      print(prefs.getInt('onBoard'));
+    }
   }
 
   @override
@@ -86,8 +91,12 @@ class _StartState extends State<Start> {
                 ? TextButton(
                     onPressed: () {
                       _storeOnboardInfo();
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Login()));
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Wrapper(),
+                        ),
+                      );
                     },
                     child: const Text(
                       "Get Started",

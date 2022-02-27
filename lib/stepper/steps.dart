@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/screens/home/home.dart';
+import 'package:googlesolutionchallenge/main.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,13 +48,15 @@ class _MyStepperState extends State<MyStepper> {
                       child: CircularPercentIndicator(
                         animateFromLastPercent: true,
                         radius: 50,
-                        progressColor: Color.fromRGBO(66, 103, 178, 1),
+                        progressColor: const Color.fromRGBO(66, 103, 178, 1),
                         percent: current / 3,
                         circularStrokeCap: CircularStrokeCap.round,
                         center: Text(
-                          "${current}/3",
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
+                          "$current/3",
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         animation: true,
                       ),
@@ -91,153 +94,149 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
     case 1:
       return Padding(
         padding: const EdgeInsets.fromLTRB(10.0, 38, 10, 0),
-        child: Container(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Welcome to LINK ',
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Color.fromRGBO(66, 103, 178, 1),
-                      fontWeight: FontWeight.bold,
-                    )),
-                SizedBox(height: 20),
-                const Text("Get Linked to us by creating an username",
-                    style: TextStyle(fontSize: 15)),
-                Padding(
-                  padding: const EdgeInsets.only(top: 18.0),
-                  child: Textfielduse('UserName', false),
-                ),
-                Textfielduse('Describe yourself here', true),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Color.fromRGBO(66, 103, 178, 1),
-                            onPrimary: Colors.white,
-                            // shadowColor: Colors.red,
-                            elevation: 5,
-                          ),
-                          onPressed: () {
-                            continueStep();
-                          },
-                          child: Text(
-                            "Create & Continue",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Welcome to LINK ',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Color.fromRGBO(66, 103, 178, 1),
+                    fontWeight: FontWeight.bold,
+                  )),
+              const SizedBox(height: 20),
+              const Text("Get Linked to us by creating an username",
+                  style: TextStyle(fontSize: 15)),
+              Padding(
+                padding: const EdgeInsets.only(top: 18.0),
+                child: textfielduse('UserName', false),
+              ),
+              textfielduse('Describe yourself here', true),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: const Color.fromRGBO(66, 103, 178, 1),
+                          onPrimary: Colors.white,
+                          // shadowColor: Colors.red,
+                          elevation: 5,
+                        ),
+                        onPressed: () {
+                          continueStep();
+                        },
+                        child: const Text(
+                          "Create & Continue",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                )
-              ]),
-        ),
+                ),
+              )
+            ]),
       );
     case 2:
       return Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
             child: Text('We need these permissions for best app experience',
                 style: TextStyle(fontSize: 18)),
           ),
           Column(
             children: [
-              Container(
-                child: Column(children: [
-                  Row(
+              Column(children: [
+                Row(
+                  children: [
+                    SizedBox(
+                        height: 100,
+                        width: 120,
+                        child: Lottie.asset('assets/location.json')),
+                    Column(
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                          child: Text(
+                            'Location',
+                            style: TextStyle(
+                                fontSize: 21, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Text(
+                          'let the need know your location',
+                          style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
                     children: [
-                      Container(
+                      SizedBox(
                           height: 100,
                           width: 120,
-                          child: Lottie.asset('assets/location.json')),
+                          child: Lottie.asset('assets/camera.json')),
                       Column(
                         children: const [
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
                             child: Text(
-                              'Location',
+                              'Media',
                               style: TextStyle(
                                   fontSize: 21, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Text(
-                            'let the need know your location',
+                            'To show others what you clicked',
                             style: TextStyle(
-                              fontSize: 17,
+                              fontSize: 15,
                             ),
                           ),
                         ],
                       )
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Row(
-                      children: [
-                        Container(
-                            height: 100,
-                            width: 120,
-                            child: Lottie.asset('assets/camera.json')),
-                        Column(
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                              child: Text(
-                                'Media',
-                                style: TextStyle(
-                                    fontSize: 21, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Text(
-                              'To show others what you clicked',
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                          height: 100,
+                          width: 120,
+                          child: Lottie.asset('assets/storage.json')),
+                      Column(
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                            child: Text(
+                              'Storage',
                               style: TextStyle(
-                                fontSize: 15,
-                              ),
+                                  fontSize: 21, fontWeight: FontWeight.bold),
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                          Text(
+                            'To access your files with permission',
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                    child: Row(
-                      children: [
-                        Container(
-                            height: 100,
-                            width: 120,
-                            child: Lottie.asset('assets/storage.json')),
-                        Column(
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                              child: Text(
-                                'Storage',
-                                style: TextStyle(
-                                    fontSize: 21, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Text(
-                              'To access your files with permission',
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ]),
-              ),
+                )
+              ]),
               Padding(
                 padding: const EdgeInsets.only(top: 25.0),
                 child: Row(
@@ -245,7 +244,7 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(66, 103, 178, 1),
+                        primary: const Color.fromRGBO(66, 103, 178, 1),
                         onPrimary: Colors.white,
                         // shadowColor: Colors.red,
                         elevation: 5,
@@ -263,7 +262,7 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(66, 103, 178, 1),
+                        primary: const Color.fromRGBO(66, 103, 178, 1),
                         onPrimary: Colors.white,
                         // shadowColor: Colors.red,
                         elevation: 5,
@@ -288,8 +287,7 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
       );
 
     case 3:
-      return Container(
-          child: Center(
+      return Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 30.0),
           child: Column(
@@ -309,7 +307,7 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromRGBO(66, 103, 178, 1),
+                      primary: const Color.fromRGBO(66, 103, 178, 1),
                       onPrimary: Colors.white,
                       // shadowColor: Colors.red,
                       elevation: 5,
@@ -327,23 +325,29 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromRGBO(66, 103, 178, 1),
+                      primary: const Color.fromRGBO(66, 103, 178, 1),
                       onPrimary: Colors.white,
                       // shadowColor: Colors.red,
                       elevation: 5,
                     ),
                     onPressed: () async {
-                      print("Shared pref called");
+                      if (kDebugMode) {
+                        print("Shared pref called");
+                      }
                       int isstep = 0;
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       await prefs.setInt('onStep', isstep);
-                      print(prefs.getInt('onStep'));
+                      if (kDebugMode) {
+                        print(prefs.getInt('onStep'));
+                      }
 
                       Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Home()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Wrapper(),
+                        ),
+                      );
                     },
                     child: const Text(
                       "Skip & Continue",
@@ -358,21 +362,21 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
             ],
           ),
         ),
-      ));
+      );
     default:
       return Container();
   }
 }
 
-Widget Textfielduse(hint, isdescription) {
+Widget textfielduse(hint, isdescription) {
   return Container(
     padding: const EdgeInsets.all(10),
     child: TextFormField(
       maxLines: isdescription ? 5 : 1,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(20),
+        contentPadding: const EdgeInsets.all(20),
         // labelText: "Enter Email",
-        hintText: "${hint}",
+        hintText: hint,
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(17.0),
@@ -380,7 +384,9 @@ Widget Textfielduse(hint, isdescription) {
         ),
         //fillColor: Colors.green
       ),
-      validator: (val) {},
+      validator: (val) {
+        return null;
+      },
       keyboardType: TextInputType.emailAddress,
     ),
   );
