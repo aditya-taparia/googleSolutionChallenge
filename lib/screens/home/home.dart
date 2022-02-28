@@ -230,7 +230,7 @@ class _HomeState extends State<Home> {
                       ),
                     )
                   ],
-                  backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
+                  backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
                 )
               : null,
           // Drawer styling from theme is left
