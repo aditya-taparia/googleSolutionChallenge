@@ -10,7 +10,7 @@ class Analytics extends StatefulWidget {
 class _AnalyticsState extends State<Analytics> {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text("Analytics"),
     );
   }

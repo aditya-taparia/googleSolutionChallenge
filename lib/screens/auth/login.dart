@@ -54,8 +54,6 @@ class _LoginState extends State<Login> {
         }
         count++;
       });
-    } else {
-      return null;
     }
 
     tim = Timer(const Duration(seconds: 1), change);

@@ -17,36 +17,36 @@ class AuthService {
     return _auth.authStateChanges().map(_userFromFirebase);
   }
 
-  // SignIn with phone number
-  // By - @jeeteshgavande30
-
+  // Phone number verification
   Future<void> verifyPhoneNumber(
       String phoneNumber, BuildContext context) async {
-    PhoneVerificationCompleted verificationCompleted =
-        (PhoneAuthCredential phoneAuthCredential) async {
+    PhoneVerificationCompleted verificationCompleted;
+    verificationCompleted = (PhoneAuthCredential phoneAuthCredential) async {
       showSnackBar(context, "Verification Completed");
     };
-    PhoneVerificationFailed verificationFailed =
-        (FirebaseAuthException exception) {
+    PhoneVerificationFailed verificationFailed;
+    verificationFailed = (FirebaseAuthException exception) {
       showSnackBar(context, exception.toString());
     };
-    PhoneCodeSent codeSent =
-        (String verificationID, [int? forceResnedingtoken]) {
+    PhoneCodeSent codeSent;
+    codeSent = (String verificationID, [int? forceResnedingtoken]) {
       showSnackBar(context, "Verification Code sent on the phone number");
       // Navigator.push(
       //     context,
       //     MaterialPageRoute(
       //         builder: (builder) => Otptest(verificationID, phoneNumber)));
-      print(verificationID);
-    } as PhoneCodeSent;
+      if (kDebugMode) {
+        print(verificationID);
+      }
+    };
 
-    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-        (String verificationID) {
+    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout;
+    codeAutoRetrievalTimeout = (String verificationID) {
       showSnackBar(context, "Time out");
     };
     try {
       await _auth.verifyPhoneNumber(
-          timeout: Duration(seconds: 60),
+          timeout: const Duration(seconds: 60),
           phoneNumber: phoneNumber,
           verificationCompleted: verificationCompleted,
           verificationFailed: verificationFailed,
@@ -57,6 +57,7 @@ class AuthService {
     }
   }
 
+  // Sign in with phone number
   Future<Users?> signInwithPhoneNumber(
       String verificationId, String smsCode, BuildContext context) async {
     try {

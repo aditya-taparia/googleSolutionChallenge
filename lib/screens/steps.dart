@@ -183,7 +183,7 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                           height: 100,
                           width: 120,
                           child: Icon(
@@ -195,10 +195,10 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
+                              children: const [
                                 Text(
                                   'Camera',
                                   style: TextStyle(
@@ -209,7 +209,7 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                               ],
                             ),
                           ),
-                          Text(
+                          const Text(
                             'To show others what you click',
                             style: TextStyle(
                               fontSize: 15,

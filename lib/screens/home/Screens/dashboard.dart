@@ -12,7 +12,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text("Dashboard"),
     );
   }

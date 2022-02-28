@@ -10,7 +10,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text("Map"),
     );
   }
