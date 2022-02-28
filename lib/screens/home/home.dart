@@ -204,7 +204,7 @@ class _HomeState extends State<Home> {
           appBar: _index != 1
               ? AppBar(
                   elevation: 0,
-                  iconTheme: const IconThemeData(color: Colors.black),
+                  // iconTheme: const IconThemeData(color: Colors.black),
                   actions: <Widget>[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
@@ -214,16 +214,17 @@ class _HomeState extends State<Home> {
                             "Name",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                           Row(
                             children: const [
                               Icon(
                                 Icons.location_on,
+                                color: Colors.white,
                               ),
                               Text("Location detail",
-                                  style: TextStyle(color: Colors.black))
+                                  style: TextStyle(color: Colors.white))
                             ],
                           )
                         ],
