@@ -203,10 +203,8 @@ class _HomeState extends State<Home> {
         return Scaffold(
           appBar: _index != 1
               ? AppBar(
-                  // toolbarHeight: 122,
-                  backgroundColor: Color.fromRGBO(66, 103, 178, 1),
                   elevation: 0,
-                  iconTheme: const IconThemeData(color: Colors.white),
+                  iconTheme: const IconThemeData(color: Colors.black),
                   actions: <Widget>[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
@@ -215,25 +213,24 @@ class _HomeState extends State<Home> {
                           const Text(
                             "Name",
                             style: TextStyle(
-                              color: Colors.white,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                           ),
                           Row(
                             children: const [
                               Icon(
                                 Icons.location_on,
-                                color: Colors.white,
                               ),
                               Text("Location detail",
-                                  style: TextStyle(color: Colors.white))
+                                  style: TextStyle(color: Colors.black))
                             ],
                           )
                         ],
                       ),
                     )
                   ],
-                  // backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
+                  backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
                 )
               : null,
           // Drawer styling from theme is left

@@ -14,7 +14,6 @@ class _ForumState extends State<Forum> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          // backgroundColor: Color.fromRGBO(66, 103, 178, 1),
           bottom: TabBar(
               indicatorColor: Colors.white,
               unselectedLabelColor: Colors.white70,
