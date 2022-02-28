@@ -14,6 +14,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Stack(
             children: [
@@ -26,11 +27,17 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   height: 130,
                   width: MediaQuery.of(context).size.width,
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(30, 20, 0, 0),
-                    child: Text(
-                      "Hi Som Sagar!",
-                      style: TextStyle(fontSize: 28, color: Colors.white),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 20, 0, 0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          "Hi Som Sagar!",
+                          style: TextStyle(fontSize: 28, color: Colors.white),
+                        ),
+                        // Icon(Icons.notifications_outlined)
+                      ],
                     ),
                   )),
               Padding(
@@ -52,6 +59,202 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  margin: const EdgeInsets.all(0),
+                  color: Colors.blueGrey[50],
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: SizedBox(
+                          height: 140,
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          child: const Align(
+                            alignment: Alignment.bottomRight,
+                            child: Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage('assets/addItem.png'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        margin: const EdgeInsets.all(0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: SizedBox(
+                          height: 175,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10.0),
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Add Items',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.redAccent[400],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  margin: const EdgeInsets.all(0),
+                  color: Colors.blue[50],
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: SizedBox(
+                          height: 140,
+                          width: MediaQuery.of(context).size.width * 0.55,
+                          child: const Align(
+                            alignment: Alignment.bottomRight,
+                            child: Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage('assets/earnings.png'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        margin: const EdgeInsets.all(0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: SizedBox(
+                          height: 175,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10.0),
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Earnings',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.blue[800],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              margin: const EdgeInsets.all(0),
+              color: Colors.blue[50],
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: const Image(
+                        fit: BoxFit.cover,
+                        image: AssetImage('assets/map.jpg'),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    color: Colors.black38,
+                    elevation: 0,
+                    margin: const EdgeInsets.all(0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: SizedBox(
+                      height: 200,
+                      width: double.maxFinite,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(10.0),
+                        onTap: () {
+                          widget.bloc.changeNavigationIndex(Navigation.map);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'Explore Items Near You',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
