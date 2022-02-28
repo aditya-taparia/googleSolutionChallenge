@@ -146,7 +146,7 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
         children: [
           const Padding(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-            child: Text('We need these permissions for best app experience',
+            child: Text('Allow these for the best app experience',
                 style: TextStyle(fontSize: 18)),
           ),
           Column(
@@ -159,19 +159,20 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                         width: 120,
                         child: Lottie.asset('assets/location.json')),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
                           child: Text(
                             'Location',
                             style: TextStyle(
-                                fontSize: 21, fontWeight: FontWeight.bold),
+                                fontSize: 19, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Text(
-                          'let the need know your location',
+                          'let the needy know your location',
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: 15,
                           ),
                         ),
                       ],
@@ -185,19 +186,31 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                       SizedBox(
                           height: 100,
                           width: 120,
-                          child: Lottie.asset('assets/camera.json')),
+                          child: Icon(
+                            Icons.camera_alt_rounded,
+                            size: 70,
+                            // color: Color.fromRGBO(66, 103, 178, 1),
+                          )),
                       Column(
-                        children: const [
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                            child: Text(
-                              'Media',
-                              style: TextStyle(
-                                  fontSize: 21, fontWeight: FontWeight.bold),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Camera',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold),
+                                  // textAlign: TextAlign.start,
+                                ),
+                              ],
                             ),
                           ),
                           Text(
-                            'To show others what you clicked',
+                            'To show others what you click',
                             style: TextStyle(
                               fontSize: 15,
                             ),
@@ -212,17 +225,18 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                   child: Row(
                     children: [
                       SizedBox(
-                          height: 100,
+                          height: 90,
                           width: 120,
                           child: Lottie.asset('assets/storage.json')),
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
                             child: Text(
                               'Storage',
                               style: TextStyle(
-                                  fontSize: 21, fontWeight: FontWeight.bold),
+                                  fontSize: 19, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Text(
@@ -238,7 +252,7 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                 )
               ]),
               Padding(
-                padding: const EdgeInsets.only(top: 25.0),
+                padding: const EdgeInsets.only(top: 45.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
