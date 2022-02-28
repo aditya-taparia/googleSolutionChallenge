@@ -14,22 +14,27 @@ class _ForumState extends State<Forum> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          bottom: TabBar(
-              indicatorColor: Colors.white,
-              unselectedLabelColor: Colors.white70,
-              tabs: [
-                Tab(
-                  child: Text(
-                    'Forum',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                Tab(
-                    child: Text(
-                  'Chats',
-                  style: TextStyle(fontSize: 20),
-                )),
-              ]),
+          flexibleSpace: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: const [
+              TabBar(
+                  indicatorColor: Colors.white,
+                  unselectedLabelColor: Colors.white70,
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        'Forum',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Tab(
+                        child: Text(
+                      'Chats',
+                      style: TextStyle(fontSize: 20),
+                    )),
+                  ])
+            ],
+          ),
         ),
         body: TabBarView(children: [
           Center(

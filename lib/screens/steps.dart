@@ -1,12 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/main.dart';
+import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/userdatabase.dart';
+
 class MyStepper extends StatefulWidget {
-  const MyStepper({Key? key}) : super(key: key);
+  final Users user;
+  const MyStepper({Key? key, required this.user}) : super(key: key);
 
   @override
   _MyStepperState createState() => _MyStepperState();
@@ -28,6 +32,9 @@ class _MyStepperState extends State<MyStepper> {
   int current = 1;
   List<String> arr = ['Create Username', 'Location Access', 'Create Avatar'];
   String s = 'Finish';
+  bool isusername = true;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +88,8 @@ class _MyStepperState extends State<MyStepper> {
                 ),
               ),
             ),
-            switchcase(current, continueStep, previousStep, context)
+            switchcase(current, continueStep, previousStep, context,
+                nameController, emailController, widget.user.userid)
           ]),
         ),
       ),
@@ -89,7 +97,14 @@ class _MyStepperState extends State<MyStepper> {
   }
 }
 
-Widget switchcase(value, continueStep, previousStep, BuildContext context) {
+Widget switchcase(
+    value,
+    continueStep,
+    previousStep,
+    BuildContext context,
+    TextEditingController nameController,
+    TextEditingController emailController,
+    String userid) {
   switch (value) {
     case 1:
       return Padding(
@@ -108,9 +123,9 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                   style: TextStyle(fontSize: 15)),
               Padding(
                 padding: const EdgeInsets.only(top: 18.0),
-                child: textfielduse('UserName', false),
+                child: textfielduse('UserName', false, nameController),
               ),
-              textfielduse('Describe yourself here', true),
+              textfielduse('Email', false, emailController),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 30.0),
@@ -125,6 +140,8 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
                           elevation: 5,
                         ),
                         onPressed: () {
+                          UserDatabaseService(uid: userid).updateUserData(
+                              nameController.text, emailController.text);
                           continueStep();
                         },
                         child: const Text(
@@ -382,10 +399,11 @@ Widget switchcase(value, continueStep, previousStep, BuildContext context) {
   }
 }
 
-Widget textfielduse(hint, isdescription) {
+Widget textfielduse(hint, isdescription, TextEditingController controller) {
   return Container(
     padding: const EdgeInsets.all(10),
     child: TextFormField(
+      controller: controller,
       maxLines: isdescription ? 5 : 1,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(20),
@@ -401,7 +419,7 @@ Widget textfielduse(hint, isdescription) {
       validator: (val) {
         return null;
       },
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.text,
     ),
   );
 }
