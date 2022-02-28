@@ -213,13 +213,15 @@ class _HomeState extends State<Home> {
                           const Text(
                             "Name",
                             style: TextStyle(
-                              color: Colors.black,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                           ),
                           Row(
                             children: const [
-                              Icon(Icons.location_on),
+                              Icon(
+                                Icons.location_on,
+                              ),
                               Text("Location detail",
                                   style: TextStyle(color: Colors.black))
                             ],
