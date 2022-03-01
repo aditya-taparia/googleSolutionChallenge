@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/screens/home/Screens/chatscreen.dart';
 
 class Forum extends StatefulWidget {
   const Forum({Key? key}) : super(key: key);
@@ -40,9 +41,7 @@ class _ForumState extends State<Forum> {
           Center(
             child: Text('Forum'),
           ),
-          Center(
-            child: Text('Chats'),
-          )
+          ChatScreen(),
         ]),
       ),
     );
