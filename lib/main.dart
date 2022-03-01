@@ -197,7 +197,8 @@ class _WrapperState extends State<Wrapper> {
       return const Loading();
     } else {
       if (user == null) {
-        return isviewed != 0 ? const Start() : const Login();
+        //return isviewed != 0 ? const Start() : const Login();
+        return isviewed != 0 ? const Start() : const Home();
       } else {
         // return MyStepper(user: user);
         return isstep != 0 ? MyStepper(user: user) : const Home();
