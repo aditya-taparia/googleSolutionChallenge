@@ -51,6 +51,14 @@ class MyApp extends StatelessWidget {
         backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
       ),
 
+      // Floating action button theme
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+
       // Drawer theme
       drawerTheme: const DrawerThemeData(
         backgroundColor: Color.fromRGBO(241, 245, 251, 1),

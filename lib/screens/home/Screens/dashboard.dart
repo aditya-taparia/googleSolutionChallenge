@@ -36,6 +36,7 @@ class _DashboardState extends State<Dashboard> {
                       "Hi Som Sagar!",
                       style: TextStyle(fontSize: 26, color: Colors.white),
                     ),
+                    SizedBox(height: 10),
                     Text(
                       "Kerala, India",
                       style: TextStyle(fontSize: 18, color: Colors.white),
