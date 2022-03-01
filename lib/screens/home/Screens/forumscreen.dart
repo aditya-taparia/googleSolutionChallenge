@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/screens/home/Screens/addforum.dart';
 import 'package:googlesolutionchallenge/screens/home/Screens/forummodel.dart';
 
 class ForumScreen extends StatefulWidget {
@@ -34,27 +37,40 @@ class _ForumScreenState extends State<ForumScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                const CircleAvatar(),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      forums.sender.name,
-                                      style: const TextStyle(fontSize: 18),
+                            Container(
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: Colors.primaries[Random()
+                                        .nextInt(Colors.primaries.length)],
+                                    child: Text(
+                                      forums.sender.name[0],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                      ),
                                     ),
-                                    const Text(
-                                      'Location',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        forums.sender.name,
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                      const Text(
+                                        'Location',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                             Text(
                               forums.time,
@@ -87,14 +103,11 @@ class _ForumScreenState extends State<ForumScreen> {
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                const Text(
-                                  '5 Comments',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                const Text('5 Comments',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
@@ -143,7 +156,8 @@ class _ForumScreenState extends State<ForumScreen> {
           child: Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () => Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Addforum())),
               child: const Icon(
                 Icons.add,
               ),

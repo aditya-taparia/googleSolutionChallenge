@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -13,55 +12,39 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _controller = Completer();
-  LatLng currentPostion = LatLng(25.69893, 32.6421);
-  late LocationPermission permission;
+  LatLng _current = LatLng(22.54481831, 88.3403691);
+  Set<Marker> _markers = {};
+
+  void _onMapCreated(_controller) {
+    setState(() {
+      _markers.add(Marker(
+          markerId: MarkerId('id-1'),
+          position: LatLng(22.5448131, 88.3403391),
+          infoWindow: InfoWindow(title: 'Name', snippet: 'Description')));
+
+      _markers.add(Marker(
+          markerId: MarkerId('id-2'),
+          position: LatLng(22.5459931, 88.3403285),
+          infoWindow: InfoWindow(title: 'Name', snippet: 'Description')));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
       GoogleMap(
-        zoomControlsEnabled: false,
+        myLocationEnabled: true,
+        zoomControlsEnabled: true,
+        compassEnabled: false,
+        tiltGesturesEnabled: false,
+        mapType: MapType.normal,
         initialCameraPosition: CameraPosition(
-          target: currentPostion,
-          zoom: 10.0,
+          target: _current,
+          zoom: 16,
         ),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+        onMapCreated: _onMapCreated,
+        markers: _markers,
       ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Align(
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton(
-              backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-              onPressed: () => getLocation(),
-              child: Icon(Icons.location_pin)),
-        ),
-      )
     ]);
-  }
-
-  getLocation() async {
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    final GoogleMapController controller = await _controller.future;
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    controller.animateCamera(
-        CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)));
-    print(currentPostion);
   }
 }
