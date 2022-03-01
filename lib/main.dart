@@ -38,6 +38,8 @@ class MyApp extends StatelessWidget {
     ThemeData _theme = ThemeData(
       fontFamily: GoogleFonts.varelaRound().fontFamily,
       backgroundColor: Colors.blueGrey[50],
+
+      // App bar theme
       appBarTheme: AppBarTheme(
         titleTextStyle: TextStyle(
           fontFamily: GoogleFonts.varelaRound().fontFamily,
@@ -47,6 +49,100 @@ class MyApp extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+      ),
+
+      // Drawer theme
+      drawerTheme: const DrawerThemeData(
+        backgroundColor: Color.fromRGBO(241, 245, 251, 1),
+      ),
+
+      // Navigation bar theme
+      navigationBarTheme: NavigationBarThemeData(
+        indicatorColor: const Color.fromRGBO(66, 103, 178, 1),
+        labelTextStyle: MaterialStateProperty.all(
+          TextStyle(
+            fontSize: 14,
+            fontFamily: GoogleFonts.varelaRound().fontFamily,
+            fontWeight: FontWeight.w700,
+            color: const Color.fromRGBO(66, 103, 178, 1),
+          ),
+        ),
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        backgroundColor: const Color.fromRGBO(241, 245, 251, 1),
+        height: 65,
+      ),
+
+      // Textbutton style
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          primary: const Color.fromRGBO(66, 103, 178, 1),
+          onSurface: const Color.fromRGBO(241, 245, 251, 1),
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+          elevation: 0,
+          fixedSize: const Size(120, 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+      ),
+
+      // Elevatedbutton style
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          primary: const Color.fromRGBO(66, 103, 178, 1),
+          onSurface: const Color.fromRGBO(241, 245, 251, 1),
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+          elevation: 0,
+          fixedSize: const Size(120, 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+      ),
+
+      // Outlinebutton style
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          primary: const Color.fromRGBO(66, 103, 178, 1),
+          onSurface: const Color.fromRGBO(241, 245, 251, 1),
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+          elevation: 0,
+          fixedSize: const Size(120, 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+      ),
+
+      // Dialog Box Theme
+      dialogTheme: DialogTheme(
+        alignment: Alignment.center,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        elevation: 1.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        contentTextStyle: TextStyle(
+          fontFamily: GoogleFonts.varelaRound().fontFamily,
+          fontSize: 18,
+          fontWeight: FontWeight.w400,
+          color: const Color.fromRGBO(66, 103, 178, 1),
+        ),
+        titleTextStyle: TextStyle(
+          fontFamily: GoogleFonts.varelaRound().fontFamily,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: const Color.fromRGBO(66, 103, 178, 1),
+        ),
       ),
     );
 
