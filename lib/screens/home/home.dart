@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/screens/home/Screens/analytics.dart';
@@ -8,6 +7,8 @@ import 'package:googlesolutionchallenge/screens/home/Screens/map.dart';
 import 'package:googlesolutionchallenge/services/auth.dart';
 import '../../services/navigation_bloc.dart';
 import 'Screens/forum.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -27,6 +28,20 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+  }
+
+// QR Generated
+  bool qrgenerated = false;
+
+//QR Scanner
+  String result = "";
+  Future qrscan() async {
+    String scan = await FlutterBarcodeScanner.scanBarcode(
+        '#336699', 'Cancel', true, ScanMode.QR);
+
+    setState(() {
+      result = scan;
+    });
   }
 
   @override
@@ -293,7 +308,65 @@ class _HomeState extends State<Home> {
                         size: 24,
                         color: Colors.white,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text(
+                              "QR Code",
+                            ),
+                            actions: <Widget>[
+                              Column(
+                                children: [
+                                  qrgenerated == false
+                                      ? const Image(
+                                          fit: BoxFit.cover,
+                                          image:
+                                              AssetImage('assets/qr_code.jpg'),
+                                        )
+                                      : SizedBox(
+                                          height: 200,
+                                          width: 200,
+                                          child: QrImage(
+                                            data: 'pass uid here',
+                                          ),
+                                        ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      OutlinedButton(
+                                        child: const Text("Generate"),
+                                        onPressed: () {
+                                          setState(() {
+                                            qrgenerated = true;
+                                          });
+                                          print(qrgenerated);
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        child: Row(
+                                          children: const [
+                                            Icon(Icons.camera_alt_rounded),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text("Scan"),
+                                          ],
+                                        ),
+                                        onPressed: () {
+                                          // qrscan();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                            actionsAlignment: MainAxisAlignment.spaceAround,
+                          ),
+                        );
+                      },
                     ),
                     IconButton(
                       tooltip: 'Notifications',
