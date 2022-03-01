@@ -19,27 +19,31 @@ class _DashboardState extends State<Dashboard> {
           Stack(
             children: [
               Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(20),
-                        bottomLeft: Radius.circular(20)),
-                    color: Color.fromRGBO(66, 103, 178, 1),
-                  ),
-                  height: 130,
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 20, 0, 0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Hi Som Sagar!",
-                          style: TextStyle(fontSize: 28, color: Colors.white),
-                        ),
-                        // Icon(Icons.notifications_outlined)
-                      ],
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(20),
+                      bottomLeft: Radius.circular(20)),
+                  color: Color.fromRGBO(66, 103, 178, 1),
+                ),
+                height: 130,
+                padding: const EdgeInsets.fromLTRB(30, 20, 0, 0),
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      "Hi Som Sagar!",
+                      style: TextStyle(fontSize: 26, color: Colors.white),
                     ),
-                  )),
+                    SizedBox(height: 10),
+                    Text(
+                      "Kerala, India",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 105, 8, 8),
                 child: TextFormField(

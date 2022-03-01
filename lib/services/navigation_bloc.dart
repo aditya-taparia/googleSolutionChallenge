@@ -5,7 +5,7 @@ enum Navigation {
   dashboard,
   map,
   disscussionForm,
-  history,
+  analytics,
 }
 
 class NavigationBloc {

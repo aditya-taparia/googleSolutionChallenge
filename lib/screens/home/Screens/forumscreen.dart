@@ -21,6 +21,7 @@ class _ForumScreenState extends State<ForumScreen> {
             color: Colors.grey[300],
           ),
           child: ListView.builder(
+<<<<<<< HEAD
               itemCount: forum.length,
               itemBuilder: (BuildContext context, int index) {
                 final forums = forum[index];
@@ -147,18 +148,23 @@ class _ForumScreenState extends State<ForumScreen> {
                           )
                         ],
                       ),
+
                     ),
                   ),
-                );
-              }),
+                ),
+              );
+            },
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
+
               onPressed: () => Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Addforum())),
+
               child: const Icon(
                 Icons.add,
               ),
