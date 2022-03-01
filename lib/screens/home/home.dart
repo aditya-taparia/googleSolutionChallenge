@@ -197,7 +197,7 @@ class _HomeState extends State<Home> {
           ),
           const MapScreen(),
           const Forum(),
-          const Analytics()
+          const Analytics(),
         ];
         _index = snapshot.data!.index;
         return Scaffold(
@@ -206,30 +206,24 @@ class _HomeState extends State<Home> {
                   elevation: 0,
                   // iconTheme: const IconThemeData(color: Colors.black),
                   actions: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
-                      child: Column(
-                        children: [
-                          const Text(
-                            "Name",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Row(
-                            children: const [
-                              Icon(
-                                Icons.location_on,
-                                color: Colors.white,
-                              ),
-                              Text("Location detail",
-                                  style: TextStyle(color: Colors.white))
-                            ],
-                          )
-                        ],
+                    IconButton(
+                      tooltip: 'QR Code',
+                      icon: const Icon(
+                        Icons.qr_code_rounded,
+                        size: 24,
+                        color: Colors.white,
                       ),
-                    )
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      tooltip: 'Notifications',
+                      icon: const Icon(
+                        Icons.notifications_rounded,
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {},
+                    ),
                   ],
                   backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
                 )
@@ -243,7 +237,7 @@ class _HomeState extends State<Home> {
                     ? screens[1]
                     : snapshot.data == Navigation.disscussionForm
                         ? screens[2]
-                        : snapshot.data == Navigation.history
+                        : snapshot.data == Navigation.analytics
                             ? screens[3]
                             : screens[0],
           ),
@@ -289,17 +283,17 @@ class _HomeState extends State<Home> {
                       Icons.chat_bubble_rounded,
                       color: Colors.white,
                     ),
-                    label: 'Forum',
+                    label: 'Chats',
                   ),
                   NavigationDestination(
                     icon: Icon(
-                      Icons.currency_rupee_rounded,
+                      Icons.insights_outlined,
                     ),
                     selectedIcon: Icon(
-                      Icons.currency_rupee_rounded,
+                      Icons.insights_rounded,
                       color: Colors.white,
                     ),
-                    label: 'Rewards',
+                    label: 'Analytics',
                   ),
                 ],
               ),
