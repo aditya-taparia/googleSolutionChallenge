@@ -51,235 +51,269 @@ class _HomeState extends State<Home> {
       builder: (context, snapshot) {
         // Drawer widget
         Widget _drawer = Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
+          child: Stack(
             children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(66, 103, 178, 1),
-                ),
-                child: SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+              ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  DrawerHeader(
+                    decoration: const BoxDecoration(
+                      color: Color.fromRGBO(66, 103, 178, 1),
+                    ),
+                    child: SafeArea(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 30,
-                            child: Text(
-                              'U',
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Color.fromRGBO(66, 103, 178, 1),
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Column(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Username',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 30,
+                                child: Text(
+                                  'U',
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: Color.fromRGBO(66, 103, 178, 1),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              SizedBox(
-                                height: 10,
+                              const SizedBox(
+                                width: 10,
                               ),
-                              Text(
-                                "examplename@company.com",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    'Username',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "examplename@company.com",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      InkWell(
-                        borderRadius: BorderRadius.circular(50),
-                        splashColor: const Color.fromRGBO(79, 129, 188, 1),
-                        onTap: () {
-                          if (kDebugMode) {
-                            print("Points");
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 115, 177, 247),
-                            borderRadius: BorderRadius.circular(50),
+                          const SizedBox(
+                            height: 10,
                           ),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 8),
-                          child: const Text(
-                            "45 Link Points",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
+                          InkWell(
+                            borderRadius: BorderRadius.circular(50),
+                            splashColor: const Color.fromRGBO(79, 129, 188, 1),
+                            onTap: () {
+                              if (kDebugMode) {
+                                print("Points");
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 115, 177, 247),
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 8),
+                              child: const Text(
+                                "45 Link Points",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 12.0,
-                  bottom: 4.0,
-                  top: 4.0,
-                ),
-                child: Text(
-                  'About',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.info_outline_rounded),
-                title: const Text(
-                  'About Us',
-                  style: TextStyle(fontSize: 18),
-                ),
-                onTap: () {},
-              ),
-              Divider(
-                height: 1,
-                color: Colors.grey[600],
-                indent: 12.0,
-                endIndent: 12.0,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 12.0,
-                  bottom: 4.0,
-                  top: 4.0,
-                ),
-                child: Text(
-                  'Personalize',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: view
-                    ? const Icon(Icons.dark_mode_rounded)
-                    : const Icon(Icons.light_mode_rounded),
-                title: const Text(
-                  'Darkmode',
-                  style: TextStyle(fontSize: 18),
-                ),
-                trailing: Switch(
-                  value: view,
-                  onChanged: (bool active) {
-                    setState(() {
-                      view = active;
-                      Global.shared.view = active;
-                      active = !active;
-                    });
-                  },
-                  activeColor: const Color.fromRGBO(66, 103, 178, 1),
-                  inactiveTrackColor: Colors.grey,
-                  inactiveThumbColor: Colors.grey,
-                ),
-                onTap: null,
-              ),
-              ListTile(
-                leading: const Icon(Icons.edit_rounded),
-                title: const Text(
-                  'Edit Profile',
-                  style: TextStyle(fontSize: 18),
-                ),
-                onTap: () {},
-              ),
-              Divider(
-                height: 1,
-                color: Colors.grey[600],
-                indent: 12.0,
-                endIndent: 12.0,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 12.0,
-                  bottom: 4.0,
-                  top: 4.0,
-                ),
-                child: Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout_rounded),
-                title: const Text(
-                  'Logout',
-                  style: TextStyle(fontSize: 18),
-                ),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text(
-                        "Logout",
-                      ),
-                      content: const Text(
-                        "Are you sure you want to logout?",
-                      ),
-                      actions: <Widget>[
-                        OutlinedButton(
-                          child: const Text("Yes"),
-                          onPressed: () async {
-                            await _auth.signOut();
-                            Navigator.pop(context);
-                          },
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        ElevatedButton(
-                          child: const Text("No"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                      actionsAlignment: MainAxisAlignment.spaceAround,
                     ),
-                  );
-                },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 12.0,
+                      bottom: 4.0,
+                      top: 4.0,
+                    ),
+                    child: Text(
+                      'About',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.info_outline_rounded),
+                    title: const Text(
+                      'About Us',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    onTap: () {},
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey[600],
+                    indent: 12.0,
+                    endIndent: 12.0,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 12.0,
+                      bottom: 4.0,
+                      top: 4.0,
+                    ),
+                    child: Text(
+                      'Personalize',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: view
+                        ? const Icon(Icons.dark_mode_rounded)
+                        : const Icon(Icons.light_mode_rounded),
+                    title: const Text(
+                      'Darkmode',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    trailing: Switch(
+                      value: view,
+                      onChanged: (bool active) {
+                        setState(() {
+                          view = active;
+                          Global.shared.view = active;
+                          active = !active;
+                        });
+                      },
+                      activeColor: const Color.fromRGBO(66, 103, 178, 1),
+                      inactiveTrackColor: Colors.grey,
+                      inactiveThumbColor: Colors.grey,
+                    ),
+                    onTap: null,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.edit_rounded),
+                    title: const Text(
+                      'Edit Profile',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    onTap: () {},
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey[600],
+                    indent: 12.0,
+                    endIndent: 12.0,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 12.0,
+                      bottom: 4.0,
+                      top: 4.0,
+                    ),
+                    child: Text(
+                      'Logout',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.logout_rounded),
+                    title: const Text(
+                      'Logout',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text(
+                            "Logout",
+                          ),
+                          content: const Text(
+                            "Are you sure you want to logout?",
+                          ),
+                          actions: <Widget>[
+                            OutlinedButton(
+                              child: const Text("Yes"),
+                              onPressed: () async {
+                                await _auth.signOut();
+                                Navigator.pop(context);
+                              },
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            ElevatedButton(
+                              child: const Text("No"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                          actionsAlignment: MainAxisAlignment.spaceAround,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ListTile(
+                  dense: true,
+                  leading: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.hub_rounded,
+                      size: 35,
+                      color: Color.fromRGBO(66, 103, 178, 1),
+                    ),
+                  ),
+                  onTap: null,
+                  title: Text(
+                    'LINK',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Version 1.0.0 | By Team Aviato',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
