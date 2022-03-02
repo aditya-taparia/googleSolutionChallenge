@@ -340,7 +340,9 @@ class _HomeState extends State<Home> {
                                       children: [
                                         OutlinedButton(
                                           child: Text(
-                                            "Generate",
+                                            !qrgenerated
+                                                ? "Generate"
+                                                : "Generated",
                                             style: TextStyle(
                                               color: !qrgenerated
                                                   ? Colors.blueGrey
