@@ -1,13 +1,12 @@
-import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/analytics.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/dashboard.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/map.dart';
+import 'package:googlesolutionchallenge/screens/home/analytics/analytics.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
+import 'package:googlesolutionchallenge/screens/home/map/map.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 import 'package:googlesolutionchallenge/services/auth.dart';
-import '../../services/navigation_bloc.dart';
-import 'Screens/forum.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Home extends StatefulWidget {
@@ -354,7 +353,9 @@ class _HomeState extends State<Home> {
                                                   setState(() {
                                                     qrgenerated = true;
                                                   });
-                                                  print(qrgenerated);
+                                                  if (kDebugMode) {
+                                                    print(qrgenerated);
+                                                  }
                                                 }
                                               : null,
                                         ),

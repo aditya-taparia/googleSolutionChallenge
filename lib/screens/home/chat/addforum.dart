@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/forummodel.dart';
 
 class Addforum extends StatefulWidget {
   const Addforum({Key? key}) : super(key: key);
@@ -28,9 +27,9 @@ class _AddforumState extends State<Addforum> {
                   radius: 28,
                   backgroundColor: Colors
                       .primaries[Random().nextInt(Colors.primaries.length)],
-                  child: Text(
+                  child: const Text(
                     "S",
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
                     ),
@@ -41,12 +40,12 @@ class _AddforumState extends State<Addforum> {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       "Som Sagar",
                       style: TextStyle(fontSize: 18),
                     ),
-                    const Text(
+                    Text(
                       'Location',
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
@@ -54,23 +53,25 @@ class _AddforumState extends State<Addforum> {
                 ),
               ],
             ),
-            Container(
+            const SizedBox(
               height: 300,
               //  color: Colors.black,
               child: TextField(
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'Post',
-                    hintText: 'What do you want to talk about ?'),
+                  border: InputBorder.none,
+                  labelText: 'Post',
+                  hintText: 'What do you want to talk about ?',
+                ),
               ),
             ),
-            Spacer(),
-            Text(
+            const Spacer(),
+            const Text(
               "Add Hashtag",
               style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
+                color: Colors.blueAccent,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

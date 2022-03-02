@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/chatscreen.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/sample.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
 
 class IndividualChat extends StatefulWidget {
-  IndividualChat({Key? key, required this.user}) : super(key: key);
+  const IndividualChat({Key? key, required this.user}) : super(key: key);
   final User user;
 
   @override
@@ -14,14 +13,14 @@ class _IndividualChatState extends State<IndividualChat> {
   buildMessage(Message message, bool isUser) {
     return Container(
       margin: isUser
-          ? EdgeInsets.only(top: 10, bottom: 8, left: 80)
-          : EdgeInsets.only(top: 10, bottom: 8, right: 80),
-      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          ? const EdgeInsets.only(top: 10, bottom: 8, left: 80)
+          : const EdgeInsets.only(top: 10, bottom: 8, right: 80),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       decoration: BoxDecoration(
         color: isUser
-            ? Color.fromRGBO(66, 103, 178, 1)
-            : Color.fromARGB(255, 235, 232, 232),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+            ? const Color.fromRGBO(66, 103, 178, 1)
+            : const Color.fromARGB(255, 235, 232, 232),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,13 +44,13 @@ class _IndividualChatState extends State<IndividualChat> {
 
   buildMessageComposer() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       height: 70,
       color: Colors.white,
       child: Row(children: [
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.photo),
+          icon: const Icon(Icons.photo),
           iconSize: 30,
           color: Theme.of(context).primaryColor,
         ),
@@ -59,13 +58,13 @@ class _IndividualChatState extends State<IndividualChat> {
             child: TextField(
           textCapitalization: TextCapitalization.sentences,
           onChanged: (value) {},
-          decoration: InputDecoration.collapsed(
+          decoration: const InputDecoration.collapsed(
             hintText: 'Send a message',
           ),
         )),
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.send),
+          icon: const Icon(Icons.send),
           iconSize: 30,
           color: Theme.of(context).primaryColor,
         ),
@@ -76,7 +75,7 @@ class _IndividualChatState extends State<IndividualChat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(66, 103, 178, 1),
+      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
       appBar: AppBar(
         title: Text(widget.user.name),
         elevation: 0,
@@ -87,18 +86,18 @@ class _IndividualChatState extends State<IndividualChat> {
           children: [
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30))),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30)),
                   child: ListView.builder(
                       reverse: true,
-                      padding: EdgeInsets.only(top: 15),
+                      padding: const EdgeInsets.only(top: 15),
                       itemCount: messages.length,
                       itemBuilder: (BuildContext context, int index) {
                         final Message message = messages[index];

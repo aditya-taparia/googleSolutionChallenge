@@ -55,7 +55,7 @@ class _DashboardState extends State<Dashboard> {
                       fillColor: Colors.white,
                       filled: true,
                       prefixIcon: const Icon(Icons.search),
-                      contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                      contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                       hintText: "What are you looking for ?",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),

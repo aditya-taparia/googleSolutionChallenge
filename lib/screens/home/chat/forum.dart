@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/chatscreen.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/forumscreen.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/chatscreen.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/forumscreen.dart';
 
 class Forum extends StatefulWidget {
   const Forum({Key? key}) : super(key: key);
@@ -38,10 +38,12 @@ class _ForumState extends State<Forum> {
             ],
           ),
         ),
-        body: TabBarView(children: [
-          ForumScreen(),
-          ChatScreen(),
-        ]),
+        body: const TabBarView(
+          children: [
+            ForumScreen(),
+            ChatScreen(),
+          ],
+        ),
       ),
     );
   }

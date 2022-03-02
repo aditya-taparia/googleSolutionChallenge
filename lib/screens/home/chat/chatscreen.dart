@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/individualchat.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/sample.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/individualchat.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Container(
       height: 300,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
       ),
       child: ListView.builder(
@@ -28,14 +28,16 @@ class _ChatScreenState extends State<ChatScreen> {
                       builder: (_) => IndividualChat(user: chat.sender))),
               child: Container(
                 decoration: BoxDecoration(
-                    color: chat.unread
-                        ? Color.fromRGBO(66, 103, 178, 0.29)
-                        : Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomRight: Radius.circular(20))),
-                margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
-                padding: EdgeInsets.all(15),
+                  color: chat.unread
+                      ? const Color.fromRGBO(66, 103, 178, 0.29)
+                      : Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                ),
+                margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                padding: const EdgeInsets.all(15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -45,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           radius: 30,
                           backgroundImage: AssetImage(chat.sender.imageUrl),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Column(
@@ -53,19 +55,19 @@ class _ChatScreenState extends State<ChatScreen> {
                           children: [
                             Text(
                               chat.sender.name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 15),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 7,
                             ),
-                            Container(
+                            SizedBox(
                               width: MediaQuery.of(context).size.width * 0.6,
                               child: Text(
                                 chat.text,
                                 overflow: TextOverflow.ellipsis,
-                                style:
-                                    TextStyle(fontSize: 15, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.grey),
                               ),
                             )
                           ],
@@ -76,11 +78,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       children: [
                         Text(
                           chat.time,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         chat.unread
@@ -91,15 +93,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                     color: Theme.of(context).primaryColor,
                                     borderRadius: BorderRadius.circular(30)),
                                 alignment: Alignment.center,
-                                child: Text(
+                                child: const Text(
                                   'NEW',
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 10,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
                       ],
                     )
                   ],

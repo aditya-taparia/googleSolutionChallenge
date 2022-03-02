@@ -2,11 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/main.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/services/userdatabase.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../services/userdatabase.dart';
 
 class MyStepper extends StatefulWidget {
   final Users user;

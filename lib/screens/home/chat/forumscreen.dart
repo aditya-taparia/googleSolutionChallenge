@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/addforum.dart';
-import 'package:googlesolutionchallenge/screens/home/Screens/forummodel.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/addforum.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/forummodel.dart';
 
 class ForumScreen extends StatefulWidget {
   const ForumScreen({Key? key}) : super(key: key);
@@ -37,40 +37,37 @@ class _ForumScreenState extends State<ForumScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.primaries[Random()
-                                        .nextInt(Colors.primaries.length)],
-                                    child: Text(
-                                      forums.sender.name[0],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                      ),
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.primaries[Random()
+                                      .nextInt(Colors.primaries.length)],
+                                  child: Text(
+                                    forums.sender.name[0],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        forums.sender.name,
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                      const Text(
-                                        'Location',
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      forums.sender.name,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    const Text(
+                                      'Location',
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                             Text(
                               forums.time,
@@ -157,7 +154,11 @@ class _ForumScreenState extends State<ForumScreen> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: () => Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Addforum())),
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Addforum(),
+                ),
+              ),
               child: const Icon(
                 Icons.add,
               ),

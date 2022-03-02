@@ -34,86 +34,86 @@ final User currentUser = User(
 );
 
 // USERS
-final User Somsagar = User(
+final User somsagar = User(
   id: 1,
   name: 'Somsagar',
   imageUrl: 'assets/profile.png',
 );
-final User Aditya = User(
+final User aditya = User(
   id: 2,
   name: 'Aditya Taparia',
   imageUrl: 'assets/profile.png',
 );
-final User Jeetesh = User(
+final User jeetesh = User(
   id: 3,
   name: 'Jeetesh',
   imageUrl: 'assets/profile.png',
 );
-final User User1 = User(
+final User user1 = User(
   id: 4,
   name: 'User1',
   imageUrl: 'assets/profile.png',
 );
-final User User2 = User(
+final User user2 = User(
   id: 5,
   name: 'User2',
   imageUrl: 'assets/profile.png',
 );
-final User User3 = User(
+final User user3 = User(
   id: 6,
   name: 'User3',
   imageUrl: 'assets/profile.png',
 );
-final User User4 = User(
+final User user4 = User(
   id: 7,
   name: 'User4',
   imageUrl: 'assets/profile.png',
 );
 List<Message> chats = [
   Message(
-    sender: Aditya,
+    sender: aditya,
     time: '5:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: true,
   ),
   Message(
-    sender: User1,
+    sender: user1,
     time: '4:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: true,
   ),
   Message(
-    sender: Jeetesh,
+    sender: jeetesh,
     time: '3:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: false,
   ),
   Message(
-    sender: User3,
+    sender: user3,
     time: '2:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: true,
   ),
   Message(
-    sender: User4,
+    sender: user4,
     time: '1:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: false,
   ),
   Message(
-    sender: User2,
+    sender: user2,
     time: '12:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: false,
   ),
   Message(
-    sender: Somsagar,
+    sender: somsagar,
     time: '11:30 AM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
@@ -123,7 +123,7 @@ List<Message> chats = [
 
 List<Message> messages = [
   Message(
-    sender: Aditya,
+    sender: aditya,
     time: '5:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: true,
@@ -137,14 +137,14 @@ List<Message> messages = [
     unread: true,
   ),
   Message(
-    sender: Aditya,
+    sender: aditya,
     time: '3:45 PM',
     text: 'How\'s the doggo?',
     isLiked: false,
     unread: true,
   ),
   Message(
-    sender: Aditya,
+    sender: aditya,
     time: '3:15 PM',
     text: 'All the food',
     isLiked: true,
@@ -158,7 +158,7 @@ List<Message> messages = [
     unread: true,
   ),
   Message(
-    sender: Aditya,
+    sender: aditya,
     time: '2:00 PM',
     text: 'I ate so much food today.',
     isLiked: false,
