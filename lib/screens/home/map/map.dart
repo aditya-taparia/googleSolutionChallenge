@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:googlesolutionchallenge/widgets/loading.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -14,9 +15,11 @@ class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _controller = Completer();
   LatLng _current = const LatLng(22.54481831, 88.3403691);
   Set<Marker> _markers = {};
+  bool _mapload = true;
 
   void _onMapCreated(_controller) {
     setState(() {
+      _mapload = false;
       _markers.add(const Marker(
           markerId: MarkerId('id-1'),
           position: LatLng(22.5448131, 88.3403391),
@@ -33,6 +36,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        (_mapload) ? const Loading() : Container(),
         GoogleMap(
           myLocationEnabled: true,
           zoomControlsEnabled: true,
