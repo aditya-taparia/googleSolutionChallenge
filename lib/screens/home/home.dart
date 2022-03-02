@@ -311,60 +311,76 @@ class _HomeState extends State<Home> {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text(
-                              "QR Code",
-                            ),
-                            actions: <Widget>[
-                              Column(
-                                children: [
-                                  qrgenerated == false
-                                      ? const Image(
-                                          fit: BoxFit.cover,
-                                          image:
-                                              AssetImage('assets/qr_code.jpg'),
-                                        )
-                                      : SizedBox(
-                                          height: 200,
-                                          width: 200,
-                                          child: QrImage(
-                                            data: 'pass uid here',
-                                          ),
-                                        ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      OutlinedButton(
-                                        child: const Text("Generate"),
-                                        onPressed: () {
-                                          setState(() {
-                                            qrgenerated = true;
-                                          });
-                                          print(qrgenerated);
-                                        },
-                                      ),
-                                      ElevatedButton(
-                                        child: Row(
-                                          children: const [
-                                            Icon(Icons.camera_alt_rounded),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text("Scan"),
-                                          ],
-                                        ),
-                                        onPressed: () {
-                                          // qrscan();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                          builder: (context) =>
+                              StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                              title: const Text(
+                                "QR Code",
                               ),
-                            ],
-                            actionsAlignment: MainAxisAlignment.spaceAround,
-                          ),
+                              actions: <Widget>[
+                                Column(
+                                  children: [
+                                    qrgenerated == false
+                                        ? const Image(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                                'assets/qr_code.jpg'),
+                                          )
+                                        : SizedBox(
+                                            height: 200,
+                                            width: 200,
+                                            child: QrImage(
+                                              data:
+                                                  'eb3WylJkoTRbKqShhaqMfLs9Lzh1',
+                                            ),
+                                          ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        OutlinedButton(
+                                          child: Text(
+                                            "Generate",
+                                            style: TextStyle(
+                                              color: !qrgenerated
+                                                  ? Colors.blueGrey
+                                                  : Colors.blueGrey[200],
+                                            ),
+                                          ),
+                                          onPressed: qrgenerated == false
+                                              ? () {
+                                                  setState(() {
+                                                    qrgenerated = true;
+                                                  });
+                                                  print(qrgenerated);
+                                                }
+                                              : null,
+                                        ),
+                                        ElevatedButton(
+                                          child: Row(
+                                            children: const [
+                                              Icon(
+                                                Icons.qr_code_scanner_rounded,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text("Scan"),
+                                            ],
+                                          ),
+                                          onPressed: () {
+                                            // qrscan();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                              actionsAlignment: MainAxisAlignment.spaceAround,
+                            );
+                          }),
                         );
                       },
                     ),
