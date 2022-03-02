@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/models/userdata.dart';
 import 'package:googlesolutionchallenge/screens/home/analytics/analytics.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
 import 'package:googlesolutionchallenge/screens/home/map/map.dart';
@@ -7,6 +9,9 @@ import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 import 'package:googlesolutionchallenge/services/auth.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
+import 'package:googlesolutionchallenge/services/userdatabase.dart';
+import 'package:googlesolutionchallenge/widgets/loading.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Home extends StatefulWidget {
@@ -318,194 +323,238 @@ class _HomeState extends State<Home> {
             ],
           ),
         );
-        // screens to be displayed on screen
-        final screens = [
-          Dashboard(
-            bloc: bloc,
-          ),
-          const MapScreen(),
-          const Forum(),
-          const Analytics(),
-        ];
-        _index = snapshot.data!.index;
-        return Scaffold(
-          appBar: _index != 1
-              ? AppBar(
-                  elevation: 0,
-                  // iconTheme: const IconThemeData(color: Colors.black),
-                  actions: <Widget>[
-                    IconButton(
-                      tooltip: 'QR Code',
-                      icon: const Icon(
-                        Icons.qr_code_rounded,
-                        size: 24,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) =>
-                              StatefulBuilder(builder: (context, setState) {
-                            return AlertDialog(
-                              title: const Text(
-                                "QR Code",
-                              ),
-                              actions: <Widget>[
-                                Column(
-                                  children: [
-                                    qrgenerated == false
-                                        ? const Image(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage(
-                                                'assets/qr_code.jpg'),
-                                          )
-                                        : SizedBox(
-                                            height: 200,
-                                            width: 200,
-                                            child: QrImage(
-                                              data:
-                                                  'eb3WylJkoTRbKqShhaqMfLs9Lzh1',
-                                            ),
-                                          ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        OutlinedButton(
-                                          child: Text(
-                                            !qrgenerated
-                                                ? "Generate"
-                                                : "Generated",
-                                            style: TextStyle(
-                                              color: !qrgenerated
-                                                  ? Colors.blueGrey
-                                                  : Colors.blueGrey[200],
-                                            ),
-                                          ),
-                                          onPressed: qrgenerated == false
-                                              ? () {
-                                                  setState(() {
-                                                    qrgenerated = true;
-                                                  });
-                                                  if (kDebugMode) {
-                                                    print(qrgenerated);
-                                                  }
-                                                }
-                                              : null,
+
+        final user = Provider.of<Users?>(context);
+
+        return StreamBuilder<Userdata?>(
+            // initialData: null,
+            stream: UserDatabaseService(uid: user!.userid).userdata,
+            builder: (context, userSnapshot) {
+              if (userSnapshot.connectionState == ConnectionState.waiting) {
+                print('waiting');
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (userSnapshot.connectionState ==
+                  ConnectionState.active) {
+                print('active');
+
+                print(userSnapshot.data);
+                if (userSnapshot.hasData) {
+                  print('has data');
+                  Userdata? userdata = userSnapshot.data;
+                  // screens to be displayed on screen
+                  final screens = [
+                    Dashboard(
+                      bloc: bloc,
+                      user: userdata!,
+                    ),
+                    const MapScreen(),
+                    const Forum(),
+                    const Analytics(),
+                  ];
+                  _index = snapshot.data!.index;
+
+                  // TODO: Now we can checkif the user is provider or
+                  // not and make changes accordingly
+
+                  // TODO: check if the userSnapshot is null or not and
+                  // show loading screen accorginly
+
+                  return Scaffold(
+                    appBar: _index != 1
+                        ? AppBar(
+                            elevation: 0,
+                            // iconTheme: const IconThemeData(color: Colors.black),
+                            actions: <Widget>[
+                              IconButton(
+                                tooltip: 'QR Code',
+                                icon: const Icon(
+                                  Icons.qr_code_rounded,
+                                  size: 24,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => StatefulBuilder(
+                                        builder: (context, setState) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                          "QR Code",
                                         ),
-                                        ElevatedButton(
-                                          child: Row(
-                                            children: const [
-                                              Icon(
-                                                Icons.qr_code_scanner_rounded,
-                                                color: Colors.white,
+                                        actions: <Widget>[
+                                          Column(
+                                            children: [
+                                              qrgenerated == false
+                                                  ? const Image(
+                                                      fit: BoxFit.cover,
+                                                      image: AssetImage(
+                                                          'assets/qr_code.jpg'),
+                                                    )
+                                                  : SizedBox(
+                                                      height: 200,
+                                                      width: 200,
+                                                      child: QrImage(
+                                                        data:
+                                                            'eb3WylJkoTRbKqShhaqMfLs9Lzh1',
+                                                      ),
+                                                    ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  OutlinedButton(
+                                                    child: Text(
+                                                      !qrgenerated
+                                                          ? "Generate"
+                                                          : "Generated",
+                                                      style: TextStyle(
+                                                        color: !qrgenerated
+                                                            ? Colors.blueGrey
+                                                            : Colors
+                                                                .blueGrey[200],
+                                                      ),
+                                                    ),
+                                                    onPressed:
+                                                        qrgenerated == false
+                                                            ? () {
+                                                                setState(() {
+                                                                  qrgenerated =
+                                                                      true;
+                                                                });
+                                                                if (kDebugMode) {
+                                                                  print(
+                                                                      qrgenerated);
+                                                                }
+                                                              }
+                                                            : null,
+                                                  ),
+                                                  ElevatedButton(
+                                                    child: Row(
+                                                      children: const [
+                                                        Icon(
+                                                          Icons
+                                                              .qr_code_scanner_rounded,
+                                                          color: Colors.white,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text("Scan"),
+                                                      ],
+                                                    ),
+                                                    onPressed: () {
+                                                      // qrscan();
+                                                    },
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text("Scan"),
                                             ],
                                           ),
-                                          onPressed: () {
-                                            // qrscan();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                        actionsAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                      );
+                                    }),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                tooltip: 'Notifications',
+                                icon: const Icon(
+                                  Icons.notifications_rounded,
+                                  size: 24,
+                                  color: Colors.white,
                                 ),
-                              ],
-                              actionsAlignment: MainAxisAlignment.spaceAround,
-                            );
-                          }),
-                        );
-                      },
+                                onPressed: () {},
+                              ),
+                            ],
+                            backgroundColor:
+                                const Color.fromRGBO(66, 103, 178, 1),
+                          )
+                        : null,
+                    // Drawer styling from theme is left
+                    drawer: _index != 1 ? _drawer : null,
+                    body: SafeArea(
+                      child: snapshot.data == Navigation.dashboard
+                          ? screens[0]
+                          : snapshot.data == Navigation.map
+                              ? screens[1]
+                              : snapshot.data == Navigation.disscussionForm
+                                  ? screens[2]
+                                  : snapshot.data == Navigation.analytics
+                                      ? screens[3]
+                                      : screens[0],
                     ),
-                    IconButton(
-                      tooltip: 'Notifications',
-                      icon: const Icon(
-                        Icons.notifications_rounded,
-                        size: 24,
-                        color: Colors.white,
+                    bottomNavigationBar: Theme(
+                      data: ThemeData(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                       ),
-                      onPressed: () {},
+                      child: NavigationBarTheme(
+                        data: Theme.of(context).navigationBarTheme,
+                        child: NavigationBar(
+                          animationDuration: const Duration(seconds: 1),
+                          selectedIndex: _index,
+                          onDestinationSelected: (_index) {
+                            bloc.changeNavigationIndex(
+                                Navigation.values[_index]);
+                          },
+                          destinations: const [
+                            NavigationDestination(
+                              icon: Icon(
+                                Icons.dashboard_outlined,
+                              ),
+                              selectedIcon: Icon(
+                                Icons.dashboard_rounded,
+                                color: Colors.white,
+                              ),
+                              label: 'Dashboard',
+                            ),
+                            NavigationDestination(
+                              icon: Icon(
+                                Icons.share_location_rounded,
+                              ),
+                              selectedIcon: Icon(
+                                Icons.share_location_rounded,
+                                color: Colors.white,
+                              ),
+                              label: 'Map',
+                            ),
+                            NavigationDestination(
+                              icon: Icon(
+                                Icons.chat_bubble_outline_rounded,
+                              ),
+                              selectedIcon: Icon(
+                                Icons.chat_bubble_rounded,
+                                color: Colors.white,
+                              ),
+                              label: 'Chats',
+                            ),
+                            NavigationDestination(
+                              icon: Icon(
+                                Icons.insights_outlined,
+                              ),
+                              selectedIcon: Icon(
+                                Icons.insights_rounded,
+                                color: Colors.white,
+                              ),
+                              label: 'Analytics',
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                  backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                )
-              : null,
-          // Drawer styling from theme is left
-          drawer: _index != 1 ? _drawer : null,
-          body: SafeArea(
-            child: snapshot.data == Navigation.dashboard
-                ? screens[0]
-                : snapshot.data == Navigation.map
-                    ? screens[1]
-                    : snapshot.data == Navigation.disscussionForm
-                        ? screens[2]
-                        : snapshot.data == Navigation.analytics
-                            ? screens[3]
-                            : screens[0],
-          ),
-          bottomNavigationBar: Theme(
-            data: ThemeData(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-            ),
-            child: NavigationBarTheme(
-              data: Theme.of(context).navigationBarTheme,
-              child: NavigationBar(
-                animationDuration: const Duration(seconds: 1),
-                selectedIndex: _index,
-                onDestinationSelected: (_index) {
-                  bloc.changeNavigationIndex(Navigation.values[_index]);
-                },
-                destinations: const [
-                  NavigationDestination(
-                    icon: Icon(
-                      Icons.dashboard_outlined,
-                    ),
-                    selectedIcon: Icon(
-                      Icons.dashboard_rounded,
-                      color: Colors.white,
-                    ),
-                    label: 'Dashboard',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(
-                      Icons.share_location_rounded,
-                    ),
-                    selectedIcon: Icon(
-                      Icons.share_location_rounded,
-                      color: Colors.white,
-                    ),
-                    label: 'Map',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(
-                      Icons.chat_bubble_outline_rounded,
-                    ),
-                    selectedIcon: Icon(
-                      Icons.chat_bubble_rounded,
-                      color: Colors.white,
-                    ),
-                    label: 'Chats',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(
-                      Icons.insights_outlined,
-                    ),
-                    selectedIcon: Icon(
-                      Icons.insights_rounded,
-                      color: Colors.white,
-                    ),
-                    label: 'Analytics',
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
+                  );
+                } else {
+                  return const Loading();
+                }
+              } else {
+                return const Loading();
+              }
+            });
       },
     );
   }

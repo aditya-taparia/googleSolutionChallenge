@@ -139,7 +139,7 @@ Widget switchcase(
                           elevation: 5,
                         ),
                         onPressed: () {
-                          UserDatabaseService(uid: userid).updateUserData(
+                          UserDatabaseService(uid: userid).setUserData(
                               nameController.text, emailController.text);
                           continueStep();
                         },

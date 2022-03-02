@@ -1,5 +1,7 @@
 class Users {
   final String userid;
 
-  Users({required this.userid});
+  Users({
+    required this.userid,
+  });
 }
