@@ -17,18 +17,39 @@ class _MapScreenState extends State<MapScreen> {
   Set<Marker> _markers = {};
   bool _mapload = true;
 
+  //map window
+  double _height = 100;
+  bool _open = false;
+  bool _markerclicked = false;
+
   void _onMapCreated(_controller) {
     setState(() {
       _mapload = false;
-      _markers.add(const Marker(
+      _markers.add(Marker(
           markerId: MarkerId('id-1'),
           position: LatLng(22.5448131, 88.3403391),
-          infoWindow: InfoWindow(title: 'Name', snippet: 'Description')));
+          onTap: () {
+            setState(() {
+              _markerclicked = true;
+            });
+          },
+          infoWindow: InfoWindow(
+            title: 'Name',
+            snippet: 'Description',
+          )));
 
-      _markers.add(const Marker(
+      _markers.add(Marker(
           markerId: MarkerId('id-2'),
           position: LatLng(22.5459931, 88.3403285),
-          infoWindow: InfoWindow(title: 'Name', snippet: 'Description')));
+          onTap: () {
+            setState(() {
+              _markerclicked = true;
+            });
+          },
+          infoWindow: InfoWindow(
+            title: 'Name',
+            snippet: 'Description',
+          )));
     });
   }
 
@@ -37,19 +58,82 @@ class _MapScreenState extends State<MapScreen> {
     return Stack(
       children: [
         (_mapload) ? const Loading() : Container(),
-        GoogleMap(
-          myLocationEnabled: true,
-          zoomControlsEnabled: true,
-          compassEnabled: false,
-          tiltGesturesEnabled: false,
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-            target: _current,
-            zoom: 16,
+        GestureDetector(
+          child: GoogleMap(
+            myLocationEnabled: true,
+            zoomControlsEnabled: !_markerclicked,
+            compassEnabled: false,
+            tiltGesturesEnabled: false,
+            mapType: MapType.normal,
+            initialCameraPosition: CameraPosition(
+              target: _current,
+              zoom: 16,
+            ),
+            onMapCreated: _onMapCreated,
+            onTap: (LatLng latLng) {
+              setState(() {
+                _markerclicked = false;
+              });
+            },
+            markers: _markers,
           ),
-          onMapCreated: _onMapCreated,
-          markers: _markers,
         ),
+        _markerclicked
+            ? Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: AnimatedContainer(
+                  duration: const Duration(
+                    milliseconds: 500,
+                  ),
+                  height: _height,
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0),
+                      )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (_open) {
+                          setState(() {
+                            _height = 100;
+                            _open = false;
+                          });
+                        } else {
+                          setState(() {
+                            _height = 300;
+                            _open = true;
+                          });
+                        }
+                      },
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: !_open
+                                  ? const Icon(
+                                      Icons.keyboard_arrow_up,
+                                      size: 30,
+                                    )
+                                  : const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      size: 30,
+                                    ),
+                            ),
+                            Text("Name"),
+                            Text("Description"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ))
+            : Container(),
       ],
     );
   }

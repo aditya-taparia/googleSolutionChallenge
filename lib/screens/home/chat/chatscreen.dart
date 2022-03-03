@@ -13,7 +13,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
       decoration: const BoxDecoration(
         color: Colors.white,
       ),
