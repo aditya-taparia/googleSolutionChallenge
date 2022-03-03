@@ -216,29 +216,31 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-                      ListTile(
-                        leading: view
-                            ? const Icon(Icons.dark_mode_rounded)
-                            : const Icon(Icons.light_mode_rounded),
-                        title: const Text(
-                          'Darkmode',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        trailing: Switch(
-                          value: view,
-                          onChanged: (bool active) {
-                            setState(() {
-                              view = active;
-                              Global.shared.view = active;
-                              active = !active;
-                            });
-                          },
-                          activeColor: const Color.fromRGBO(66, 103, 178, 1),
-                          inactiveTrackColor: Colors.grey,
-                          inactiveThumbColor: Colors.grey,
-                        ),
-                        onTap: null,
-                      ),
+                      StatefulBuilder(builder: (context, setState) {
+                        return ListTile(
+                          leading: view
+                              ? const Icon(Icons.dark_mode_rounded)
+                              : const Icon(Icons.light_mode_rounded),
+                          title: const Text(
+                            'Darkmode',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          trailing: Switch(
+                            value: view,
+                            onChanged: (bool active) {
+                              setState(() {
+                                view = active;
+                                Global.shared.view = active;
+                                active = !active;
+                              });
+                            },
+                            activeColor: const Color.fromRGBO(66, 103, 178, 1),
+                            inactiveTrackColor: Colors.grey,
+                            inactiveThumbColor: Colors.grey,
+                          ),
+                          onTap: null,
+                        );
+                      }),
                       ListTile(
                         leading: const Icon(Icons.edit_rounded),
                         title: const Text(
