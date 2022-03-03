@@ -18,7 +18,8 @@ List<String> fromtime = [
   "December 13,2021 at 5:30 AM",
   "May 23,2000 at 7:30 PM"
 ];
-List<bool> fromto = [true, true, false, true];
+List<bool> fromto = [true, false, false, true];
+List<bool> isCharity = [true, false, true, false];
 
 class _transactionsState extends State<transactions> {
   @override
@@ -30,6 +31,10 @@ class _transactionsState extends State<transactions> {
           return Padding(
             padding: const EdgeInsets.only(top: 4),
             child: ListTile(
+              dense: true,
+              tileColor:
+                  isCharity[index] ? Colors.blue[50] : Colors.transparent,
+              onTap: () {},
               leading: CircleAvatar(
                 backgroundColor:
                     Colors.primaries[Random().nextInt(Colors.primaries.length)],
@@ -41,41 +46,59 @@ class _transactionsState extends State<transactions> {
                   ),
                 ),
               ),
-              title: Row(
-                children: [
-                  Text(
-                    fromname[index].toString(),
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                        color: fromto[index] ? Colors.green : Colors.orange,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: fromto[index]
-                        ? const Text(
-                            "Recieved",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )
-                        : const Text("sent",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                  ),
-                ],
+              title: Text(
+                fromname[index].toString(),
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
               ),
               subtitle: Text(fromtime[index]),
-              trailing: fromto[index]
-                  ? Text("+" + fromamount[index].toString() + "/-",
-                      style: const TextStyle(color: Colors.green, fontSize: 18))
-                  : Text("-" + fromamount[index].toString() + "/-",
-                      style: const TextStyle(color: Colors.red, fontSize: 18)),
+              trailing: FittedBox(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    fromto[index]
+                        ? Text(
+                            "+ ₹" + fromamount[index].toString(),
+                            style: const TextStyle(
+                              color: Color.fromRGBO(15, 157, 88, 1),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : Text(
+                            "- ₹" + fromamount[index].toString(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                    const SizedBox(height: 5),
+                    isCharity[index]
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(66, 103, 178, 1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Text(
+                              "Charity",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          )
+                        : Container(),
+                  ],
+                ),
+              ),
             ),
           );
         });
