@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:googlesolutionchallenge/models/userdata.dart';
 
 class UserDatabaseService {
   final String uid;
@@ -59,27 +58,5 @@ class UserDatabaseService {
     return await userdatacollection.doc(uid).update({
       'service-id-list': FieldValue.arrayUnion([serviceId])
     });
-  }
-
-  // Getting user data from database
-  Userdata _userdataFromSnapshot(DocumentSnapshot snapshot) {
-    print(snapshot.data());
-    return Userdata(
-      name: snapshot['name'],
-      email: snapshot['email'],
-      description: snapshot['description'],
-      location: snapshot['location'],
-      isServiceProvider: snapshot['isServiceProvider'],
-      isServiceProviderVerified: snapshot['isServiceProviderVerified'],
-      points: snapshot['points'],
-      requests: snapshot['request-id-list'],
-      services: snapshot['service-id-list'],
-    );
-  }
-
-  // Get user data stream
-  Stream<Userdata> get userdata {
-    print(uid);
-    return userdatacollection.doc(uid).snapshots().map(_userdataFromSnapshot);
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/models/userdata.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 
 class Dashboard extends StatefulWidget {
   final NavigationBloc bloc;
-  final Userdata user;
-  const Dashboard({Key? key, required this.bloc, required this.user})
-      : super(key: key);
+  const Dashboard({
+    Key? key,
+    required this.bloc,
+  }) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -34,13 +34,13 @@ class _DashboardState extends State<Dashboard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
-                      "Hi ${widget.user.name}",
+                      "Hi Aditya",
                       style: TextStyle(fontSize: 26, color: Colors.white),
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
+                    SizedBox(height: 10),
+                    Text(
                       "Kerala, India",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),

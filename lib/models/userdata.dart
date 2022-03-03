@@ -4,7 +4,7 @@ class Userdata {
   final String name;
   final String email;
   final String description;
-  final String points;
+  final int points;
   final GeoPoint location;
   final List<String?> requests;
   final List<String?> services;
