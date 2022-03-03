@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/addforum.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/forummodel.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class ForumScreen extends StatefulWidget {
   const ForumScreen({Key? key}) : super(key: key);
@@ -151,19 +152,31 @@ class _ForumScreenState extends State<ForumScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Addforum(),
-                ),
-              ),
-              child: const Icon(
-                Icons.add,
-              ),
-            ),
-          ),
+              alignment: Alignment.bottomRight,
+              child: SpeedDial(
+                animatedIcon: AnimatedIcons.menu_home,
+                children: [
+                  SpeedDialChild(
+                      backgroundColor: Color.fromRGBO(66, 103, 178, 1),
+                      label: "Post",
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Addforum(),
+                          ),
+                        );
+                      }),
+                  SpeedDialChild(
+                      backgroundColor: Color.fromRGBO(66, 103, 178, 1),
+                      label: "Ad",
+                      child: const Icon(Icons.add, color: Colors.white)),
+                ],
+              )),
         )
       ],
     );
