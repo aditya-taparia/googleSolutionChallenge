@@ -39,48 +39,54 @@ class _AnalyticsState extends State<Analytics> {
       length: 2,
       initialIndex: 0,
       child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(130.0),
-            child: AppBar(
-              flexibleSpace: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: Text(
-                      "Earnings : " + earnings(fromamount, fromto),
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(130.0),
+          child: AppBar(
+            flexibleSpace: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Earnings : " + earnings(fromamount, fromto),
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: Text(
-                      "Donation : ",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Donation : ",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
-                  const Spacer(),
-                  const TabBar(
-                      indicatorColor: Colors.white,
-                      unselectedLabelColor: Colors.white70,
-                      tabs: [
-                        Tab(
-                          child: Text(
-                            'Chart',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                        Tab(
-                            child: Text(
-                          'History',
+                ),
+                const Spacer(),
+                const TabBar(
+                    indicatorColor: Colors.white,
+                    unselectedLabelColor: Colors.white70,
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          'Chart',
                           style: TextStyle(fontSize: 20),
-                        )),
-                      ])
-                ],
-              ),
+                        ),
+                      ),
+                      Tab(
+                          child: Text(
+                        'History',
+                        style: TextStyle(fontSize: 20),
+                      )),
+                    ])
+              ],
             ),
           ),
-          body: TabBarView(children: [chart(), transactions()])),
+        ),
+        body: const TabBarView(
+          children: [
+            Chart(),
+            Transactions(),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
-class chart extends StatefulWidget {
-  const chart({Key? key}) : super(key: key);
+class Chart extends StatefulWidget {
+  const Chart({Key? key}) : super(key: key);
 
   @override
-  State<chart> createState() => _chartState();
+  State<Chart> createState() => _ChartState();
 }
 
-class _chartState extends State<chart> {
+class _ChartState extends State<Chart> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text("Work in Progress"),
-      ),
+    return const Center(
+      child: Text("Work in Progress"),
     );
   }
 }

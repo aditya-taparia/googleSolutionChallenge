@@ -1,13 +1,11 @@
 import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class transactions extends StatefulWidget {
-  const transactions({Key? key}) : super(key: key);
+class Transactions extends StatefulWidget {
+  const Transactions({Key? key}) : super(key: key);
 
   @override
-  State<transactions> createState() => _transactionsState();
+  State<Transactions> createState() => _TransactionsState();
 }
 
 List<String> fromname = ["Sagar", "Aditya", "Kowsik", "Jeetesh"];
@@ -21,7 +19,7 @@ List<String> fromtime = [
 List<bool> fromto = [true, false, false, true];
 List<bool> isCharity = [true, false, true, false];
 
-class _transactionsState extends State<transactions> {
+class _TransactionsState extends State<Transactions> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

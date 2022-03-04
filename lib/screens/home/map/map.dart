@@ -12,9 +12,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Completer<GoogleMapController> _controller = Completer();
-  LatLng _current = const LatLng(22.54481831, 88.3403691);
-  Set<Marker> _markers = {};
+  Completer<GoogleMapController> controller = Completer();
+  final LatLng _current = const LatLng(22.54481831, 88.3403691);
+  final Set<Marker> _markers = {};
   bool _mapload = true;
 
   //map window
@@ -25,31 +25,37 @@ class _MapScreenState extends State<MapScreen> {
   void _onMapCreated(_controller) {
     setState(() {
       _mapload = false;
-      _markers.add(Marker(
-          markerId: MarkerId('id-1'),
-          position: LatLng(22.5448131, 88.3403391),
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('id-1'),
+          position: const LatLng(22.5448131, 88.3403391),
           onTap: () {
             setState(() {
               _markerclicked = true;
             });
           },
-          infoWindow: InfoWindow(
+          infoWindow: const InfoWindow(
             title: 'Name',
             snippet: 'Description',
-          )));
+          ),
+        ),
+      );
 
-      _markers.add(Marker(
-          markerId: MarkerId('id-2'),
-          position: LatLng(22.5459931, 88.3403285),
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('id-2'),
+          position: const LatLng(22.5459931, 88.3403285),
           onTap: () {
             setState(() {
               _markerclicked = true;
             });
           },
-          infoWindow: InfoWindow(
+          infoWindow: const InfoWindow(
             title: 'Name',
             snippet: 'Description',
-          )));
+          ),
+        ),
+      );
     });
   }
 
@@ -125,8 +131,8 @@ class _MapScreenState extends State<MapScreen> {
                                       size: 30,
                                     ),
                             ),
-                            Text("Name"),
-                            Text("Description"),
+                            const Text("Name"),
+                            const Text("Description"),
                           ],
                         ),
                       ),
