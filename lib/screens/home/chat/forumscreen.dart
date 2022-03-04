@@ -160,7 +160,7 @@ class _ForumScreenState extends State<ForumScreen> {
                       backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
                       label: "Post",
                       child: const Icon(
-                        Icons.add, 
+                        Icons.add,
                         color: Colors.white,
                       ),
                       onTap: () {
@@ -173,7 +173,7 @@ class _ForumScreenState extends State<ForumScreen> {
                       }),
                   SpeedDialChild(
                       backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                      label: "Ad",
+                      label: "Open",
                       child: const Icon(Icons.add, color: Colors.white)),
                 ],
               )),
