@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/analytics/analytics.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/linkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
 import 'package:googlesolutionchallenge/screens/home/map/map.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/services/auth.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -357,7 +357,7 @@ class _HomeState extends State<Home> {
                       bloc: bloc,
                     ),
                     const MapScreen(),
-                    const Forum(),
+                    const linkspace(),
                     const Analytics(),
                   ];
                   _index = snapshot.data!.index;
@@ -495,7 +495,7 @@ class _HomeState extends State<Home> {
                           ? screens[0]
                           : snapshot.data == Navigation.map
                               ? screens[1]
-                              : snapshot.data == Navigation.disscussionForm
+                              : snapshot.data == Navigation.linkspace
                                   ? screens[2]
                                   : snapshot.data == Navigation.analytics
                                       ? screens[3]
@@ -538,13 +538,13 @@ class _HomeState extends State<Home> {
                             ),
                             NavigationDestination(
                               icon: Icon(
-                                Icons.chat_bubble_outline_rounded,
+                                Icons.groups_rounded,
                               ),
                               selectedIcon: Icon(
-                                Icons.chat_bubble_rounded,
+                                Icons.groups_rounded,
                                 color: Colors.white,
                               ),
-                              label: 'Chats',
+                              label: 'Linkspace',
                             ),
                             NavigationDestination(
                               icon: Icon(
