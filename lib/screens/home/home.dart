@@ -6,6 +6,7 @@ import 'package:googlesolutionchallenge/screens/home/analytics/analytics.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
 import 'package:googlesolutionchallenge/screens/home/map/map.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
+import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/services/auth.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
@@ -474,7 +475,13 @@ class _HomeState extends State<Home> {
                                   size: 24,
                                   color: Colors.white,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const notify()));
+                                },
                               ),
                             ],
                             backgroundColor:
