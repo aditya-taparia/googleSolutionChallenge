@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/addlinkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 
 class linkspace extends StatefulWidget {
@@ -28,7 +29,7 @@ class _linkspaceState extends State<linkspace> {
       // appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 8, 2, 8),
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -113,7 +114,7 @@ class _linkspaceState extends State<linkspace> {
                                       child: Text(tiledescriptions[index])),
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(right: 10, left: 10),
@@ -140,7 +141,10 @@ class _linkspaceState extends State<linkspace> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const Addlinkspace()));
+        },
         child: Icon(Icons.group_add),
       ),
     );
