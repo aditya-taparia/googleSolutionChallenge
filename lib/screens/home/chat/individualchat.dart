@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
+import 'package:googlesolutionchallenge/services/chat.dart';
 
 class IndividualChat extends StatefulWidget {
   const IndividualChat({Key? key, required this.user}) : super(key: key);
@@ -10,6 +11,9 @@ class IndividualChat extends StatefulWidget {
 }
 
 class _IndividualChatState extends State<IndividualChat> {
+  TextEditingController messageController = TextEditingController();
+  ChatService _chatService = ChatService();
+
   buildMessage(Message message, bool isUser) {
     return Container(
       margin: isUser
@@ -56,6 +60,7 @@ class _IndividualChatState extends State<IndividualChat> {
         ),
         Expanded(
             child: TextField(
+          controller: messageController,
           textCapitalization: TextCapitalization.sentences,
           onChanged: (value) {},
           decoration: const InputDecoration.collapsed(
@@ -63,7 +68,10 @@ class _IndividualChatState extends State<IndividualChat> {
           ),
         )),
         IconButton(
-          onPressed: () {},
+          onPressed: () async {
+            
+            await _chatService.onSendMessage(messageController, ChatId)
+          },
           icon: const Icon(Icons.send),
           iconSize: 30,
           color: Theme.of(context).primaryColor,
