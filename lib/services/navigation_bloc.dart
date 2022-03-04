@@ -5,6 +5,7 @@ enum Navigation {
   dashboard,
   map,
   linkspace,
+  chat,
   analytics,
 }
 
