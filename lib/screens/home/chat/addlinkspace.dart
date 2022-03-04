@@ -7,6 +7,8 @@ class Addlinkspace extends StatefulWidget {
   State<Addlinkspace> createState() => _AddlinkspaceState();
 }
 
+double _slidervalue = 2;
+
 class _AddlinkspaceState extends State<Addlinkspace> {
   @override
   Widget build(BuildContext context) {
@@ -76,6 +78,42 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                       borderRadius: BorderRadius.circular(15),
                     )),
               ),
+              const SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: const [
+                  Text("Radius of visibilty"),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.info_rounded,
+                    color: Colors.grey,
+                    size: 20,
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Slider(
+                value: _slidervalue,
+                onChanged: (value) {
+                  setState(() {
+                    _slidervalue = value;
+                  });
+                },
+                min: 0,
+                max: 50,
+                divisions: 25,
+              ),
+              _slidervalue >= 2
+                  ? Text(_slidervalue.toInt().toString() + "km")
+                  : const Text(
+                      "Must be atleast 2 km",
+                      style: TextStyle(color: Colors.red),
+                    ),
               const SizedBox(
                 height: 15,
               ),
