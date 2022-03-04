@@ -157,7 +157,7 @@ class _ForumScreenState extends State<ForumScreen> {
                 animatedIcon: AnimatedIcons.menu_home,
                 children: [
                   SpeedDialChild(
-                      backgroundColor: Color.fromRGBO(66, 103, 178, 1),
+                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
                       label: "Post",
                       child: const Icon(
                         Icons.add,
@@ -172,7 +172,7 @@ class _ForumScreenState extends State<ForumScreen> {
                         );
                       }),
                   SpeedDialChild(
-                      backgroundColor: Color.fromRGBO(66, 103, 178, 1),
+                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
                       label: "Ad",
                       child: const Icon(Icons.add, color: Colors.white)),
                 ],
