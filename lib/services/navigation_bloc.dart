@@ -4,7 +4,7 @@ import 'package:rxdart/rxdart.dart';
 enum Navigation {
   dashboard,
   map,
-  disscussionForm,
+  linkspace,
   analytics,
 }
 

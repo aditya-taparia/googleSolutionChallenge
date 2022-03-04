@@ -16,27 +16,24 @@ class _ForumState extends State<Forum> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              TabBar(
-                  indicatorColor: Colors.white,
-                  unselectedLabelColor: Colors.white70,
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        'Forum',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    Tab(
-                        child: Text(
-                      'Chats',
-                      style: TextStyle(fontSize: 20),
-                    )),
-                  ])
-            ],
-          ),
+          title: const Text("LinkSpace Name"),
+          // centerTitle: false,
+          bottom: const TabBar(
+              indicatorColor: Colors.white,
+              unselectedLabelColor: Colors.white70,
+              tabs: [
+                Tab(
+                  child: Text(
+                    'Forum',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+                Tab(
+                    child: Text(
+                  'Chats',
+                  style: TextStyle(fontSize: 20),
+                )),
+              ]),
         ),
         body: const TabBarView(
           children: [
