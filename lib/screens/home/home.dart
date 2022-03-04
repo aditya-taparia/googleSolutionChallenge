@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/analytics/analytics.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/chatscreen.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/linkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
 import 'package:googlesolutionchallenge/screens/home/map/map.dart';
@@ -358,6 +359,7 @@ class _HomeState extends State<Home> {
                     ),
                     const MapScreen(),
                     const linkspace(),
+                    const ChatScreen(),
                     const Analytics(),
                   ];
                   _index = snapshot.data!.index;
@@ -491,16 +493,17 @@ class _HomeState extends State<Home> {
                     // Drawer styling from theme is left
                     drawer: _index != 1 ? _drawer : null,
                     body: SafeArea(
-                      child: snapshot.data == Navigation.dashboard
-                          ? screens[0]
-                          : snapshot.data == Navigation.map
-                              ? screens[1]
-                              : snapshot.data == Navigation.linkspace
-                                  ? screens[2]
-                                  : snapshot.data == Navigation.analytics
-                                      ? screens[3]
-                                      : screens[0],
-                    ),
+                        child: snapshot.data == Navigation.dashboard
+                            ? screens[0]
+                            : snapshot.data == Navigation.map
+                                ? screens[1]
+                                : snapshot.data == Navigation.linkspace
+                                    ? screens[2]
+                                    : snapshot.data == Navigation.chat
+                                        ? screens[3]
+                                        : snapshot.data == Navigation.analytics
+                                            ? screens[4]
+                                            : screens[0]),
                     bottomNavigationBar: Theme(
                       data: ThemeData(
                         splashColor: Colors.transparent,
@@ -545,6 +548,16 @@ class _HomeState extends State<Home> {
                                 color: Colors.white,
                               ),
                               label: 'Linkspace',
+                            ),
+                            NavigationDestination(
+                              icon: Icon(
+                                Icons.chat,
+                              ),
+                              selectedIcon: Icon(
+                                Icons.chat,
+                                color: Colors.white,
+                              ),
+                              label: 'Chat',
                             ),
                             NavigationDestination(
                               icon: Icon(
