@@ -145,6 +145,7 @@ class _HomeState extends State<Home> {
                                 splashColor:
                                     const Color.fromRGBO(79, 129, 188, 1),
                                 onTap: () {
+                                  //TODO: Make Points history page
                                   if (kDebugMode) {
                                     print("Points");
                                   }
@@ -372,123 +373,159 @@ class _HomeState extends State<Home> {
 
                   return Scaffold(
                     appBar: _index != 1
-                        ? AppBar(
-                            elevation: 0,
-                            // iconTheme: const IconThemeData(color: Colors.black),
-                            actions: <Widget>[
-                              IconButton(
-                                tooltip: 'QR Code',
-                                icon: const Icon(
-                                  Icons.qr_code_rounded,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => StatefulBuilder(
-                                        builder: (context, setState) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                          "QR Code",
-                                        ),
-                                        actions: <Widget>[
-                                          Column(
-                                            children: [
-                                              qrgenerated == false
-                                                  ? const Image(
-                                                      fit: BoxFit.cover,
-                                                      image: AssetImage(
-                                                          'assets/qr_code.jpg'),
-                                                    )
-                                                  : SizedBox(
-                                                      height: 200,
-                                                      width: 200,
-                                                      child: QrImage(
-                                                        data:
-                                                            'eb3WylJkoTRbKqShhaqMfLs9Lzh1',
-                                                      ),
-                                                    ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
+                        ? _index != 0
+                            ? AppBar(
+                                elevation: 0,
+                                // iconTheme: const IconThemeData(color: Colors.black),
+                                actions: <Widget>[
+                                  IconButton(
+                                    tooltip: 'QR Code',
+                                    icon: const Icon(
+                                      Icons.qr_code_rounded,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => StatefulBuilder(
+                                            builder: (context, setState) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              "QR Code",
+                                            ),
+                                            actions: <Widget>[
+                                              Column(
                                                 children: [
-                                                  OutlinedButton(
-                                                    child: Text(
-                                                      !qrgenerated
-                                                          ? "Generate"
-                                                          : "Generated",
-                                                      style: TextStyle(
-                                                        color: !qrgenerated
-                                                            ? Colors.blueGrey
-                                                            : Colors
-                                                                .blueGrey[200],
+                                                  qrgenerated == false
+                                                      ? const Image(
+                                                          fit: BoxFit.cover,
+                                                          image: AssetImage(
+                                                              'assets/qr_code.jpg'),
+                                                        )
+                                                      : SizedBox(
+                                                          height: 200,
+                                                          width: 200,
+                                                          child: QrImage(
+                                                            data:
+                                                                'eb3WylJkoTRbKqShhaqMfLs9Lzh1',
+                                                          ),
+                                                        ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      OutlinedButton(
+                                                        child: Text(
+                                                          !qrgenerated
+                                                              ? "Generate"
+                                                              : "Generated",
+                                                          style: TextStyle(
+                                                            color: !qrgenerated
+                                                                ? Colors
+                                                                    .blueGrey
+                                                                : Colors.blueGrey[
+                                                                    200],
+                                                          ),
+                                                        ),
+                                                        onPressed:
+                                                            qrgenerated == false
+                                                                ? () {
+                                                                    setState(
+                                                                        () {
+                                                                      qrgenerated =
+                                                                          true;
+                                                                    });
+                                                                    if (kDebugMode) {
+                                                                      print(
+                                                                          qrgenerated);
+                                                                    }
+                                                                  }
+                                                                : null,
                                                       ),
-                                                    ),
-                                                    onPressed:
-                                                        qrgenerated == false
-                                                            ? () {
-                                                                setState(() {
-                                                                  qrgenerated =
-                                                                      true;
-                                                                });
-                                                                if (kDebugMode) {
-                                                                  print(
-                                                                      qrgenerated);
-                                                                }
-                                                              }
-                                                            : null,
-                                                  ),
-                                                  ElevatedButton(
-                                                    child: Row(
-                                                      children: const [
-                                                        Icon(
-                                                          Icons
-                                                              .qr_code_scanner_rounded,
-                                                          color: Colors.white,
+                                                      ElevatedButton(
+                                                        child: Row(
+                                                          children: const [
+                                                            Icon(
+                                                              Icons
+                                                                  .qr_code_scanner_rounded,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Text("Scan"),
+                                                          ],
                                                         ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text("Scan"),
-                                                      ],
-                                                    ),
-                                                    onPressed: () {
-                                                      // qrscan();
-                                                    },
+                                                        onPressed: () {
+                                                          // qrscan();
+                                                        },
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
                                             ],
-                                          ),
-                                        ],
-                                        actionsAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                            actionsAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                          );
+                                        }),
                                       );
-                                    }),
-                                  );
-                                },
-                              ),
-                              IconButton(
-                                tooltip: 'Notifications',
-                                icon: const Icon(
-                                  Icons.notifications_rounded,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Notify()));
-                                },
-                              ),
-                            ],
-                            backgroundColor:
-                                const Color.fromRGBO(66, 103, 178, 1),
-                          )
+                                    },
+                                  ),
+                                  IconButton(
+                                    tooltip: 'Notifications',
+                                    icon: const Icon(
+                                      Icons.notifications_rounded,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Notify()));
+                                    },
+                                  ),
+                                ],
+                                backgroundColor:
+                                    const Color.fromRGBO(66, 103, 178, 1),
+                              )
+                            : AppBar(
+                                elevation: 0,
+                                iconTheme:
+                                    const IconThemeData(color: Colors.black),
+                                actions: <Widget>[
+                                  IconButton(
+                                    tooltip: 'QR Code',
+                                    icon: const Icon(
+                                      Icons.qr_code_rounded,
+                                      size: 24,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    tooltip: 'Notifications',
+                                    icon: const Icon(
+                                      Icons.notifications_rounded,
+                                      size: 24,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Notify()));
+                                    },
+                                  ),
+                                ],
+                                backgroundColor: Colors.blue[50],
+                              )
                         : null,
                     // Drawer styling from theme is left
                     drawer: _index != 1 ? _drawer : null,

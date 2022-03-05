@@ -73,6 +73,9 @@ dependencies:
   qr_flutter: ^4.0.0
   flutter_barcode_scanner: ^2.0.0
 
+  # Dotted Border
+  dotted_border: ^2.0.0+2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
