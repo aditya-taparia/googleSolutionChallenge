@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:googlesolutionchallenge/screens/home/linkspace/addlinkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
+import 'package:googlesolutionchallenge/screens/utils/randomcolor.dart';
 import 'package:lottie/lottie.dart';
 
 class Linkspace extends StatefulWidget {
@@ -11,33 +13,75 @@ class Linkspace extends StatefulWidget {
 }
 
 bool _isspaceowned = true;
+List<bool> isClicked = [false, false, false, false];
+String join = "Join this space";
 
 List<String> tiletitles = [
   "Indian Institute Of Information Technology",
-  "Google Solutions Challenge Workspace"
+  "Google Solutions Challenge Workspace",
+  "Google Solutions Challenge Workspace",
+  "Google Solutions Challenge Workspace",
 ];
 List<String> tiledescriptions = [
   "A linkspace dedicated to study flutter and develop futuristic apps for the betterment of the world",
-  "A linkspace comprised of students from IIITK participating in GSC 2022"
+  "A linkspace comprised of students from IIITK participating in GSC 2022",
+  "A linkspace comprised of students from IIITK participating in GSC 2022",
+  "A linkspace comprised of students from IIITK participating in GSC 2022",
 ];
-List<String> tilelocation = ["Valavoor, Kottayam", "Valavoor, Kottayam"];
-List<int> tilememeber = [546, 4];
+
+List<String> tilelocation = [
+  "Valavoor, Kottayam",
+  "Valavoor, Kottayam",
+  "Valavoor, Kottayam",
+  "Valavoor, Kottayam",
+];
+List<int> tilememeber = [546, 4, 300, 250];
 
 class _LinkspaceState extends State<Linkspace> {
   @override
+  late bool view = false;
+
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(),
       body: tiletitles.isNotEmpty
           ? SingleChildScrollView(
+              physics: ScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Linkspace",
-                      style: TextStyle(fontSize: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          child: Text(
+                            "Linkspace",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text('Show all Spaces:'),
+                            Switch(
+                              value: view,
+                              onChanged: (bool active) {
+                                setState(() {
+                                  view = active;
+                                  _isspaceowned = !_isspaceowned;
+                                });
+                              },
+                              activeColor:
+                                  const Color.fromRGBO(66, 103, 178, 1),
+                              inactiveTrackColor: Colors.grey,
+                              inactiveThumbColor: Colors.grey,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     _isspaceowned
                         ? const Text(
@@ -52,9 +96,12 @@ class _LinkspaceState extends State<Linkspace> {
                       height: 10,
                     ),
                     ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
                         itemCount: tiletitles.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
+                          Color color = Randomcol().getcolor();
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -63,77 +110,176 @@ class _LinkspaceState extends State<Linkspace> {
                                       builder: (context) => const Forum()));
                             },
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
+                              padding: const EdgeInsets.all(10.0),
                               child: Container(
-                                height: 180,
-                                decoration: const BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    borderRadius: BorderRadius.only(
+                                height: 240,
+                                constraints: BoxConstraints(
+                                  maxHeight: double.infinity,
+                                ),
+                                decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: const BorderRadius.all(
                                         // topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(30))),
+                                        Radius.circular(15))),
                                 padding: const EdgeInsets.all(4.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: const [
-                                        Icon(
-                                          Icons.circle,
-                                          color: Colors.green,
-                                          size: 10,
-                                        ),
-                                        Text("Active")
-                                      ],
-                                    ),
-                                    ListTile(
-                                      leading: Column(
-                                        children: [
-                                          const Icon(Icons.group),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Container(
-                                            width: 45,
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: const BoxDecoration(
-                                                color: Color.fromRGBO(
-                                                    66, 103, 178, 1),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10))),
-                                            child: Center(
-                                              child: Text(
-                                                tilememeber[index].toString(),
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      title: Text(tiletitles[index]),
-                                      subtitle: SingleChildScrollView(
-                                        child: Text(tiledescriptions[index]),
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 10, left: 10),
-                                      child: Row(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(tilelocation[index]),
-                                          const Icon(
-                                            Icons.person_add,
-                                            color:
-                                                Color.fromRGBO(66, 103, 178, 1),
-                                          )
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 92, 216, 96),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Row(
+                                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: const Text(
+                                                    "Active",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 8,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Row(
+                                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  tilelocation[index],
+                                                  style: TextStyle(
+                                                    color: color,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    ),
-                                  ],
+                                      ListTile(
+                                        leading: Column(
+                                          children: [
+                                            Container(
+                                              width: 60,
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8, 8, 8, 7),
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10))),
+                                              child: Column(
+                                                children: [
+                                                  const Icon(Icons.group),
+                                                  Text(
+                                                    tilememeber[index]
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        color: color,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        title: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            tiletitles[(index)],
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 19,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        subtitle: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(tiledescriptions[index],
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13)),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.white,
+                                            onPrimary: Colors.white,
+                                            // shadowColor: Colors.red,
+                                            elevation: 0,
+                                          ),
+                                          onPressed: () {},
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: !isClicked[index]
+                                                    ? Icon(
+                                                        Icons.group,
+                                                        color: color,
+                                                      )
+                                                    : Icon(
+                                                        Icons.cancel,
+                                                        color: color,
+                                                      ),
+                                              ),
+                                              Text(
+                                                join,
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      GoogleFonts.varelaRound()
+                                                          .fontFamily,
+                                                  color: color,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
