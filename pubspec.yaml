@@ -75,6 +75,13 @@ dependencies:
 
   # Dotted Border
   dotted_border: ^2.0.0+2
+  
+  # OTP 
+  sms_autofill: ^2.2.0
+  pin_code_fields: ^7.3.0
+  pin_entry_text_field: ^0.1.4
+  pinput: ^1.2.2
+  syncfusion_flutter_charts: ^19.4.54
 
 dev_dependencies:
   flutter_test:
