@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "chat!['recieverName']",
+                                      chat!['recieverName'],
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),

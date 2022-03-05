@@ -18,18 +18,10 @@ class ChatService {
     await _firestore.collection('Userdata').doc(sender['recieverId']).set({
       'chat-id-list': [reciever]
     }, SetOptions(merge: true));
-    // .update({
-    //   'chat-id-list': FieldValue.arrayUnion([reciever])
-    // });
 
     await _firestore.collection('Userdata').doc(reciever['recieverId']).set({
       'chat-id-list': [sender]
     }, SetOptions(merge: true));
-
-    // await _firestore.collection('Userdata').doc(reciever['recieverId'])
-    // .update({
-    //   'chat-id-list': FieldValue.arrayUnion([sender])
-    // });
   }
 
   String chatRoomId(String user1, String user2) {
