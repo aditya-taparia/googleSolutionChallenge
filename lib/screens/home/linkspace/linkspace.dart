@@ -4,6 +4,7 @@ import 'package:googlesolutionchallenge/screens/home/linkspace/addlinkspace.dart
 import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 import 'package:googlesolutionchallenge/screens/utils/randomcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Linkspace extends StatefulWidget {
   const Linkspace({Key? key}) : super(key: key);
@@ -13,8 +14,8 @@ class Linkspace extends StatefulWidget {
 }
 
 bool _isspaceowned = true;
-List<bool> isClicked = [false, false, false, false];
-String join = "Join this space";
+
+late Color prevcolor;
 
 List<String> tiletitles = [
   "Indian Institute Of Information Technology",
@@ -46,9 +47,9 @@ class _LinkspaceState extends State<Linkspace> {
       // appBar: AppBar(),
       body: tiletitles.isNotEmpty
           ? SingleChildScrollView(
-              physics: ScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +58,7 @@ class _LinkspaceState extends State<Linkspace> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Padding(
-                          padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          padding: EdgeInsets.only(left: 8),
                           child: Text(
                             "Linkspace",
                             style: TextStyle(fontSize: 20),
@@ -65,7 +66,9 @@ class _LinkspaceState extends State<Linkspace> {
                         ),
                         Row(
                           children: [
-                            Text('Show all Spaces:'),
+                            _isspaceowned
+                                ? const Text('Show Nearby Spaces')
+                                : const Text('Show Joined Spaces'),
                             Switch(
                               value: view,
                               onChanged: (bool active) {
@@ -83,15 +86,20 @@ class _LinkspaceState extends State<Linkspace> {
                         ),
                       ],
                     ),
-                    _isspaceowned
-                        ? const Text(
-                            "Check out what happening in your space",
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                          )
-                        : const Text(
-                            "Explore and find your ideal space",
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: _isspaceowned
+                          ? const Text(
+                              "Check out what happening in your space",
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey),
+                            )
+                          : const Text(
+                              "Explore and find your ideal space",
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -102,6 +110,15 @@ class _LinkspaceState extends State<Linkspace> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           Color color = Randomcol().getcolor();
+                          if (index == 0) {
+                            prevcolor = color;
+                          } else {
+                            if (prevcolor == color) {
+                              color = setnewcolor(color, prevcolor);
+                            }
+                            prevcolor = color;
+                          }
+
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -113,7 +130,7 @@ class _LinkspaceState extends State<Linkspace> {
                               padding: const EdgeInsets.all(10.0),
                               child: Container(
                                 height: 240,
-                                constraints: BoxConstraints(
+                                constraints: const BoxConstraints(
                                   maxHeight: double.infinity,
                                 ),
                                 decoration: BoxDecoration(
@@ -143,11 +160,10 @@ class _LinkspaceState extends State<Linkspace> {
                                             ),
                                             child: Row(
                                               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
+                                              children: const [
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  child: const Text(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: Text(
                                                     "Active",
                                                     style: TextStyle(
                                                       color: Colors.white,
@@ -234,50 +250,171 @@ class _LinkspaceState extends State<Linkspace> {
                                         ),
                                       ),
                                       const Spacer(),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.6,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.white,
-                                            onPrimary: Colors.white,
-                                            // shadowColor: Colors.red,
-                                            elevation: 0,
-                                          ),
-                                          onPressed: () {},
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: !isClicked[index]
-                                                    ? Icon(
-                                                        Icons.group,
-                                                        color: color,
-                                                      )
-                                                    : Icon(
-                                                        Icons.cancel,
-                                                        color: color,
-                                                      ),
-                                              ),
-                                              Text(
-                                                join,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      GoogleFonts.varelaRound()
-                                                          .fontFamily,
-                                                  color: color,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Container(
+                                            child: Row(
+                                              children: const [
+                                                Icon(
+                                                  Icons.chat,
+                                                  color: Colors.white,
                                                 ),
-                                              ),
-                                            ],
+                                                Icon(
+                                                  Icons.forum,
+                                                  color: Colors.white,
+                                                ),
+                                                Icon(
+                                                  Icons.handshake,
+                                                  color: Colors.white,
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ),
+                                          SizedBox(
+                                            width: 150,
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Colors.white,
+                                                  onPrimary: Colors.white,
+                                                  // shadowColor: Colors.red,
+                                                  elevation: 0,
+                                                ),
+                                                onPressed: _isspaceowned
+                                                    ? () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        const Forum()));
+                                                      }
+                                                    : () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              AlertDialog(
+                                                            title: const Text(
+                                                              "Send Request",
+                                                            ),
+                                                            content: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                const Text(
+                                                                  "Purpose of joining the LinkSpace?",
+                                                                ),
+                                                                TextFormField(
+                                                                  autofocus:
+                                                                      false,
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .text,
+                                                                  onSaved:
+                                                                      (value) {},
+                                                                  textInputAction:
+                                                                      TextInputAction
+                                                                          .done,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    fillColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    filled:
+                                                                        true,
+                                                                    prefixIcon:
+                                                                        Icon(Icons
+                                                                            .group),
+                                                                    contentPadding:
+                                                                        EdgeInsets.fromLTRB(
+                                                                            20,
+                                                                            15,
+                                                                            20,
+                                                                            15),
+                                                                    hintText:
+                                                                        "Answer",
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            actions: <Widget>[
+                                                              OutlinedButton(
+                                                                child:
+                                                                    const Text(
+                                                                        "Send"),
+                                                                onPressed:
+                                                                    () {},
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              ElevatedButton(
+                                                                child:
+                                                                    const Text(
+                                                                        "Exit"),
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                              ),
+                                                            ],
+                                                            actionsAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                          ),
+                                                        );
+                                                      },
+                                                child: _isspaceowned
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.check,
+                                                            color: color,
+                                                          ),
+                                                          Text(
+                                                            "Joined",
+                                                            style: TextStyle(
+                                                              fontFamily: GoogleFonts
+                                                                      .varelaRound()
+                                                                  .fontFamily,
+                                                              color: color,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 20,
+                                                          )
+                                                        ],
+                                                      )
+                                                    : Text(
+                                                        "Join this space",
+                                                        style: TextStyle(
+                                                          fontFamily: GoogleFonts
+                                                                  .varelaRound()
+                                                              .fontFamily,
+                                                          color: color,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      )),
+                                          ),
+                                          _isspaceowned
+                                              ? const Icon(
+                                                  Icons.notifications,
+                                                  color: Colors.white,
+                                                )
+                                              : Container()
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ),
@@ -330,4 +467,12 @@ class _LinkspaceState extends State<Linkspace> {
       ),
     );
   }
+}
+
+Color setnewcolor(Color color, Color prevcolor) {
+  color = Randomcol().getcolor();
+  if (color == prevcolor) {
+    setnewcolor(color, prevcolor);
+  }
+  return color;
 }
