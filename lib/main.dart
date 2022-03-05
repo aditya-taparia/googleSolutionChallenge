@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -202,16 +203,21 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
-    if (_isLoading) {
-      return const Loading();
+    if (user == null) {
+      return isviewed != 0 ? const Start() : const Login();
     } else {
-      if (user == null) {
-        return isviewed != 0 ? const Start() : const Login();
-        //return isviewed != 0 ? const Start() : const Home();
-      } else {
-        // return const TestConnection();
-        return isstep != 0 ? MyStepper(user: user) : const Home();
-      }
+      FirebaseFirestore.instance
+          .collection('Userdata')
+          .doc(user.userid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          return const Home();
+        } else {
+          return const MyStepper();
+        }
+      });
     }
+    return const Loading();
   }
 }
