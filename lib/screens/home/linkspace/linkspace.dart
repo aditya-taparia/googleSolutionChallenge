@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/addlinkspace.dart';
+import 'package:googlesolutionchallenge/screens/home/linkspace/addlinkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 import 'package:lottie/lottie.dart';
 
-class linkspace extends StatefulWidget {
-  const linkspace({Key? key}) : super(key: key);
+class Linkspace extends StatefulWidget {
+  const Linkspace({Key? key}) : super(key: key);
 
   @override
-  State<linkspace> createState() => _linkspaceState();
+  State<Linkspace> createState() => _LinkspaceState();
 }
 
 bool _isspaceowned = true;
@@ -23,7 +23,7 @@ List<String> tiledescriptions = [
 List<String> tilelocation = ["Valavoor, Kottayam", "Valavoor, Kottayam"];
 List<int> tilememeber = [546, 4];
 
-class _linkspaceState extends State<linkspace> {
+class _LinkspaceState extends State<Linkspace> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,9 +113,7 @@ class _linkspaceState extends State<linkspace> {
                                       ),
                                       title: Text(tiletitles[index]),
                                       subtitle: SingleChildScrollView(
-                                        child: Container(
-                                            child:
-                                                Text(tiledescriptions[index])),
+                                        child: Text(tiledescriptions[index]),
                                       ),
                                     ),
                                     const Spacer(),
@@ -155,7 +153,7 @@ class _linkspaceState extends State<linkspace> {
                     children: const [
                       Text("LinkSpace",
                           style: TextStyle(
-                              color: const Color.fromRGBO(66, 103, 178, 1),
+                              color: Color.fromRGBO(66, 103, 178, 1),
                               fontSize: 25)),
                       SizedBox(
                         width: 5,
@@ -169,7 +167,7 @@ class _linkspaceState extends State<linkspace> {
                   ),
                 ),
                 Lottie.asset('assets/team.json'),
-                Container(
+                SizedBox(
                   width: 300,
                   child: ElevatedButton(
                       onPressed: () {},
@@ -182,7 +180,7 @@ class _linkspaceState extends State<linkspace> {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const Addlinkspace()));
         },
-        child: Icon(Icons.group_add),
+        child: const Icon(Icons.group_add),
       ),
     );
   }

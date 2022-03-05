@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/forumscreen.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/linkspacechat.dart';
+import 'package:googlesolutionchallenge/screens/home/linkspace/linkspacechat.dart';
 
 class Forum extends StatefulWidget {
   const Forum({Key? key}) : super(key: key);

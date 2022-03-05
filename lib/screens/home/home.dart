@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/analytics/analytics.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/chatscreen.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/linkspace.dart';
+import 'package:googlesolutionchallenge/screens/home/linkspace/linkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
 import 'package:googlesolutionchallenge/screens/home/map/map.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
@@ -358,7 +358,7 @@ class _HomeState extends State<Home> {
                       bloc: bloc,
                     ),
                     const MapScreen(),
-                    const linkspace(),
+                    const Linkspace(),
                     const ChatScreen(),
                     const Analytics(),
                   ];
@@ -482,7 +482,7 @@ class _HomeState extends State<Home> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const notify()));
+                                              const Notify()));
                                 },
                               ),
                             ],

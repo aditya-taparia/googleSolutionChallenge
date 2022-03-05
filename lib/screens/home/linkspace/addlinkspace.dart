@@ -44,9 +44,8 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                       decoration: const InputDecoration(
                         fillColor: Colors.white,
                         filled: true,
-                        prefixIcon: const Icon(Icons.group),
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                        prefixIcon: Icon(Icons.group),
+                        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                         hintText: "Type Linkspace name ...",
                       ),
                     ),
