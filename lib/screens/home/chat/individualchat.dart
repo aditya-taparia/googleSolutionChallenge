@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
-import 'package:googlesolutionchallenge/services/chat.dart';
-import 'package:provider/provider.dart';
 
 class IndividualChat extends StatefulWidget {
-  const IndividualChat({Key? key, required this.user, required this.curruser})
-      : super(key: key);
-  final Map user;
-  final Map curruser;
+  const IndividualChat({Key? key, required this.user}) : super(key: key);
+  final User user;
 
   @override
   _IndividualChatState createState() => _IndividualChatState();
 }
 
 class _IndividualChatState extends State<IndividualChat> {
-  TextEditingController messageController = TextEditingController();
-  ChatService _chatService = ChatService();
-
   buildMessage(Message message, bool isUser) {
     return Container(
       margin: isUser
@@ -50,7 +42,7 @@ class _IndividualChatState extends State<IndividualChat> {
     );
   }
 
-  buildMessageComposer(String chatId) {
+  buildMessageComposer() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       height: 70,
@@ -64,7 +56,6 @@ class _IndividualChatState extends State<IndividualChat> {
         ),
         Expanded(
             child: TextField(
-          controller: messageController,
           textCapitalization: TextCapitalization.sentences,
           onChanged: (value) {},
           decoration: const InputDecoration.collapsed(
@@ -72,9 +63,7 @@ class _IndividualChatState extends State<IndividualChat> {
           ),
         )),
         IconButton(
-          onPressed: () {
-            _chatService.onSendMessage(messageController, chatId);
-          },
+          onPressed: () {},
           icon: const Icon(Icons.send),
           iconSize: 30,
           color: Theme.of(context).primaryColor,
@@ -85,15 +74,10 @@ class _IndividualChatState extends State<IndividualChat> {
 
   @override
   Widget build(BuildContext context) {
-    String chatId = _chatService.chatRoomId(
-        widget.user['recieverId'], widget.curruser['recieverId']);
-
-    _chatService.addChatUser(widget.curruser, widget.user);
-
     return Scaffold(
       backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
       appBar: AppBar(
-        title: Text(widget.user['recieverName']),
+        title: Text(widget.user.name),
         elevation: 0,
       ),
       body: GestureDetector(
@@ -117,14 +101,13 @@ class _IndividualChatState extends State<IndividualChat> {
                       itemCount: messages.length,
                       itemBuilder: (BuildContext context, int index) {
                         final Message message = messages[index];
-                        final bool isUser =
-                            message.sender.id == widget.curruser['recieverId'];
+                        final bool isUser = message.sender.id == currentUser.id;
                         return buildMessage(message, isUser);
                       }),
                 ),
               ),
             ),
-            buildMessageComposer(chatId),
+            buildMessageComposer(),
           ],
         ),
       ),

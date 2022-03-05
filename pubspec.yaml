@@ -73,6 +73,9 @@ dependencies:
   qr_flutter: ^4.0.0
   flutter_barcode_scanner: ^2.0.0
 
+  # Dotted Border
+  dotted_border: ^2.0.0+2
+  
   # OTP 
   sms_autofill: ^2.2.0
   pin_code_fields: ^7.3.0

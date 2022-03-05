@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
+import 'package:googlesolutionchallenge/widgets/loading.dart';
+import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
   final NavigationBloc bloc;
@@ -14,8 +19,198 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    final user = Provider.of<Users?>(context);
+    final Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance
+        .collection('Userdata')
+        .doc(user!.userid)
+        .snapshots();
+    return StreamBuilder<DocumentSnapshot>(
+        stream: _userStream,
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
+          if (userSnapshot.connectionState == ConnectionState.waiting) {
+            return const Loading();
+          }
+          if (userSnapshot.hasData) {
+            return Stack(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  /* decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.blue[50]!,
+                        const Color.fromRGBO(66, 103, 178, 1)
+                      ],                      
+                    ),
+                  ), */
+                  color: Colors.blue[50],
+                  padding: const EdgeInsets.all(32),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Hello ${userSnapshot.data!['name']}',
+                            style: const TextStyle(
+                              fontSize: 28,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            '${userSnapshot.data!['generalLocation']}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  left: 10,
+                  right: 0,
+                  top: MediaQuery.of(context).size.height * 0.17,
+                  child: SizedBox(
+                    height: 200,
+                    child: ListView(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        Card(
+                          elevation: 2.5,
+                          margin: const EdgeInsets.all(8.0),
+                          color: Colors.orange[100],
+                          child: const SizedBox(
+                            width: 200.0,
+                            height: 150.0,
+                            child: Text('Text'),
+                          ),
+                        ),
+                        Card(
+                          elevation: 2.5,
+                          margin: const EdgeInsets.all(8.0),
+                          color: Colors.green[100],
+                          child: const SizedBox(
+                            width: 200.0,
+                            height: 150.0,
+                            child: Text('Text'),
+                          ),
+                        ),
+                        Card(
+                          elevation: 2.5,
+                          margin: const EdgeInsets.all(8.0),
+                          color: Colors.purple[100],
+                          child: const SizedBox(
+                            width: 200.0,
+                            height: 150.0,
+                            child: Text('Text'),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DottedBorder(
+                            borderType: BorderType.RRect,
+                            radius: const Radius.circular(8),
+                            strokeWidth: 1,
+                            dashPattern: const [4, 4],
+                            padding: const EdgeInsets.all(8.0),
+                            color: Colors.black,
+                            child: SizedBox(
+                              width: 150.0,
+                              height: 150.0,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      Icons.add_rounded,
+                                      size: 24,
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'See More',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox.expand(
+                  child: DraggableScrollableSheet(
+                    initialChildSize: 0.4,
+                    minChildSize: 0.4,
+                    maxChildSize: 0.8,
+                    expand: true,
+                    snap: true,
+                    snapSizes: const [0.8],
+                    builder: ((context, _scrollController) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                color: Colors.black.withOpacity(0.2)),
+                          ],
+                        ),
+                        child: SingleChildScrollView(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          controller: _scrollController,
+                          child: Column(
+                            children: [
+                              Text('Welcome ${userSnapshot.data!['name']}',
+                                  style: const TextStyle(fontSize: 20)),
+                              Text('${userSnapshot.data!['email']}',
+                                  style: const TextStyle(fontSize: 20)),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            );
+          }
+          return const Loading();
+        });
+
+    /* SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -24,8 +219,9 @@ class _DashboardState extends State<Dashboard> {
               Container(
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(20),
-                      bottomLeft: Radius.circular(20)),
+                    bottomRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                  ),
                   color: Color.fromRGBO(66, 103, 178, 1),
                 ),
                 height: 130,
@@ -265,6 +461,6 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
-    );
+    ); */
   }
 }
