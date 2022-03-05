@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/analytics/analytics.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/linkspace.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/chatscreen.dart';
+import 'package:googlesolutionchallenge/screens/home/linkspace/linkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
 import 'package:googlesolutionchallenge/screens/home/map/map.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
@@ -357,7 +358,8 @@ class _HomeState extends State<Home> {
                       bloc: bloc,
                     ),
                     const MapScreen(),
-                    const linkspace(),
+                    const Linkspace(),
+                    const ChatScreen(),
                     const Analytics(),
                   ];
                   _index = snapshot.data!.index;
@@ -480,7 +482,7 @@ class _HomeState extends State<Home> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const notify()));
+                                              const Notify()));
                                 },
                               ),
                             ],
@@ -490,17 +492,17 @@ class _HomeState extends State<Home> {
                         : null,
                     // Drawer styling from theme is left
                     drawer: _index != 1 ? _drawer : null,
-                    body: SafeArea(
-                      child: snapshot.data == Navigation.dashboard
-                          ? screens[0]
-                          : snapshot.data == Navigation.map
-                              ? screens[1]
-                              : snapshot.data == Navigation.linkspace
-                                  ? screens[2]
-                                  : snapshot.data == Navigation.analytics
-                                      ? screens[3]
-                                      : screens[0],
-                    ),
+                    body: snapshot.data == Navigation.dashboard
+                        ? screens[0]
+                        : snapshot.data == Navigation.map
+                            ? screens[1]
+                            : snapshot.data == Navigation.linkspace
+                                ? screens[2]
+                                : snapshot.data == Navigation.chat
+                                    ? screens[3]
+                                    : snapshot.data == Navigation.analytics
+                                        ? screens[4]
+                                        : screens[0],
                     bottomNavigationBar: Theme(
                       data: ThemeData(
                         splashColor: Colors.transparent,
@@ -538,13 +540,23 @@ class _HomeState extends State<Home> {
                             ),
                             NavigationDestination(
                               icon: Icon(
-                                Icons.groups_rounded,
+                                Icons.groups_outlined,
                               ),
                               selectedIcon: Icon(
                                 Icons.groups_rounded,
                                 color: Colors.white,
                               ),
                               label: 'Linkspace',
+                            ),
+                            NavigationDestination(
+                              icon: Icon(
+                                Icons.chat_bubble_outline_rounded,
+                              ),
+                              selectedIcon: Icon(
+                                Icons.chat_bubble_rounded,
+                                color: Colors.white,
+                              ),
+                              label: 'Chat',
                             ),
                             NavigationDestination(
                               icon: Icon(

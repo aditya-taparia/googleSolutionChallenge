@@ -5,11 +5,11 @@ import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/services/userdatabase.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyStepper extends StatefulWidget {
-  final Users user;
-  const MyStepper({Key? key, required this.user}) : super(key: key);
+  const MyStepper({Key? key}) : super(key: key);
 
   @override
   _MyStepperState createState() => _MyStepperState();
@@ -37,6 +37,7 @@ class _MyStepperState extends State<MyStepper> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<Users?>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
@@ -88,7 +89,7 @@ class _MyStepperState extends State<MyStepper> {
               ),
             ),
             switchcase(current, continueStep, previousStep, context,
-                nameController, emailController, widget.user.userid)
+                nameController, emailController, user!.userid)
           ]),
         ),
       ),

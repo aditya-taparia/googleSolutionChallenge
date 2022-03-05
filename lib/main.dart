@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -204,14 +205,27 @@ class _WrapperState extends State<Wrapper> {
     final user = Provider.of<Users?>(context);
     if (_isLoading) {
       return const Loading();
+    }
+    if (user == null) {
+      return isviewed != 0 ? const Start() : const Login();
     } else {
-      if (user == null) {
-        return isviewed != 0 ? const Start() : const Login();
-        //return isviewed != 0 ? const Start() : const Home();
-      } else {
-        // return const TestConnection();
-        return isstep != 0 ? MyStepper(user: user) : const Home();
-      }
+      final Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance
+          .collection('Userdata')
+          .doc(user.userid)
+          .snapshots();
+      return StreamBuilder<DocumentSnapshot>(
+        stream: _usersStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Loading();
+          }
+          if (snapshot.hasError) {
+            //TODO: Make a error page
+            return const Loading();
+          }
+          return snapshot.data!.exists ? const Home() : const MyStepper();
+        },
+      );
     }
   }
 }
