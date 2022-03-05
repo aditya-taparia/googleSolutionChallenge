@@ -19,6 +19,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Call firebase from device
   await Firebase.initializeApp();
+  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
 
   // Shared Preference
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -208,7 +209,7 @@ class _WrapperState extends State<Wrapper> {
         return isviewed != 0 ? const Start() : const Login();
         //return isviewed != 0 ? const Start() : const Home();
       } else {
-        // return MyStepper(user: user);
+        // return const TestConnection();
         return isstep != 0 ? MyStepper(user: user) : const Home();
       }
     }

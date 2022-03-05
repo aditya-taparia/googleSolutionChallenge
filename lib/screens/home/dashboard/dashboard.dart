@@ -3,7 +3,10 @@ import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 
 class Dashboard extends StatefulWidget {
   final NavigationBloc bloc;
-  const Dashboard({Key? key, required this.bloc}) : super(key: key);
+  const Dashboard({
+    Key? key,
+    required this.bloc,
+  }) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -33,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     Text(
-                      "Hi Som Sagar!",
+                      "Hi Aditya",
                       style: TextStyle(fontSize: 26, color: Colors.white),
                     ),
                     SizedBox(height: 10),

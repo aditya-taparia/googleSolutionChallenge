@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
 import 'package:googlesolutionchallenge/services/chat.dart';
+import 'package:provider/provider.dart';
 
 class IndividualChat extends StatefulWidget {
-  const IndividualChat({Key? key, required this.user}) : super(key: key);
-  final User user;
+  const IndividualChat({Key? key, required this.user, required this.curruser})
+      : super(key: key);
+  final Map user;
+  final Map curruser;
 
   @override
   _IndividualChatState createState() => _IndividualChatState();
@@ -46,7 +50,7 @@ class _IndividualChatState extends State<IndividualChat> {
     );
   }
 
-  buildMessageComposer() {
+  buildMessageComposer(String chatId) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       height: 70,
@@ -68,9 +72,8 @@ class _IndividualChatState extends State<IndividualChat> {
           ),
         )),
         IconButton(
-          onPressed: () async {
-            
-            await _chatService.onSendMessage(messageController, ChatId)
+          onPressed: () {
+            _chatService.onSendMessage(messageController, chatId);
           },
           icon: const Icon(Icons.send),
           iconSize: 30,
@@ -82,10 +85,15 @@ class _IndividualChatState extends State<IndividualChat> {
 
   @override
   Widget build(BuildContext context) {
+    String chatId = _chatService.chatRoomId(
+        widget.user['recieverId'], widget.curruser['recieverId']);
+
+    _chatService.addChatUser(widget.curruser, widget.user);
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
       appBar: AppBar(
-        title: Text(widget.user.name),
+        title: Text(widget.user['recieverName']),
         elevation: 0,
       ),
       body: GestureDetector(
@@ -109,13 +117,14 @@ class _IndividualChatState extends State<IndividualChat> {
                       itemCount: messages.length,
                       itemBuilder: (BuildContext context, int index) {
                         final Message message = messages[index];
-                        final bool isUser = message.sender.id == currentUser.id;
+                        final bool isUser =
+                            message.sender.id == widget.curruser['recieverId'];
                         return buildMessage(message, isUser);
                       }),
                 ),
               ),
             ),
-            buildMessageComposer(),
+            buildMessageComposer(chatId),
           ],
         ),
       ),

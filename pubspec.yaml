@@ -66,6 +66,9 @@ dependencies:
   google_maps_flutter: ^2.1.1
   geolocator: ^8.2.0
 
+  #forumfloatingaction
+  flutter_speed_dial: ^5.0.0+1
+
   #qrcode
   qr_flutter: ^4.0.0
   flutter_barcode_scanner: ^2.0.0

@@ -12,23 +12,32 @@ class ChatService {
     });
   }
 
-  void addChatUser(String uid1, String uid2) async {
-    await _firestore.collection('Userdata').doc(uid1).update({
-      'chats': FieldValue.arrayUnion([uid2])
-    });
+  void addChatUser(Map sender, Map reciever) async {
+    print(sender['recieverId'] + "1st print");
+    print(reciever['recieverId'] + "2st print");
+    await _firestore.collection('Userdata').doc(sender['recieverId']).set({
+      'chat-id-list': [reciever]
+    }, SetOptions(merge: true));
+    // .update({
+    //   'chat-id-list': FieldValue.arrayUnion([reciever])
+    // });
 
-    await _firestore.collection('Userdata').doc(uid2).update({
-      'chats': FieldValue.arrayUnion([uid1])
-    });
+    await _firestore.collection('Userdata').doc(reciever['recieverId']).set({
+      'chat-id-list': [sender]
+    }, SetOptions(merge: true));
+
+    // await _firestore.collection('Userdata').doc(reciever['recieverId'])
+    // .update({
+    //   'chat-id-list': FieldValue.arrayUnion([sender])
+    // });
   }
 
-  String chatRoomId(User user1, User user2) {
-    addChatUser(user1.uid, user2.uid);
-    if (user1.uid.toLowerCase().codeUnits[0] >
-        user2.uid.toLowerCase().codeUnits[0]) {
-      return "$user1.uid$user2.uid";
+  String chatRoomId(String user1, String user2) {
+    // addChatUser(user1, user2);
+    if (user1.toLowerCase().codeUnits[0] > user2.toLowerCase().codeUnits[0]) {
+      return "$user1$user2";
     } else {
-      return "$user2.uid$user1.uid";
+      return "$user2$user1";
     }
   }
 
@@ -39,6 +48,7 @@ class ChatService {
         "message": _message.text,
         "type": "text",
         "time": FieldValue.serverTimestamp(),
+        "senderId": _auth.currentUser!.uid,
       };
 
       _message.clear();
