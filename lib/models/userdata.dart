@@ -22,11 +22,4 @@ class Userdata {
     required this.isServiceProvider,
     required this.isServiceProviderVerified,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'email': email,
-    };
-  }
 }

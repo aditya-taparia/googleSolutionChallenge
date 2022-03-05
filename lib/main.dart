@@ -209,23 +209,18 @@ class _WrapperState extends State<Wrapper> {
     if (user == null) {
       return isviewed != 0 ? const Start() : const Login();
     } else {
-      final Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance
+      FirebaseFirestore.instance
           .collection('Userdata')
           .doc(user.userid)
-          .snapshots();
-      return StreamBuilder<DocumentSnapshot>(
-        stream: _usersStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Loading();
-          }
-          if (snapshot.hasError) {
-            //TODO: Make a error page
-            return const Loading();
-          }
-          return snapshot.data!.exists ? const Home() : const MyStepper();
-        },
-      );
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          return const Home();
+        } else {
+          return const MyStepper();
+        }
+      });
     }
+    return const Home();
   }
 }
