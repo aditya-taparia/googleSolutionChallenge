@@ -15,7 +15,6 @@ var element = Randomcolorlist[_random.nextInt(Randomcolorlist.length)];
 
 class Randomcol {
   getcolor() {
-    print(element);
     return element;
   }
 }
