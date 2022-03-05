@@ -203,6 +203,9 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
+    if (_isLoading) {
+      return const Loading();
+    }
     if (user == null) {
       return isviewed != 0 ? const Start() : const Login();
     } else {
