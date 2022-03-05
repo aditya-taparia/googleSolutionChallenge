@@ -221,6 +221,6 @@ class _WrapperState extends State<Wrapper> {
         }
       });
     }
-    return const Loading();
+    return const Home();
   }
 }
