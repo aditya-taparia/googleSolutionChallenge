@@ -497,14 +497,14 @@ class _HomeState extends State<Home> {
                             : AppBar(
                                 elevation: 0,
                                 iconTheme:
-                                    const IconThemeData(color: Colors.black),
+                                    const IconThemeData(color: Colors.white),
                                 actions: <Widget>[
                                   IconButton(
                                     tooltip: 'QR Code',
                                     icon: const Icon(
                                       Icons.qr_code_rounded,
                                       size: 24,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                     ),
                                     onPressed: () {},
                                   ),
@@ -513,7 +513,7 @@ class _HomeState extends State<Home> {
                                     icon: const Icon(
                                       Icons.notifications_rounded,
                                       size: 24,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                     ),
                                     onPressed: () {
                                       Navigator.push(
@@ -524,7 +524,9 @@ class _HomeState extends State<Home> {
                                     },
                                   ),
                                 ],
-                                backgroundColor: Colors.blue[50],
+                                // backgroundColor: Colors.blue[50],
+                                backgroundColor:
+                                    const Color.fromRGBO(66, 103, 178, 1),
                               )
                         : null,
                     // Drawer styling from theme is left

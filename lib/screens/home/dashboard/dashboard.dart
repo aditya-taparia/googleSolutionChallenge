@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:geocode/geocode.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
@@ -28,6 +29,13 @@ class _DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
+  // Can use this to get the region
+  Future<String>? getPlace(GeoPoint point) async {
+    final value = await GeoCode()
+        .reverseGeocoding(latitude: point.latitude, longitude: point.longitude);
+    return value.region!;
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
@@ -47,17 +55,19 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 Container(
                   height: MediaQuery.of(context).size.height,
-                  /* decoration: BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
+                      stops: const [0.7, 0.8, 0.9],
                       colors: [
                         Colors.blue[50]!,
+                        const Color.fromRGBO(124, 154, 234, 1),
                         const Color.fromRGBO(66, 103, 178, 1)
-                      ],                      
+                      ],
                     ),
-                  ), */
-                  color: Colors.blue[50],
+                  ),
+                  //color: Colors.blue[50],
                   padding: const EdgeInsets.all(32),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -70,17 +80,89 @@ class _DashboardState extends State<Dashboard> {
                             'Hello ${userSnapshot.data!['name']}',
                             style: const TextStyle(
                               fontSize: 28,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Text(
-                            '${userSnapshot.data!['generalLocation']}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
-                          ),
+                          FutureBuilder<String>(
+                              future: getPlace(userSnapshot.data!['location']),
+                              initialData: 'No Location',
+                              builder: (context, geodata) {
+                                try {
+                                  if (geodata.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Row(
+                                      children: const [
+                                        SizedBox(
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            //Color.fromRGBO(66, 103, 178, 1),
+                                            strokeWidth: 2.5,
+                                          ),
+                                          height: 15,
+                                          width: 15,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          'Getting Location...',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  if (geodata.connectionState ==
+                                      ConnectionState.done) {
+                                    try {
+                                      if (geodata.hasData) {
+                                        return Text(
+                                          geodata.data!,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                        );
+                                      } else {
+                                        return const Text(
+                                          'Location Not Found',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                        );
+                                      }
+                                    } catch (e) {
+                                      rethrow;
+                                    }
+                                  } else {
+                                    return Row(
+                                      children: const [
+                                        SizedBox(
+                                          child: CircularProgressIndicator(
+                                            color:
+                                                Color.fromRGBO(66, 103, 178, 1),
+                                            strokeWidth: 2.5,
+                                          ),
+                                          height: 15,
+                                          width: 15,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          'Getting Location...',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                } catch (e) {
+                                  rethrow;
+                                }
+                              }),
                           const SizedBox(height: 20),
                         ],
                       ),
@@ -98,65 +180,113 @@ class _DashboardState extends State<Dashboard> {
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       children: [
-                        Card(
+                        const Card(
                           elevation: 2.5,
-                          margin: const EdgeInsets.all(8.0),
-                          color: Colors.orange[100],
-                          child: const SizedBox(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25),
+                            ),
+                          ),
+                          margin: EdgeInsets.all(8.0),
+                          color: Color.fromRGBO(111, 185, 143, 1),
+                          child: SizedBox(
                             width: 200.0,
                             height: 150.0,
-                            child: Text('Text'),
+                            child: Center(
+                              child: Text(
+                                'Text',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        Card(
+                        const Card(
                           elevation: 2.5,
-                          margin: const EdgeInsets.all(8.0),
-                          color: Colors.green[100],
-                          child: const SizedBox(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25),
+                            ),
+                          ),
+                          margin: EdgeInsets.all(8.0),
+                          color: Color.fromRGBO(77, 133, 189, 1),
+                          child: SizedBox(
                             width: 200.0,
                             height: 150.0,
-                            child: Text('Text'),
+                            child: Center(
+                              child: Text(
+                                'Text',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        Card(
+                        const Card(
                           elevation: 2.5,
-                          margin: const EdgeInsets.all(8.0),
-                          color: Colors.purple[100],
-                          child: const SizedBox(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25),
+                            ),
+                          ),
+                          margin: EdgeInsets.all(8.0),
+                          color: Color.fromRGBO(246, 148, 84, 1),
+                          child: SizedBox(
                             width: 200.0,
                             height: 150.0,
-                            child: Text('Text'),
+                            child: Center(
+                              child: Text(
+                                'Text',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: DottedBorder(
-                            borderType: BorderType.RRect,
-                            radius: const Radius.circular(8),
-                            strokeWidth: 1,
-                            dashPattern: const [4, 4],
-                            padding: const EdgeInsets.all(8.0),
-                            color: Colors.black,
-                            child: SizedBox(
-                              width: 150.0,
-                              height: 150.0,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: const [
-                                    Icon(
-                                      Icons.add_rounded,
-                                      size: 24,
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'See More',
-                                      style: TextStyle(
-                                        fontSize: 18,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(25),
+                              ),
+                              color: Color.fromRGBO(208, 225, 249, 1),
+                            ),
+                            padding: const EdgeInsets.all(4.0),
+                            child: DottedBorder(
+                              borderType: BorderType.RRect,
+                              radius: const Radius.circular(25),
+                              strokeWidth: 1.5,
+                              dashPattern: const [8, 8],
+                              padding: const EdgeInsets.all(8.0),
+                              color: const Color.fromRGBO(0, 57, 125, 1),
+                              child: SizedBox(
+                                width: 150.0,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: const [
+                                      Icon(
+                                        Icons.add_rounded,
+                                        size: 28,
+                                        color: Color.fromRGBO(0, 57, 125, 1),
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(height: 8),
+                                      Text(
+                                        'See More',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color.fromRGBO(0, 57, 125, 1),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

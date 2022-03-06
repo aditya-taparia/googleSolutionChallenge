@@ -65,6 +65,7 @@ dependencies:
   #Google Map
   google_maps_flutter: ^2.1.1
   geolocator: ^8.2.0
+  geocode: ^1.0.1
 
   #forumfloatingaction
   flutter_speed_dial: ^5.0.0+1
