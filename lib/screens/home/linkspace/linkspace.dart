@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
+
 import 'package:googlesolutionchallenge/screens/home/linkspace/addlinkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 import 'package:googlesolutionchallenge/screens/utils/randomcolor.dart';
@@ -66,11 +67,9 @@ class _LinkspaceState extends State<Linkspace> {
                         ),
                         Row(
                           children: [
-                            _isspaceowned
-                                ? const Text('Show Nearby Spaces')
-                                : const Text('Show Joined Spaces'),
+                            Text('Show Nearby Spaces'),
                             Switch(
-                              value: view,
+                              value: !_isspaceowned,
                               onChanged: (bool active) {
                                 setState(() {
                                   view = active;

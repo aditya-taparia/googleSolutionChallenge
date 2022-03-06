@@ -8,7 +8,7 @@ class Addlinkspace extends StatefulWidget {
 }
 
 double _slidervalue = 2;
-List<bool> isDisabled = [false, true, true];
+List<bool> isActive = [true, true, true];
 
 class _AddlinkspaceState extends State<Addlinkspace> {
   @override
@@ -117,59 +117,6 @@ class _AddlinkspaceState extends State<Addlinkspace> {
               const SizedBox(
                 height: 15,
               ),
-              Row(
-                children: const [
-                  Text("Select a colour"),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Icon(
-                    Icons.info_rounded,
-                    color: Colors.grey,
-                    size: 20,
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: ElevatedButton(
-                      style:
-                          ElevatedButton.styleFrom(primary: Color(0xFF4e5ae8)),
-                      onPressed: () {},
-                      child: null,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: ElevatedButton(
-                      style:
-                          ElevatedButton.styleFrom(primary: Color(0xFFFFB746)),
-                      onPressed: () {},
-                      child: null,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: Color.fromRGBO(255, 99, 71, 1)),
-                      onPressed: () {},
-                      child: null,
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(
                 height: 15,
               ),
@@ -197,13 +144,7 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                         height: 60,
                         width: 60,
                         child: ElevatedButton(
-                          onPressed: isDisabled[0]
-                              ? null
-                              : () {
-                                  setState(() {
-                                    isDisabled[0] = !isDisabled[0];
-                                  });
-                                },
+                          onPressed: () {},
                           child: const Icon(Icons.chat),
                           style: ElevatedButton.styleFrom(
                             onSurface: Colors.amber,
@@ -227,8 +168,24 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                       SizedBox(
                         height: 60,
                         width: 60,
-                        child: ElevatedButton(
-                            onPressed: () {}, child: const Icon(Icons.forum)),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isActive[1] = !isActive[1];
+                            });
+                          },
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  onSurface: Colors.grey),
+                              onPressed: isActive[1]
+                                  ? () {
+                                      setState(() {
+                                        isActive[1] = false;
+                                      });
+                                    }
+                                  : null,
+                              child: const Icon(Icons.forum)),
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.only(top: 8.0),
@@ -247,9 +204,24 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                       SizedBox(
                         height: 60,
                         width: 60,
-                        child: ElevatedButton(
-                            onPressed: () {},
-                            child: const Icon(Icons.handshake)),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isActive[2] = !isActive[2];
+                            });
+                          },
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  onSurface: Colors.grey),
+                              onPressed: isActive[2]
+                                  ? () {
+                                      setState(() {
+                                        isActive[2] = false;
+                                      });
+                                    }
+                                  : null,
+                              child: const Icon(Icons.handshake)),
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.only(top: 8.0),
