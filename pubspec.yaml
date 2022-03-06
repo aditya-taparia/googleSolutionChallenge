@@ -82,6 +82,7 @@ dependencies:
   pin_entry_text_field: ^0.1.4
   pinput: ^1.2.2
   syncfusion_flutter_charts: ^19.4.54
+  toggle_switch: ^1.4.0
 
 dev_dependencies:
   flutter_test:
