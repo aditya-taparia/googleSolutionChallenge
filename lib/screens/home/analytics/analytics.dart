@@ -47,16 +47,42 @@ class _AnalyticsState extends State<Analytics> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
-                  child: Text(
-                    "Earnings : " + earnings(fromamount, fromto),
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.account_balance_wallet,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Earnings : " + earnings(fromamount, fromto),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                    ],
                   ),
                 ),
-                const Padding(
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
                   padding: EdgeInsets.only(left: 15),
-                  child: Text(
-                    "Donation : ",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.handshake,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        " Donations : 1000/-",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                    ],
                   ),
                 ),
                 const Spacer(),
