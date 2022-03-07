@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +6,11 @@ import 'package:googlesolutionchallenge/screens/home/linkspace/addlinkspace.dart
 import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 import 'package:googlesolutionchallenge/screens/utils/randomcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../models/user.dart';
+import '../../../widgets/loading.dart';
 
 class Linkspace extends StatefulWidget {
   const Linkspace({Key? key}) : super(key: key);
@@ -20,34 +25,101 @@ late Color prevcolor;
 
 List<String> tiletitles = [
   "Indian Institute Of Information Technology",
-  "Google Solutions Challenge Workspace",
-  "Google Solutions Challenge Workspace",
-  "Google Solutions Challenge Workspace",
 ];
 List<String> tiledescriptions = [
   "A linkspace dedicated to study flutter and develop futuristic apps for the betterment of the world",
-  "A linkspace comprised of students from IIITK participating in GSC 2022",
-  "A linkspace comprised of students from IIITK participating in GSC 2022",
-  "A linkspace comprised of students from IIITK participating in GSC 2022",
 ];
 
 List<String> tilelocation = [
   "Valavoor, Kottayam",
-  "Valavoor, Kottayam",
-  "Valavoor, Kottayam",
-  "Valavoor, Kottayam",
 ];
-List<int> tilememeber = [546, 4, 300, 250];
+List<int> tilememeber = [546];
 
 class _LinkspaceState extends State<Linkspace> {
   @override
   late bool view = false;
 
+  CollectionReference Linkspacecollection =
+      FirebaseFirestore.instance.collection('Linkspace');
+
+// all data
+/*
+  Future<List<Object?>> getData() async {
+    QuerySnapshot querySnapshot = await Linkspacecollection.get();
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    print(allData);
+    return allData;
+  }*/
+
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(),
-      body: tiletitles.isNotEmpty
-          ? SingleChildScrollView(
+    final user = Provider.of<Users?>(context);
+    final doc = Linkspacecollection.doc(user!.userid);
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: Linkspacecollection.doc(user.userid).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return Scaffold(
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text("LinkSpace",
+                          style: TextStyle(
+                              color: Color.fromRGBO(66, 103, 178, 1),
+                              fontSize: 25)),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Icon(
+                        Icons.info_rounded,
+                        color: Colors.grey,
+                        size: 20,
+                      )
+                    ],
+                  ),
+                ),
+                Lottie.asset('assets/team.json'),
+                SizedBox(
+                  width: 300,
+                  child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text("Find Your LinkSpaces")),
+                )
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Addlinkspace()));
+              },
+              child: const Icon(Icons.group_add),
+            ),
+          );
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data!['added'] == false) {
+            tiletitles.add(snapshot.data!['name']);
+            tiledescriptions.add(snapshot.data!['description']);
+            tilelocation.add(snapshot.data!['location']);
+            tilememeber.add(snapshot.data!['member'].length);
+
+            doc.update({'added': true});
+          }
+          return Scaffold(
+            // appBar: AppBar(),
+            body: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
@@ -424,46 +496,22 @@ class _LinkspaceState extends State<Linkspace> {
                   ],
                 ),
               ),
-            )
-          : Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text("LinkSpace",
-                          style: TextStyle(
-                              color: Color.fromRGBO(66, 103, 178, 1),
-                              fontSize: 25)),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Icon(
-                        Icons.info_rounded,
-                        color: Colors.grey,
-                        size: 20,
-                      )
-                    ],
-                  ),
-                ),
-                Lottie.asset('assets/team.json'),
-                SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Find Your LinkSpaces")),
-                )
-              ],
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const Addlinkspace()));
-        },
-        child: const Icon(Icons.group_add),
-      ),
+
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Addlinkspace()));
+              },
+              child: const Icon(Icons.group_add),
+            ),
+          );
+        }
+
+        return Loading();
+      },
     );
   }
 }
