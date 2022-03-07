@@ -305,15 +305,15 @@ class _AddlinkspaceState extends State<Addlinkspace> {
   Future createlinkspace(String name, String purp, int type, String docname,
       String location) async {
     final addedlinkspace =
-        FirebaseFirestore.instance.collection("Linkspace").doc(docname);
+        FirebaseFirestore.instance.collection("Linkspace").doc();
 
     final json = {
+      'ownerid': docname,
       'name': name,
       'description': purp,
       'location': location,
       'type': type,
       'member': [docname],
-      'added': false,
     };
 
     await addedlinkspace.set(json);
