@@ -313,6 +313,7 @@ class _AddlinkspaceState extends State<Addlinkspace> {
       'location': location,
       'type': type,
       'member': [docname],
+      'added': false,
     };
 
     await addedlinkspace.set(json);
