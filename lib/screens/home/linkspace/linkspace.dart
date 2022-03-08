@@ -265,59 +265,70 @@ class _LinkspaceState extends State<Linkspace> {
                                             ),
                                           ],
                                         ),
-                                        ListTile(
-                                          leading: Column(
-                                            children: [
-                                              Container(
-                                                width: 60,
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        8, 8, 8, 7),
-                                                decoration: const BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10))),
-                                                child: Column(
-                                                  children: [
-                                                    const Icon(Icons.group),
-                                                    Text(
-                                                      "${linkdata["member"].length}"
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          color: color,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ],
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ListTile(
+                                            leading: Column(
+                                              children: [
+                                                Container(
+                                                  width: 60,
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          8, 8, 8, 7),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          10))),
+                                                  child: Column(
+                                                    children: [
+                                                      const Icon(Icons.group),
+                                                      Text(
+                                                        "${linkdata["member"].length}"
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                            color: color,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          title: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "${linkdata["name"]}",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 19,
-                                                  fontWeight: FontWeight.bold),
+                                              ],
                                             ),
-                                          ),
-                                          subtitle: SingleChildScrollView(
-                                            scrollDirection: Axis.vertical,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0),
+                                            title: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Text(
-                                                  "${linkdata["description"]}",
-                                                  maxLines: 4,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 13)),
+                                                "${linkdata["name"]}",
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 19,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            subtitle: SingleChildScrollView(
+                                              scrollDirection: Axis.vertical,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0),
+                                                child: Text(
+                                                    "${linkdata["description"]}",
+                                                    maxLines: 4,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 13)),
+                                              ),
                                             ),
                                           ),
                                         ),
