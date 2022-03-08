@@ -12,6 +12,7 @@ import 'package:googlesolutionchallenge/services/auth.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -494,20 +495,13 @@ class _HomeState extends State<Home> {
                                 backgroundColor:
                                     const Color.fromRGBO(66, 103, 178, 1),
                               )
-                            : AppBar(
+                            // Appbar for dashboard
+                            : null /* AppBar(
                                 elevation: 0,
+                                
                                 iconTheme:
                                     const IconThemeData(color: Colors.white),
                                 actions: <Widget>[
-                                  IconButton(
-                                    tooltip: 'QR Code',
-                                    icon: const Icon(
-                                      Icons.qr_code_rounded,
-                                      size: 24,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {},
-                                  ),
                                   IconButton(
                                     tooltip: 'Notifications',
                                     icon: const Icon(
@@ -527,7 +521,7 @@ class _HomeState extends State<Home> {
                                 // backgroundColor: Colors.blue[50],
                                 backgroundColor:
                                     const Color.fromRGBO(66, 103, 178, 1),
-                              )
+                              ) */
                         : null,
                     // Drawer styling from theme is left
                     drawer: _index != 1 ? _drawer : null,

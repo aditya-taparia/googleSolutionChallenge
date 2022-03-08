@@ -66,6 +66,7 @@ dependencies:
   google_maps_flutter: ^2.1.1
   geolocator: ^8.2.0
   geocode: ^1.0.1
+  material_floating_search_bar: ^0.3.7
 
   #forumfloatingaction
   flutter_speed_dial: ^5.0.0+1
@@ -74,8 +75,9 @@ dependencies:
   qr_flutter: ^4.0.0
   flutter_barcode_scanner: ^2.0.0
 
-  # Dotted Border
+  # Dashboard
   dotted_border: ^2.0.0+2
+  shimmer_animation: ^2.1.0+1
   
   # OTP 
   sms_autofill: ^2.2.0
