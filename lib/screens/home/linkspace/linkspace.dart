@@ -306,14 +306,20 @@ class _LinkspaceState extends State<Linkspace> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ),
-                                          subtitle: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0),
-                                            child: Text(
-                                                "${linkdata["description"]}",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 13)),
+                                          subtitle: SingleChildScrollView(
+                                            scrollDirection: Axis.vertical,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0),
+                                              child: Text(
+                                                  "${linkdata["description"]}",
+                                                  maxLines: 4,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 13)),
+                                            ),
                                           ),
                                         ),
                                         const Spacer(),
