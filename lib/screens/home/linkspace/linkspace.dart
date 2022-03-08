@@ -7,7 +7,6 @@ import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
 import 'package:googlesolutionchallenge/screens/utils/randomcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/user.dart';
 import '../../../widgets/loading.dart';
@@ -60,7 +59,7 @@ class _LinkspaceState extends State<Linkspace> {
 
         if (snapshot.connectionState == ConnectionState.active) {
           var alldoc = snapshot.data!.docs;
-          print(alldoc);
+          //print(alldoc);
 
           if (alldoc.isEmpty) {
             return Scaffold(
