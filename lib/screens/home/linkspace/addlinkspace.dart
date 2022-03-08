@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../models/user.dart';
 
 class Addlinkspace extends StatefulWidget {
   const Addlinkspace({Key? key}) : super(key: key);
@@ -9,10 +14,16 @@ class Addlinkspace extends StatefulWidget {
 
 double _slidervalue = 2;
 List<bool> isActive = [true, true, true];
+int widgettype = 0;
 
 class _AddlinkspaceState extends State<Addlinkspace> {
+  final lncontroller = TextEditingController();
+  final ldcontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<Users?>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create a Linkspace"),
@@ -39,6 +50,7 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                     width: 300,
                     child: TextFormField(
                       autofocus: false,
+                      controller: lncontroller,
                       keyboardType: TextInputType.text,
                       onSaved: (value) {},
                       textInputAction: TextInputAction.next,
@@ -65,6 +77,7 @@ class _AddlinkspaceState extends State<Addlinkspace> {
               ),
               TextFormField(
                 autofocus: false,
+                controller: ldcontroller,
                 keyboardType: TextInputType.text,
                 maxLines: 5,
                 onSaved: (value) {},
@@ -81,7 +94,7 @@ class _AddlinkspaceState extends State<Addlinkspace> {
               const SizedBox(
                 height: 15,
               ),
-              Row(
+              /* Row(
                 children: const [
                   Text("Radius of visibilty"),
                   SizedBox(
@@ -116,7 +129,7 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                     ),
               const SizedBox(
                 height: 15,
-              ),
+              ),*/
               const SizedBox(
                 height: 15,
               ),
@@ -171,6 +184,7 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
+                              widgettype = widgettype * 10 + 1;
                               isActive[1] = !isActive[1];
                             });
                           },
@@ -207,6 +221,7 @@ class _AddlinkspaceState extends State<Addlinkspace> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
+                              widgettype = widgettype * 10 + 2;
                               isActive[2] = !isActive[2];
                             });
                           },
@@ -273,8 +288,34 @@ class _AddlinkspaceState extends State<Addlinkspace> {
         child: const Icon(
           Icons.done,
         ),
-        onPressed: () {},
+        onPressed: () {
+          String name = lncontroller.text;
+          String purp = ldcontroller.text;
+          int type = widgettype;
+          String location = "IIIT Kottayam";
+          String docname = user!.userid;
+          createlinkspace(name, purp, type, docname, location);
+
+          Navigator.pop(context);
+        },
       ),
     );
+  }
+
+  Future createlinkspace(String name, String purp, int type, String docname,
+      String location) async {
+    final addedlinkspace =
+        FirebaseFirestore.instance.collection("Linkspace").doc();
+
+    final json = {
+      'ownerid': docname,
+      'name': name,
+      'description': purp,
+      'location': location,
+      'type': type,
+      'member': [docname],
+    };
+
+    await addedlinkspace.set(json);
   }
 }
