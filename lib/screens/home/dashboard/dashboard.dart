@@ -47,459 +47,508 @@ class _DashboardState extends State<Dashboard> {
         .collection('Userdata')
         .doc(user!.userid)
         .snapshots();
-    return FloatingSearchBar(
-      clearQueryOnClose: true,
-      transitionDuration: const Duration(milliseconds: 800),
-      transitionCurve: Curves.easeInOutCubic,
-      physics: const BouncingScrollPhysics(),
-      borderRadius: BorderRadius.circular(25),
-      elevation: 0,
-      border: const BorderSide(
-        color: Color.fromRGBO(204, 204, 204, 1),
-        width: 1.5,
-      ),
-      iconColor: Colors.grey[800],
-      automaticallyImplyDrawerHamburger: true,
-      hint: 'What are you looking for?',
-      openWidth: MediaQuery.of(context).size.width,
-      hintStyle: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: Color.fromRGBO(102, 102, 102, 1),
-      ),
-      backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-      openAxisAlignment: 0.0,
-      axisAlignment: 0.0,
-      transition: CircularFloatingSearchBarTransition(),
-      actions: [
-        FloatingSearchBarAction(
-          showIfOpened: false,
-          child: CircularButton(
-            icon: Icon(
-              Icons.notifications_rounded,
-              size: 24,
-              color: Colors.grey[800],
-            ),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Notify()));
-            },
-          ),
+    return Stack(
+      children: [
+        Image.asset(
+          "assets/bgscaffold.jpeg",
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
         ),
-        FloatingSearchBarAction.searchToClear(
-          showIfClosed: false,
-        ),
-      ],
-      builder: (context, transition) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Material(
-            color: Colors.white,
-            elevation: 4.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: Colors.accents.map((color) {
-                return Container(height: 112, color: color);
-              }).toList(),
-            ),
+        FloatingSearchBar(
+          clearQueryOnClose: true,
+          transitionDuration: const Duration(milliseconds: 800),
+          transitionCurve: Curves.easeInOutCubic,
+          physics: const BouncingScrollPhysics(),
+          borderRadius: BorderRadius.circular(25),
+          elevation: 0,
+          border: const BorderSide(
+            color: Color.fromRGBO(204, 204, 204, 1),
+            width: 1.5,
           ),
-        );
-      },
-      body: StreamBuilder<DocumentSnapshot>(
-          stream: _userStream,
-          builder: (BuildContext context,
-              AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
-            if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return const Loading();
-            }
-            if (userSnapshot.hasData) {
-              return Scaffold(
-                backgroundColor: Colors.white,
-                appBar: AppBar(
-                  elevation: 0,
-                  backgroundColor: Colors.white,
+          iconColor: Colors.grey[800],
+          automaticallyImplyDrawerHamburger: true,
+          hint: 'What are you looking for?',
+          openWidth: MediaQuery.of(context).size.width,
+          hintStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Color.fromRGBO(102, 102, 102, 1),
+          ),
+          backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
+          openAxisAlignment: 0.0,
+          axisAlignment: 0.0,
+          transition: CircularFloatingSearchBarTransition(),
+          actions: [
+            FloatingSearchBarAction(
+              showIfOpened: false,
+              child: CircularButton(
+                icon: Icon(
+                  Icons.notifications_rounded,
+                  size: 24,
+                  color: Colors.grey[800],
                 ),
-                body: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Intro Text
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            24.0,
-                            16.0,
-                            4.0,
-                            0.0,
-                          ),
-                          child: Text(
-                            'Hello ${userSnapshot.data!['name']}',
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(66, 103, 178, 1),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Notify()));
+                },
+              ),
+            ),
+            FloatingSearchBarAction.searchToClear(
+              showIfClosed: false,
+            ),
+          ],
+          builder: (context, transition) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Material(
+                color: Colors.white,
+                elevation: 4.0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: Colors.accents.map((color) {
+                    return Container(height: 112, color: color);
+                  }).toList(),
+                ),
+              ),
+            );
+          },
+          body: StreamBuilder<DocumentSnapshot>(
+              stream: _userStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
+                if (userSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Loading();
+                }
+                if (userSnapshot.hasData) {
+                  return Scaffold(
+                    backgroundColor: Colors.transparent,
+                    appBar: AppBar(
+                      elevation: 0,
+                      backgroundColor: Colors.transparent,
+                    ),
+                    body: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Intro Text
+                            const SizedBox(
+                              height: 10,
                             ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            24.0,
-                            4.0,
-                            4.0,
-                            0.0,
-                          ),
-                          child: FutureBuilder<String>(
-                              future: getPlace(userSnapshot.data!['location']),
-                              initialData: 'No Location',
-                              builder: (context, geodata) {
-                                try {
-                                  if (geodata.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Row(
-                                      children: const [
-                                        SizedBox(
-                                          child: CircularProgressIndicator(
-                                            color:
-                                                Color.fromRGBO(66, 103, 178, 1),
-                                            strokeWidth: 2.5,
-                                          ),
-                                          height: 15,
-                                          width: 15,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Getting Location...',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Color.fromRGBO(
-                                                102, 102, 102, 1),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                  if (geodata.connectionState ==
-                                      ConnectionState.done) {
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                24.0,
+                                10.0,
+                                4.0,
+                                0.0,
+                              ),
+                              child: Text(
+                                'Hello ${userSnapshot.data!['name']}',
+                                style: const TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color.fromRGBO(66, 103, 178, 1),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                24.0,
+                                4.0,
+                                4.0,
+                                0.0,
+                              ),
+                              child: FutureBuilder<String>(
+                                  future:
+                                      getPlace(userSnapshot.data!['location']),
+                                  initialData: 'No Location',
+                                  builder: (context, geodata) {
                                     try {
-                                      if (geodata.hasData) {
-                                        return Text(
-                                          geodata.data!,
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            color: Color.fromRGBO(
-                                                102, 102, 102, 1),
-                                          ),
+                                      if (geodata.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Row(
+                                          children: const [
+                                            SizedBox(
+                                              child: CircularProgressIndicator(
+                                                color: Color.fromRGBO(
+                                                    66, 103, 178, 1),
+                                                strokeWidth: 2.5,
+                                              ),
+                                              height: 15,
+                                              width: 15,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Text(
+                                              'Getting Location...',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                color: Color.fromRGBO(
+                                                    102, 102, 102, 1),
+                                              ),
+                                            ),
+                                          ],
                                         );
+                                      }
+                                      if (geodata.connectionState ==
+                                          ConnectionState.done) {
+                                        try {
+                                          if (geodata.hasData) {
+                                            return Text(
+                                              geodata.data!,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                color: Color.fromRGBO(
+                                                    102, 102, 102, 1),
+                                              ),
+                                            );
+                                          } else {
+                                            return const Text(
+                                              'Location Not Found',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                color: Color.fromRGBO(
+                                                    102, 102, 102, 1),
+                                              ),
+                                            );
+                                          }
+                                        } catch (e) {
+                                          rethrow;
+                                        }
                                       } else {
-                                        return const Text(
-                                          'Location Not Found',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Color.fromRGBO(
-                                                102, 102, 102, 1),
-                                          ),
+                                        return Row(
+                                          children: const [
+                                            SizedBox(
+                                              child: CircularProgressIndicator(
+                                                color: Color.fromRGBO(
+                                                    66, 103, 178, 1),
+                                                strokeWidth: 2.5,
+                                              ),
+                                              height: 15,
+                                              width: 15,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Text(
+                                              'Getting Location...',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                color: Color.fromRGBO(
+                                                    102, 102, 102, 1),
+                                              ),
+                                            ),
+                                          ],
                                         );
                                       }
                                     } catch (e) {
                                       rethrow;
                                     }
-                                  } else {
-                                    return Row(
-                                      children: const [
-                                        SizedBox(
-                                          child: CircularProgressIndicator(
-                                            color:
-                                                Color.fromRGBO(66, 103, 178, 1),
-                                            strokeWidth: 2.5,
-                                          ),
-                                          height: 15,
-                                          width: 15,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Getting Location...',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Color.fromRGBO(
-                                                102, 102, 102, 1),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                } catch (e) {
-                                  rethrow;
-                                }
-                              }),
-                        ),
+                                  }),
+                            ),
 
-                        // Status Cards
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        FittedBox(
-                          child: Wrap(
-                            alignment: WrapAlignment.start,
-                            spacing: 0,
-                            runSpacing: 0,
-                            runAlignment: WrapAlignment.start,
-                            crossAxisAlignment: WrapCrossAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  DashCard(
-                                    color: Color.fromRGBO(111, 185, 143, 1),
-                                    width: 210.0,
-                                    height: 145.0,
-                                    title: 'Service Requests',
-                                    subtitle:
-                                        'Total Requests: 0\nLast Request Status: Pending',
-                                    subtitleFontSize: 12,
-                                  ),
-                                  DashCard(
-                                    color: Color.fromRGBO(250, 103, 118, 1),
-                                    width: 210.0,
-                                    height: 145.0,
-                                    title: 'Service Provided',
-                                    subtitle:
-                                        'Total Services: 0\nLast Service Status: Success',
-                                    subtitleFontSize: 12,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 40,
-                                  ),
-                                  const DashCard(
-                                    color: Color.fromRGBO(25, 148, 173, 1),
-                                    width: 150.0,
-                                    height: 160.0,
-                                    title: 'Total Charity',
-                                    subtitle: '₹ 10000',
-                                    subtitleFontSize: 24,
-                                  ),
-                                  const SizedBox(
-                                    height: 2,
-                                  ),
-                                  Card(
-                                    elevation: 2,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                    ),
-                                    margin: const EdgeInsets.all(8.0),
-                                    color:
-                                        const Color.fromRGBO(102, 102, 102, 1),
-                                    child: InkWell(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                      onTap: () {},
-                                      child: const SizedBox(
-                                        width: 150.0,
-                                        height: 60.0,
-                                        child: Center(
-                                          child: Text(
-                                            'See All',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white,
+                            // Status Cards
+                            const SizedBox(
+                              height: 15,
+                            ),
+
+                            DefaultTabController(
+                                length: 2,
+                                child: Column(children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 225,
+                                        child: TabBar(
+                                          indicator:
+                                              const UnderlineTabIndicator(
+                                            borderSide: BorderSide(
+                                                color: Color.fromRGBO(
+                                                    66, 103, 178, 1),
+                                                width: 4.0),
+                                            insets: EdgeInsets.only(
+                                                left: 10, right: 80),
+                                          ),
+                                          tabs: [
+                                            Tab(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: const [
+                                                  Text("Service",
+                                                      style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromRGBO(
+                                                            66, 103, 178, 1),
+                                                      )),
+                                                ],
+                                              ),
                                             ),
-                                          ),
+                                            Tab(
+                                                child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: const [
+                                                Text("Open Jobs",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color.fromRGBO(
+                                                          66, 103, 178, 1),
+                                                    )),
+                                              ],
+                                            )),
+                                          ],
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.65,
+                                    child: TabBarView(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            FittedBox(
+                                              child: Wrap(
+                                                alignment: WrapAlignment.start,
+                                                spacing: 0,
+                                                runSpacing: 0,
+                                                runAlignment:
+                                                    WrapAlignment.start,
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.start,
+                                                children: [
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: const [
+                                                      DashCard(
+                                                        color: Color.fromRGBO(
+                                                            111, 185, 143, 1),
+                                                        width: 210.0,
+                                                        height: 145.0,
+                                                        title:
+                                                            'Service Requests',
+                                                        subtitle:
+                                                            'Total Requests: 0\nLast Request Status: Pending',
+                                                        subtitleFontSize: 12,
+                                                      ),
+                                                      DashCard(
+                                                        color: Color.fromRGBO(
+                                                            250, 103, 118, 1),
+                                                        width: 210.0,
+                                                        height: 145.0,
+                                                        title:
+                                                            'Service Provided',
+                                                        subtitle:
+                                                            'Total Services: 0\nLast Service Status: Success',
+                                                        subtitleFontSize: 12,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const SizedBox(
+                                                        height: 40,
+                                                      ),
+                                                      const DashCard(
+                                                        color: Color.fromRGBO(
+                                                            25, 148, 173, 1),
+                                                        width: 150.0,
+                                                        height: 160.0,
+                                                        title:
+                                                            'Community Service',
+                                                        subtitle: '',
+                                                        subtitleFontSize: 24,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      Card(
+                                                        elevation: 2,
+                                                        shape:
+                                                            const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(20),
+                                                          ),
+                                                        ),
+                                                        margin: const EdgeInsets
+                                                            .all(8.0),
+                                                        color: const Color
+                                                                .fromRGBO(
+                                                            102, 102, 102, 1),
+                                                        child: InkWell(
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                  .all(
+                                                            Radius.circular(20),
+                                                          ),
+                                                          onTap: () {},
+                                                          child: const SizedBox(
+                                                            width: 150.0,
+                                                            height: 60.0,
+                                                            child: Center(
+                                                              child: Text(
+                                                                'See All',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 16.0,
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: const [
+                                                  Text(
+                                                    'Explore',
+                                                    style: TextStyle(
+                                                      fontSize: 24,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Color.fromRGBO(
+                                                          66, 103, 178, 1),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const [
+                                                InfoCard(
+                                                  tag: 'QR Scanner',
+                                                  icon: Icons
+                                                      .qr_code_scanner_rounded,
+                                                  hasIcon: true,
+                                                ),
+                                                SizedBox(
+                                                  width: 12,
+                                                ),
+                                                InfoCard(
+                                                  tag: 'Requests Near You',
+                                                  icon: Icons
+                                                      .person_pin_circle_rounded,
+                                                  hasIcon: true,
+                                                ),
+                                                SizedBox(
+                                                  width: 12,
+                                                ),
+                                                InfoCard(
+                                                  tag: 'Friends',
+                                                  icon: Icons
+                                                      .person_search_rounded,
+                                                  hasIcon: true,
+                                                ),
+                                                SizedBox(
+                                                  width: 12,
+                                                ),
+                                                InfoCard(
+                                                  tag: 'Community Service',
+                                                  icon: Icons
+                                                      .volunteer_activism_rounded,
+                                                  hasIcon: true,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          //height: 200,
+                                          child: ListView(
+                                            //scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            children: const [
+                                              DashCard(
+                                                color: Color.fromRGBO(
+                                                    111, 185, 143, 1),
+                                                width: 180.0,
+                                                height: 200.0,
+                                                title: 'Open Forum 1',
+                                                subtitle:
+                                                    'Open Forum 1 details',
+                                                subtitleFontSize: 12,
+                                              ),
+                                              DashCard(
+                                                color: Color.fromRGBO(
+                                                    25, 148, 173, 1),
+                                                width: 180.0,
+                                                height: 200.0,
+                                                title: 'Open Forum 2',
+                                                subtitle:
+                                                    'Open Forum 2 details',
+                                                subtitleFontSize: 12,
+                                              ),
+                                              DashCard(
+                                                color: Color.fromRGBO(
+                                                    250, 103, 118, 1),
+                                                width: 180.0,
+                                                height: 200.0,
+                                                title: 'Open Forum 3',
+                                                subtitle:
+                                                    'Open Forum 3 details',
+                                                subtitleFontSize: 12,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                                  ),
+                                ])),
 
-                        // User Interactions
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                          ),
-                          child: Text(
-                            'Explore',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(66, 103, 178, 1),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            InfoCard(
-                              tag: 'QR Scanner',
-                              icon: Icons.qr_code_scanner_rounded,
-                              hasIcon: true,
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            InfoCard(
-                              tag: 'Requests Near You',
-                              icon: Icons.person_pin_circle_rounded,
-                              hasIcon: true,
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            InfoCard(
-                              tag: 'Search A Friend',
-                              icon: Icons.person_search_rounded,
-                              hasIcon: true,
-                            ),
+                            // User Interactions
                           ],
                         ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            InfoCard(
-                              tag: 'LinkSpaces Near You',
-                              icon: Icons.not_listed_location_rounded,
-                              hasIcon: true,
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            InfoCard(
-                              tag: 'Global Forum',
-                              icon: Icons.forum_rounded,
-                              hasIcon: true,
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            InfoCard(
-                              tag: 'Perform Charity',
-                              icon: Icons.volunteer_activism_rounded,
-                              hasIcon: true,
-                            ),
-                          ],
-                        ),
-                        // User Interactions
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                          ),
-                          child: Text(
-                            'Recent Chats',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(66, 103, 178, 1),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          height: 100,
-                          child: ListView(
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            children: const [
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InfoCard(
-                                tag: 'User Name',
-                                hasIcon: true,
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InfoCard(
-                                tag: 'User Name',
-                                hasIcon: true,
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InfoCard(
-                                tag: 'User Name',
-                                hasIcon: true,
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InfoCard(
-                                tag: 'User Name',
-                                hasIcon: true,
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InfoCard(
-                                tag: 'User Name',
-                                hasIcon: true,
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InfoCard(
-                                tag: 'User Name',
-                                hasIcon: true,
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InfoCard(
-                                tag: 'User Name',
-                                hasIcon: true,
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InfoCard(
-                                tag: 'User Name',
-                                hasIcon: true,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }
-            return const Loading();
-          }),
+                  );
+                }
+                return const Loading();
+              }),
+        ),
+      ],
     );
 
     /* SingleChildScrollView(
