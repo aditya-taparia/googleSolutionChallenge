@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -31,46 +32,53 @@ class _MapScreenState extends State<MapScreen> {
 
   // 1. CS , 2. IR , 3. JR
   List<bool> showmarkertype = [true, true, true];
+  List<LatLng> ll = [];
+  List<Map> userList = [];
   //map window
   double _height = 100;
   bool _open = false;
   bool _markerclicked = false;
 
+  void getdata() async {
+    final Future<QuerySnapshot> _usersStream =
+        FirebaseFirestore.instance.collection('Mapdata').get();
+    _usersStream.then((value) {
+      value.docs.forEach((element) {
+        Map<String, dynamic> val = element.data() as Map<String, dynamic>;
+        userList.add(val);
+        print(element.data());
+      });
+    });
+  }
+
   void _onMapCreated(_controller) {
     setState(() {
       _mapload = false;
-      _markers.add(
-        Marker(
-          markerId: const MarkerId('id-1'),
-          position: const LatLng(22.5448131, 88.3403391),
-          onTap: () {
-            setState(() {
-              _markerclicked = true;
-            });
-          },
-          infoWindow: const InfoWindow(
-            title: 'User Name',
-            snippet: 'Item/service Name',
+      userList.forEach((element) {
+        _markers.add(
+          Marker(
+            markerId: MarkerId('id-1' + element.toString()),
+            position: LatLng(
+                double.parse(element["location"].latitude.toString()),
+                double.parse(element["location"].longitude.toString())),
+            onTap: () {
+              setState(() {
+                _markerclicked = true;
+              });
+            },
+            infoWindow: InfoWindow(
+              title: element["name"],
+              snippet: 'Item/service Name',
+            ),
           ),
-        ),
-      );
-
-      _markers.add(
-        Marker(
-          markerId: const MarkerId('id-2'),
-          position: const LatLng(22.5459931, 88.3403285),
-          onTap: () {
-            setState(() {
-              _markerclicked = true;
-            });
-          },
-          infoWindow: const InfoWindow(
-            title: 'Name',
-            snippet: 'Description',
-          ),
-        ),
-      );
+        );
+      });
     });
+  }
+
+  void initState() {
+    getdata();
+    super.initState();
   }
 
   @override
