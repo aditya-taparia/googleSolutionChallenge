@@ -373,6 +373,7 @@ class _HomeState extends State<Home> {
                   // show loading screen accorginly
 
                   return Scaffold(
+                    resizeToAvoidBottomInset: false,
                     appBar: _index != 1
                         ? _index != 0
                             ? AppBar(
