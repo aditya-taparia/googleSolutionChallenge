@@ -50,7 +50,7 @@ class _DashboardState extends State<Dashboard> {
     return Stack(
       children: [
         Image.asset(
-          "assets/bgscaffold.jpeg",
+          "assets/bgscaffold.jpg",
           width: MediaQuery.of(context).size.width,
           fit: BoxFit.cover,
         ),
@@ -260,7 +260,7 @@ class _DashboardState extends State<Dashboard> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: 225,
                                         child: TabBar(
                                           indicator:
