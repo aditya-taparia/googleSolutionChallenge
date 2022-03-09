@@ -35,8 +35,8 @@ class _MapScreenState extends State<MapScreen> {
             });
           },
           infoWindow: const InfoWindow(
-            title: 'Name',
-            snippet: 'Description',
+            title: 'User Name',
+            snippet: 'Item/service Name',
           ),
         ),
       );
