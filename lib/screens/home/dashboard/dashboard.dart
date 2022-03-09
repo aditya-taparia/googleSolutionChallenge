@@ -314,7 +314,7 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.65,
+                                        0.62,
                                     child: TabBarView(
                                       children: [
                                         Column(
@@ -485,9 +485,8 @@ class _DashboardState extends State<Dashboard> {
                                                   width: 12,
                                                 ),
                                                 InfoCard(
-                                                  tag: 'Community Service',
-                                                  icon: Icons
-                                                      .volunteer_activism_rounded,
+                                                  tag: 'Add item',
+                                                  icon: Icons.add_card,
                                                   hasIcon: true,
                                                 ),
                                               ],
