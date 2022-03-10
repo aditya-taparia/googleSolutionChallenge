@@ -15,7 +15,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> controller = Completer();
-  final LatLng _current = const LatLng(22.54481831, 88.3403691);
+  final LatLng _current = const LatLng(10.8505, 76.2711);
   final Set<Marker> _markers = {};
   bool _mapload = true;
 
@@ -30,8 +30,8 @@ class _MapScreenState extends State<MapScreen> {
     color: Color.fromRGBO(66, 103, 178, 1),
   );
 
-  // 1. CS , 2. IR , 3. JR
-  List<bool> showmarkertype = [true, true, true];
+  // 1cs 2ls 3ir 4jr
+  List<bool> showmarkertype = [true, false, false, false];
   List<LatLng> ll = [];
   List<Map> userList = [];
   //map window
@@ -95,7 +95,7 @@ class _MapScreenState extends State<MapScreen> {
             initialCameraPosition: CameraPosition(
               tilt: 30,
               target: _current,
-              zoom: 16,
+              zoom: 5,
             ),
             onMapCreated: _onMapCreated,
             onTap: (LatLng latLng) {
@@ -119,7 +119,8 @@ class _MapScreenState extends State<MapScreen> {
                   filled: true,
                   prefixIcon: const Icon(Icons.search),
                   contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  hintText: "Search for Items, Spaces, Jobs",
+                  hintText:
+                      "Search for Items, Spaces, Jobs, Community service near you",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   )),
@@ -307,8 +308,8 @@ class _MapScreenState extends State<MapScreen> {
                             ),
                             onTap: () {
                               setState(() {
-                                // 1. CS , 2. IR , 3. JR
-                                showmarkertype = [false, false, true];
+                                // 1cs 2ls 3ir 4jr
+                                showmarkertype = [false, false, false, true];
                               });
                             }),
                         SpeedDialChild(
@@ -323,8 +324,23 @@ class _MapScreenState extends State<MapScreen> {
                                 const Icon(Icons.handyman, color: Colors.white),
                             onTap: () {
                               setState(() {
-                                // 1. CS , 2. IR , 3. JR
-                                showmarkertype = [false, true, false];
+                                // 1cs 2ls 3ir 4jr
+                                showmarkertype = [false, false, true, false];
+                              });
+                            }),
+                        SpeedDialChild(
+                            backgroundColor:
+                                const Color.fromRGBO(66, 103, 178, 1),
+                            label: "LinkSpace",
+                            labelStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(66, 103, 178, 1),
+                            ),
+                            child: const Icon(Icons.group, color: Colors.white),
+                            onTap: () {
+                              setState(() {
+                                // 1cs 2ls 3ir 4jr
+                                showmarkertype = [false, true, false, false];
                               });
                             }),
                         SpeedDialChild(
@@ -339,8 +355,8 @@ class _MapScreenState extends State<MapScreen> {
                                 color: Colors.white),
                             onTap: () {
                               setState(() {
-                                // 1. CS , 2. IR , 3. JR
-                                showmarkertype = [true, false, false];
+                                // 1cs 2ls 3ir 4jr
+                                showmarkertype = [true, false, false, false];
                               });
                             }),
                       ],
