@@ -1,5 +1,7 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/forummodel.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
@@ -495,41 +497,192 @@ class _DashboardState extends State<Dashboard> {
                                         ),
                                         Container(
                                           //height: 200,
-                                          child: ListView(
-                                            //scrollDirection: Axis.horizontal,
-                                            shrinkWrap: true,
-                                            children: const [
-                                              DashCard(
-                                                color: Color.fromRGBO(
-                                                    111, 185, 143, 1),
-                                                width: 180.0,
-                                                height: 200.0,
-                                                title: 'Open Forum 1',
-                                                subtitle:
-                                                    'Open Forum 1 details',
-                                                subtitleFontSize: 12,
-                                              ),
-                                              DashCard(
-                                                color: Color.fromRGBO(
-                                                    25, 148, 173, 1),
-                                                width: 180.0,
-                                                height: 200.0,
-                                                title: 'Open Forum 2',
-                                                subtitle:
-                                                    'Open Forum 2 details',
-                                                subtitleFontSize: 12,
-                                              ),
-                                              DashCard(
-                                                color: Color.fromRGBO(
-                                                    250, 103, 118, 1),
-                                                width: 180.0,
-                                                height: 200.0,
-                                                title: 'Open Forum 3',
-                                                subtitle:
-                                                    'Open Forum 3 details',
-                                                subtitleFontSize: 12,
-                                              ),
-                                            ],
+                                          child: ListView.builder(
+                                            itemCount: forum.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              final forums = forum[index];
+                                              return Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 5.0, bottom: 5.0),
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 0, 0, 1),
+                                                child: Container(
+                                                  color: Colors.white,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                CircleAvatar(
+                                                                  backgroundColor: Colors
+                                                                          .primaries[
+                                                                      Random().nextInt(Colors
+                                                                          .primaries
+                                                                          .length)],
+                                                                  child: Text(
+                                                                    forums
+                                                                        .sender
+                                                                        .name[0],
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          18,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      forums
+                                                                          .sender
+                                                                          .name,
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              18),
+                                                                    ),
+                                                                    const Text(
+                                                                      'Location',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          color:
+                                                                              Colors.grey),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Text(
+                                                              forums.time,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 7,
+                                                        ),
+                                                        Text(
+                                                          forums.msg,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 15,
+                                                                  color: Colors
+                                                                      .black),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 8.0),
+                                                          child: SizedBox(
+                                                            height: 20,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  forums.numLiked
+                                                                          .toString() +
+                                                                      ' Likes',
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontSize:
+                                                                          13,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                                const Text(
+                                                                    '5 Comments',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontSize:
+                                                                            13,
+                                                                        fontWeight:
+                                                                            FontWeight.bold)),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const Divider(
+                                                          thickness: 0.2,
+                                                          color: Colors.black,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            GestureDetector(
+                                                              onTap: () {},
+                                                              child: Icon(
+                                                                Icons.favorite,
+                                                                color: forums
+                                                                        .isLiked
+                                                                    ? Colors
+                                                                        .pink
+                                                                    : Colors
+                                                                        .white,
+                                                              ),
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: () {},
+                                                              child: const Icon(
+                                                                Icons.comment,
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        66,
+                                                                        103,
+                                                                        178,
+                                                                        1),
+                                                              ),
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: () {},
+                                                              child: const Icon(
+                                                                Icons
+                                                                    .report_rounded,
+                                                                // color: Colors.white,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           ),
                                         )
                                       ],
