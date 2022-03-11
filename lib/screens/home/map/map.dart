@@ -1,9 +1,10 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 
 class MapScreen extends StatefulWidget {
@@ -14,10 +15,13 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Completer<GoogleMapController> controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
+
+  late LocationPermission permission;
   final LatLng _current = const LatLng(10.8505, 76.2711);
   final Set<Marker> _markers = {};
   bool _mapload = true;
+  bool showgeolocationwidget = false;
 
 // heart symbol
   bool favselect = false;
@@ -31,7 +35,7 @@ class _MapScreenState extends State<MapScreen> {
   );
 
   // 1cs 2ls 3ir 4jr
-  List<bool> showmarkertype = [true, false, false, false];
+  List<bool> showmarkertype = [false, false, false, true];
   List<LatLng> ll = [];
   List<Map> userList = [];
   //map window
@@ -76,6 +80,7 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  @override
   void initState() {
     getdata();
     super.initState();
@@ -107,24 +112,187 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
         SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: TextFormField(
-              autofocus: false,
-              keyboardType: TextInputType.text,
-              onSaved: (value) {},
-              textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  prefixIcon: const Icon(Icons.search),
-                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  hintText:
-                      "Search for Items, Spaces, Jobs, Community service near you",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  )),
-            ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: TextFormField(
+                  autofocus: false,
+                  keyboardType: TextInputType.text,
+                  onSaved: (value) {},
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      prefixIcon: const Icon(Icons.location_on),
+                      contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                      hintText:
+                          "Search for Items, Spaces, Jobs, Community service near you",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      )),
+                ),
+              ),
+              showmarkertype[0]
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                      child: SizedBox(
+                        height: 25,
+                        child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            children: [
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  getnearbylocations("Orphanages", _current);
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(66, 103, 178, 1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Text(
+                                    "Orphanages",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  getnearbylocations("old+age+homes", _current);
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(66, 103, 178, 1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Text(
+                                    "Old Age Homes",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  getnearbylocations("NGO", _current);
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(66, 103, 178, 1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Text(
+                                    "Non Government Organisations",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ]),
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+              alignment: Alignment.bottomRight,
+              child: SpeedDial(
+                animatedIcon: AnimatedIcons.menu_home,
+                overlayOpacity: 0,
+                children: [
+                  SpeedDialChild(
+                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                      label: "Job Requests",
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(66, 103, 178, 1),
+                      ),
+                      child: const Icon(
+                        Icons.work,
+                        color: Colors.white,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          // 1cs 2ls 3ir 4jr
+                          showmarkertype = [false, false, false, true];
+                        });
+                      }),
+                  SpeedDialChild(
+                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                      label: "Items Requests",
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(66, 103, 178, 1),
+                      ),
+                      child: const Icon(Icons.handyman, color: Colors.white),
+                      onTap: () {
+                        setState(() {
+                          // 1cs 2ls 3ir 4jr
+                          showmarkertype = [false, false, true, false];
+                        });
+                      }),
+                  SpeedDialChild(
+                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                      label: "LinkSpace",
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(66, 103, 178, 1),
+                      ),
+                      child: const Icon(Icons.group, color: Colors.white),
+                      onTap: () {
+                        setState(() {
+                          // 1cs 2ls 3ir 4jr
+                          showmarkertype = [false, true, false, false];
+                        });
+                      }),
+                  SpeedDialChild(
+                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                      label: "Community Service",
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(66, 103, 178, 1),
+                      ),
+                      child: const Icon(Icons.handshake, color: Colors.white),
+                      onTap: () {
+                        setState(() {
+                          // 1cs 2ls 3ir 4jr
+                          showmarkertype = [true, false, false, false];
+                        });
+                      }),
+                ],
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 80, 8),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                onPressed: () => getLocation(),
+                child: const Icon(Icons.gps_fixed)),
           ),
         ),
         _markerclicked
@@ -285,85 +453,27 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                 ))
             : Container(),
-        !_markerclicked
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: SpeedDial(
-                      animatedIcon: AnimatedIcons.menu_home,
-                      overlayOpacity: 0,
-                      children: [
-                        SpeedDialChild(
-                            backgroundColor:
-                                const Color.fromRGBO(66, 103, 178, 1),
-                            label: "Job Requests",
-                            labelStyle: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(66, 103, 178, 1),
-                            ),
-                            child: const Icon(
-                              Icons.work,
-                              color: Colors.white,
-                            ),
-                            onTap: () {
-                              setState(() {
-                                // 1cs 2ls 3ir 4jr
-                                showmarkertype = [false, false, false, true];
-                              });
-                            }),
-                        SpeedDialChild(
-                            backgroundColor:
-                                const Color.fromRGBO(66, 103, 178, 1),
-                            label: "Items Requests",
-                            labelStyle: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(66, 103, 178, 1),
-                            ),
-                            child:
-                                const Icon(Icons.handyman, color: Colors.white),
-                            onTap: () {
-                              setState(() {
-                                // 1cs 2ls 3ir 4jr
-                                showmarkertype = [false, false, true, false];
-                              });
-                            }),
-                        SpeedDialChild(
-                            backgroundColor:
-                                const Color.fromRGBO(66, 103, 178, 1),
-                            label: "LinkSpace",
-                            labelStyle: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(66, 103, 178, 1),
-                            ),
-                            child: const Icon(Icons.group, color: Colors.white),
-                            onTap: () {
-                              setState(() {
-                                // 1cs 2ls 3ir 4jr
-                                showmarkertype = [false, true, false, false];
-                              });
-                            }),
-                        SpeedDialChild(
-                            backgroundColor:
-                                const Color.fromRGBO(66, 103, 178, 1),
-                            label: "Community Service",
-                            labelStyle: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(66, 103, 178, 1),
-                            ),
-                            child: const Icon(Icons.handshake,
-                                color: Colors.white),
-                            onTap: () {
-                              setState(() {
-                                // 1cs 2ls 3ir 4jr
-                                showmarkertype = [true, false, false, false];
-                              });
-                            }),
-                      ],
-                    )),
-              )
-            : Container(),
       ],
     );
   }
+
+  getLocation() async {
+    print("called");
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    final position = await Geolocator.getCurrentPosition();
+    print(position);
+  }
+
+  getnearbylocations(String locationtype, LatLng current) async {}
 }
