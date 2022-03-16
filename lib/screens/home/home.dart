@@ -12,7 +12,6 @@ import 'package:googlesolutionchallenge/services/auth.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -31,6 +30,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final NavigationBloc bloc = NavigationBloc();
   final _auth = AuthService();
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   int _index = 0;
 
@@ -373,6 +374,7 @@ class _HomeState extends State<Home> {
                   // show loading screen accorginly
 
                   return Scaffold(
+                    key: scaffoldKey,
                     resizeToAvoidBottomInset: false,
                     appBar: _index != 1
                         ? _index != 0
@@ -525,7 +527,7 @@ class _HomeState extends State<Home> {
                               ) */
                         : null,
                     // Drawer styling from theme is left
-                    drawer: _index != 1 ? _drawer : null,
+                    drawer: _drawer,
                     body: snapshot.data == Navigation.dashboard
                         ? screens[0]
                         : snapshot.data == Navigation.map

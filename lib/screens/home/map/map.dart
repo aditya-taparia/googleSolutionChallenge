@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -102,54 +102,93 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        (_mapload) ? const Loading() : Container(),
-        GestureDetector(
-          child: GoogleMap(
-            zoomControlsEnabled: false,
-            compassEnabled: false,
-            tiltGesturesEnabled: false,
-            mapType: MapType.normal,
-            initialCameraPosition: CameraPosition(
-              tilt: 30,
-              target: _current,
-              zoom: 15,
-            ),
-            onMapCreated: _onMapCreated,
-            onTap: (LatLng latLng) {
-              setState(() {
-                _markerclicked = false;
-              });
-            },
-            markers: _markers,
+        FloatingSearchBar(
+          clearQueryOnClose: true,
+          transitionDuration: const Duration(milliseconds: 800),
+          transitionCurve: Curves.easeInOutCubic,
+          physics: const BouncingScrollPhysics(),
+          borderRadius: BorderRadius.circular(10),
+          elevation: 0,
+          border: const BorderSide(
+            color: Color.fromRGBO(204, 204, 204, 1),
+            width: 1.5,
           ),
-        ),
-        SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: TextFormField(
-                  autofocus: false,
-                  keyboardType: TextInputType.text,
-                  onSaved: (value) {},
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      prefixIcon: const Icon(Icons.location_on),
-                      contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                      hintText:
-                          "Search for Items, Spaces, Jobs, Community service near you",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      )),
+          iconColor: Colors.grey[800],
+          automaticallyImplyDrawerHamburger: true,
+          hint: 'What are you looking for?',
+          openWidth: MediaQuery.of(context).size.width,
+          hintStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Color.fromRGBO(102, 102, 102, 1),
+          ),
+          backgroundColor: Colors.white,
+          openAxisAlignment: 0.0,
+          axisAlignment: 0.0,
+          transition: CircularFloatingSearchBarTransition(),
+          actions: [
+            FloatingSearchBarAction(
+              showIfOpened: false,
+              child: CircularButton(
+                icon: Icon(
+                  Icons.notifications_rounded,
+                  size: 24,
+                  color: Colors.grey[800],
+                ),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Notify()));
+                },
+              ),
+            ),
+            FloatingSearchBarAction.searchToClear(
+              showIfClosed: false,
+            ),
+          ],
+          builder: (context, transition) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Material(
+                color: Colors.white,
+                elevation: 4.0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: Colors.accents.map((color) {
+                    return Container(height: 112, color: color);
+                  }).toList(),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+            );
+          },
+          body: Stack(
+            children: [
+              (_mapload) ? const Loading() : Container(),
+              GestureDetector(
+                child: GoogleMap(
+                  zoomControlsEnabled: false,
+                  compassEnabled: false,
+                  tiltGesturesEnabled: false,
+                  mapType: MapType.normal,
+                  initialCameraPosition: CameraPosition(
+                    tilt: 30,
+                    target: _current,
+                    zoom: 15,
+                  ),
+                  onMapCreated: _onMapCreated,
+                  onTap: (LatLng latLng) {
+                    setState(() {
+                      _markerclicked = false;
+                    });
+                  },
+                  markers: _markers,
+                ),
+              ),
+              Align(
+                alignment: const Alignment(0, -0.6),
                 child: SizedBox(
                   height: 35,
                   child: ListView(
+                      physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       children: [
@@ -215,7 +254,8 @@ class _MapScreenState extends State<MapScreen> {
                                     border: Border.all(
                                         color: const Color.fromRGBO(
                                             66, 103, 178, 1),
-                                        width: 2.0),
+                                        // change width to 1.5
+                                        width: 1.5),
                                     borderRadius: BorderRadius.circular(20),
                                   )
                                 : selectedDecoration,
@@ -351,348 +391,351 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                       ]),
                 ),
-              )
+              ),
+              (isSelected[0] | isSelected[1])
+                  ? Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment(1, -0.45),
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.white,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  StatefulBuilder(builder: (context, setState) {
+                                return AlertDialog(
+                                  title: Center(
+                                    child: const Text(
+                                      "Apply Filter",
+                                      style: TextStyle(fontSize: 25),
+                                    ),
+                                  ),
+                                  content: Column(
+                                    // mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CheckboxListTile(
+                                        dense: true,
+                                        activeColor: Colors.orangeAccent,
+                                        title: Text(
+                                          'Orphanages',
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        value: check[0],
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            check[0] = value!;
+                                          });
+                                        },
+                                      ),
+                                      CheckboxListTile(
+                                        dense: true,
+                                        activeColor: Colors.orangeAccent,
+                                        title: Text(
+                                          'Old Age Homes',
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        value: check[1],
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            check[1] = value!;
+                                          });
+                                        },
+                                      ),
+                                      CheckboxListTile(
+                                        dense: true,
+                                        activeColor: Colors.orangeAccent,
+                                        title: Text(
+                                          'NGO\'s',
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        value: check[2],
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            check[2] = value!;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    OutlinedButton(
+                                      child: Text(
+                                        "Cancel",
+                                        style: TextStyle(
+                                          fontFamily: GoogleFonts.varelaRound()
+                                              .fontFamily,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    ElevatedButton(
+                                      child: Text(
+                                        "Apply",
+                                        style: TextStyle(
+                                          fontFamily: GoogleFonts.varelaRound()
+                                              .fontFamily,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                  actionsAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                );
+                              }),
+                            );
+                          },
+                          child: Icon(
+                            Icons.tune_rounded,
+                            size: 30,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ))
+                  : Container(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 70.0, right: 8.0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                    onPressed: () => getLocation(),
+                    child: const Icon(
+                      Icons.add_location_rounded,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                    onPressed: () {
+                      _currentIcon ? getLocation() : null;
+                      setState(() {
+                        _currentIcon = !_currentIcon;
+                      });
+                    },
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 350),
+                      switchInCurve: Curves.easeInOut,
+                      switchOutCurve: Curves.easeInOut,
+                      transitionBuilder:
+                          (Widget child, Animation<double> animation) {
+                        return ScaleTransition(
+                          scale: animation,
+                          child: child,
+                        );
+                      },
+                      child: _currentIcon
+                          ? Icon(
+                              Icons.gps_not_fixed_rounded,
+                              key: const ValueKey('download'),
+                            )
+                          : Icon(
+                              Icons.gps_fixed_rounded,
+                              key: const ValueKey('done'),
+                            ),
+                    ),
+                  ),
+                ),
+              ),
+              _markerclicked
+                  ? Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: AnimatedContainer(
+                        duration: const Duration(
+                          milliseconds: 500,
+                        ),
+                        height: _height,
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20.0),
+                              topRight: Radius.circular(20.0),
+                            )),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (_open) {
+                                setState(() {
+                                  _height = 100;
+                                  _open = false;
+                                });
+                              } else {
+                                setState(() {
+                                  _height = 300;
+                                  _open = true;
+                                });
+                              }
+                            },
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: !_open
+                                        ? const Icon(
+                                            Icons.keyboard_arrow_up,
+                                            size: 30,
+                                          )
+                                        : const Icon(
+                                            Icons.keyboard_arrow_down,
+                                            size: 30,
+                                          ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "ITEM NAME",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Color.fromRGBO(
+                                                  66, 103, 178, 1),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromRGBO(
+                                                  66, 103, 178, 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: const Text(
+                                              "Category",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      GestureDetector(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 8.0),
+                                          child: favselect ? fav : fav2,
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            favselect = !favselect;
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Text(
+                                    "Description",
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(66, 103, 178, 1),
+                                    ),
+                                  ),
+                                  const Text(
+                                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam posuere ullamcorper varius. Suspendisse id auctor tellus, at imperdiet justo. Mauris vitae orci in odio dapibus consectetur. Etiam convallis lectus felis,"),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        height: 100,
+                                        child: const Center(
+                                          child: Text("IMAGE 1"),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromRGBO(
+                                              211, 211, 211, 1),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          height: 100,
+                                          child: const Center(
+                                            child: Text("IMAGE 2"),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromRGBO(
+                                                211, 211, 211, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          )),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: ElevatedButton(
+                                        onPressed: () {},
+                                        child: const Text("Chat")),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ))
+                  : Container(),
             ],
           ),
         ),
-        (isSelected[0] | isSelected[1])
-            ? Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment(1, -0.45),
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.white,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) =>
-                            StatefulBuilder(builder: (context, setState) {
-                          return AlertDialog(
-                            title: Center(
-                              child: const Text(
-                                "Apply Filter",
-                                style: TextStyle(fontSize: 25),
-                              ),
-                            ),
-                            content: Column(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                GFCheckboxListTile(
-                                  position: GFPosition.start,
-                                  titleText: 'Orphanages',
-                                  size: 25,
-                                  activeBgColor: Colors.orangeAccent,
-                                  type: GFCheckboxType.square,
-                                  activeIcon: Icon(
-                                    Icons.check,
-                                    size: 25,
-                                    color: Colors.white,
-                                  ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      check[0] = value;
-                                    });
-                                  },
-                                  value: check[0],
-                                  inactiveIcon: null,
-                                ),
-                                GFCheckboxListTile(
-                                  position: GFPosition.start,
-                                  titleText: 'Old Age Homes',
-                                  size: 25,
-                                  activeBgColor: Colors.orangeAccent,
-                                  type: GFCheckboxType.square,
-                                  activeIcon: Icon(
-                                    Icons.check,
-                                    size: 25,
-                                    color: Colors.white,
-                                  ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      check[1] = value;
-                                    });
-                                  },
-                                  value: check[1],
-                                  inactiveIcon: null,
-                                ),
-                                GFCheckboxListTile(
-                                  position: GFPosition.start,
-                                  titleText: "NGO's",
-                                  size: 25,
-                                  activeBgColor: Colors.orangeAccent,
-                                  type: GFCheckboxType.square,
-                                  activeIcon: Icon(
-                                    Icons.check,
-                                    size: 25,
-                                    color: Colors.white,
-                                  ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      check[2] = value;
-                                    });
-                                  },
-                                  value: check[2],
-                                  inactiveIcon: null,
-                                ),
-                              ],
-                            ),
-                            actions: <Widget>[
-                              OutlinedButton(
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                    fontFamily:
-                                        GoogleFonts.varelaRound().fontFamily,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              ElevatedButton(
-                                child: Text(
-                                  "Apply",
-                                  style: TextStyle(
-                                    fontFamily:
-                                        GoogleFonts.varelaRound().fontFamily,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                            actionsAlignment: MainAxisAlignment.spaceAround,
-                          );
-                        }),
-                      );
-                    },
-                    child: Icon(
-                      Icons.tune_rounded,
-                      size: 30,
-                      color: Colors.black,
-                    ),
-                  ),
-                ))
-            : Container(),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 70.0, right: 8.0),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-              onPressed: () => getLocation(),
-              child: const Icon(
-                Icons.add_location_rounded,
-                size: 30,
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-              onPressed: () {
-                _currentIcon ? getLocation() : null;
-                setState(() {
-                  _currentIcon = !_currentIcon;
-                });
-              },
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 350),
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return ScaleTransition(
-                    scale: animation,
-                    child: child,
-                  );
-                },
-                child: _currentIcon
-                    ? Icon(
-                        Icons.gps_not_fixed_rounded,
-                        key: const ValueKey('download'),
-                      )
-                    : Icon(
-                        Icons.gps_fixed_rounded,
-                        key: const ValueKey('done'),
-                      ),
-              ),
-            ),
-          ),
-        ),
-        _markerclicked
-            ? Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: AnimatedContainer(
-                  duration: const Duration(
-                    milliseconds: 500,
-                  ),
-                  height: _height,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0),
-                      )),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        if (_open) {
-                          setState(() {
-                            _height = 100;
-                            _open = false;
-                          });
-                        } else {
-                          setState(() {
-                            _height = 300;
-                            _open = true;
-                          });
-                        }
-                      },
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: !_open
-                                  ? const Icon(
-                                      Icons.keyboard_arrow_up,
-                                      size: 30,
-                                    )
-                                  : const Icon(
-                                      Icons.keyboard_arrow_down,
-                                      size: 30,
-                                    ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "ITEM NAME",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Color.fromRGBO(66, 103, 178, 1),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromRGBO(
-                                            66, 103, 178, 1),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: const Text(
-                                        "Category",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                GestureDetector(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 8.0),
-                                    child: favselect ? fav : fav2,
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      favselect = !favselect;
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                              "Description",
-                              style: TextStyle(
-                                color: Color.fromRGBO(66, 103, 178, 1),
-                              ),
-                            ),
-                            const Text(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam posuere ullamcorper varius. Suspendisse id auctor tellus, at imperdiet justo. Mauris vitae orci in odio dapibus consectetur. Etiam convallis lectus felis,"),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  height: 100,
-                                  child: const Center(
-                                    child: Text("IMAGE 1"),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(211, 211, 211, 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    height: 100,
-                                    child: const Center(
-                                      child: Text("IMAGE 2"),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(
-                                          211, 211, 211, 1),
-                                      borderRadius: BorderRadius.circular(20),
-                                    )),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: ElevatedButton(
-                                  onPressed: () {}, child: const Text("Chat")),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ))
-            : Container(),
       ],
     );
   }
