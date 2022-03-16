@@ -3,9 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:googlesolutionchallenge/widgets/loading.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -15,10 +18,12 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  List<bool> check = [false, false, false];
+
   final Completer<GoogleMapController> _controller = Completer();
 
   late LocationPermission permission;
-  final LatLng _current = const LatLng(10.8505, 76.2711);
+  final LatLng _current = const LatLng(15.5057, 80.0499);
   final Set<Marker> _markers = {};
   bool _mapload = true;
   bool showgeolocationwidget = false;
@@ -35,13 +40,20 @@ class _MapScreenState extends State<MapScreen> {
   );
 
   // 1cs 2ls 3ir 4jr
+  BoxDecoration selectedDecoration = BoxDecoration(
+    color: const Color.fromRGBO(66, 103, 178, 1),
+    borderRadius: BorderRadius.circular(20),
+  );
   List<bool> showmarkertype = [false, false, false, true];
+  List<bool> isSelected = [true, false, false, false, false];
+
   List<LatLng> ll = [];
   List<Map> userList = [];
   //map window
   double _height = 100;
   bool _open = false;
   bool _markerclicked = false;
+  bool _currentIcon = true;
 
   void getdata() async {
     final Future<QuerySnapshot> _usersStream =
@@ -100,7 +112,7 @@ class _MapScreenState extends State<MapScreen> {
             initialCameraPosition: CameraPosition(
               tilt: 30,
               target: _current,
-              zoom: 5,
+              zoom: 15,
             ),
             onMapCreated: _onMapCreated,
             onTap: (LatLng latLng) {
@@ -133,166 +145,394 @@ class _MapScreenState extends State<MapScreen> {
                       )),
                 ),
               ),
-              showmarkertype[0]
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: SizedBox(
-                        height: 25,
-                        child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  getnearbylocations("Orphanages", _current);
-                                },
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(66, 103, 178, 1),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                child: SizedBox(
+                  height: 35,
+                  child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSelected.asMap().forEach((index, value) {
+                                if (value == true) {
+                                  isSelected[index] = false;
+                                }
+                              });
+                              isSelected[0] = true;
+                            });
+                          },
+                          child: Container(
+                            width: 70,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: !isSelected[0]
+                                ? BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color.fromRGBO(
+                                            66, 103, 178, 1),
+                                        width: 2.0),
                                     borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Text(
-                                    "Orphanages",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  )
+                                : selectedDecoration,
+                            child: Center(
+                              child: Text(
+                                "All",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: !isSelected[0]
+                                      ? const Color.fromRGBO(66, 103, 178, 1)
+                                      : Colors.white,
                                 ),
                               ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  getnearbylocations("old+age+homes", _current);
-                                },
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(66, 103, 178, 1),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSelected.asMap().forEach((index, value) {
+                                if (value == true) {
+                                  isSelected[index] = false;
+                                }
+                              });
+                              isSelected[1] = true;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            decoration: !isSelected[1]
+                                ? BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color.fromRGBO(
+                                            66, 103, 178, 1),
+                                        width: 2.0),
                                     borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Text(
-                                    "Old Age Homes",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  )
+                                : selectedDecoration,
+                            child: Center(
+                              child: Text(
+                                "Community Service",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: !isSelected[1]
+                                      ? const Color.fromRGBO(66, 103, 178, 1)
+                                      : Colors.white,
                                 ),
                               ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  getnearbylocations("NGO", _current);
-                                },
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(66, 103, 178, 1),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSelected.asMap().forEach((index, value) {
+                                if (value == true) {
+                                  isSelected[index] = false;
+                                }
+                              });
+                              isSelected[2] = true;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            decoration: !isSelected[2]
+                                ? BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color.fromRGBO(
+                                            66, 103, 178, 1),
+                                        width: 2.0),
                                     borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Text(
-                                    "Non Government Organisations",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  )
+                                : selectedDecoration,
+                            child: Center(
+                              child: Text(
+                                "LinkSpaces",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: !isSelected[2]
+                                      ? const Color.fromRGBO(66, 103, 178, 1)
+                                      : Colors.white,
                                 ),
                               ),
-                            ]),
-                      ),
-                    )
-                  : Container(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSelected.asMap().forEach((index, value) {
+                                if (value == true) {
+                                  isSelected[index] = false;
+                                }
+                              });
+                              isSelected[3] = true;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            decoration: !isSelected[3]
+                                ? BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color.fromRGBO(
+                                            66, 103, 178, 1),
+                                        width: 2.0),
+                                    borderRadius: BorderRadius.circular(20),
+                                  )
+                                : selectedDecoration,
+                            child: Center(
+                              child: Text(
+                                "Item Requests",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: !isSelected[3]
+                                      ? const Color.fromRGBO(66, 103, 178, 1)
+                                      : Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSelected.asMap().forEach((index, value) {
+                                if (value == true) {
+                                  isSelected[index] = false;
+                                }
+                              });
+                              isSelected[4] = true;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            decoration: !isSelected[4]
+                                ? BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color.fromRGBO(
+                                            66, 103, 178, 1),
+                                        width: 2.0),
+                                    borderRadius: BorderRadius.circular(20),
+                                  )
+                                : selectedDecoration,
+                            child: Center(
+                              child: Text(
+                                "Job Requests",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: !isSelected[4]
+                                      ? const Color.fromRGBO(66, 103, 178, 1)
+                                      : Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
+                ),
+              )
             ],
+          ),
+        ),
+        (isSelected[0] | isSelected[1])
+            ? Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment(1, -0.45),
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.white,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) =>
+                            StatefulBuilder(builder: (context, setState) {
+                          return AlertDialog(
+                            title: Center(
+                              child: const Text(
+                                "Apply Filter",
+                                style: TextStyle(fontSize: 25),
+                              ),
+                            ),
+                            content: Column(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                GFCheckboxListTile(
+                                  position: GFPosition.start,
+                                  titleText: 'Orphanages',
+                                  size: 25,
+                                  activeBgColor: Colors.orangeAccent,
+                                  type: GFCheckboxType.square,
+                                  activeIcon: Icon(
+                                    Icons.check,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      check[0] = value;
+                                    });
+                                  },
+                                  value: check[0],
+                                  inactiveIcon: null,
+                                ),
+                                GFCheckboxListTile(
+                                  position: GFPosition.start,
+                                  titleText: 'Old Age Homes',
+                                  size: 25,
+                                  activeBgColor: Colors.orangeAccent,
+                                  type: GFCheckboxType.square,
+                                  activeIcon: Icon(
+                                    Icons.check,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      check[1] = value;
+                                    });
+                                  },
+                                  value: check[1],
+                                  inactiveIcon: null,
+                                ),
+                                GFCheckboxListTile(
+                                  position: GFPosition.start,
+                                  titleText: "NGO's",
+                                  size: 25,
+                                  activeBgColor: Colors.orangeAccent,
+                                  type: GFCheckboxType.square,
+                                  activeIcon: Icon(
+                                    Icons.check,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      check[2] = value;
+                                    });
+                                  },
+                                  value: check[2],
+                                  inactiveIcon: null,
+                                ),
+                              ],
+                            ),
+                            actions: <Widget>[
+                              OutlinedButton(
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    fontFamily:
+                                        GoogleFonts.varelaRound().fontFamily,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              ElevatedButton(
+                                child: Text(
+                                  "Apply",
+                                  style: TextStyle(
+                                    fontFamily:
+                                        GoogleFonts.varelaRound().fontFamily,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                            actionsAlignment: MainAxisAlignment.spaceAround,
+                          );
+                        }),
+                      );
+                    },
+                    child: Icon(
+                      Icons.tune_rounded,
+                      size: 30,
+                      color: Colors.black,
+                    ),
+                  ),
+                ))
+            : Container(),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 70.0, right: 8.0),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+              onPressed: () => getLocation(),
+              child: const Icon(
+                Icons.add_location_rounded,
+                size: 30,
+              ),
+            ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Align(
-              alignment: Alignment.bottomRight,
-              child: SpeedDial(
-                animatedIcon: AnimatedIcons.menu_home,
-                overlayOpacity: 0,
-                children: [
-                  SpeedDialChild(
-                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                      label: "Job Requests",
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(66, 103, 178, 1),
-                      ),
-                      child: const Icon(
-                        Icons.work,
-                        color: Colors.white,
-                      ),
-                      onTap: () {
-                        setState(() {
-                          // 1cs 2ls 3ir 4jr
-                          showmarkertype = [false, false, false, true];
-                        });
-                      }),
-                  SpeedDialChild(
-                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                      label: "Items Requests",
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(66, 103, 178, 1),
-                      ),
-                      child: const Icon(Icons.handyman, color: Colors.white),
-                      onTap: () {
-                        setState(() {
-                          // 1cs 2ls 3ir 4jr
-                          showmarkertype = [false, false, true, false];
-                        });
-                      }),
-                  SpeedDialChild(
-                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                      label: "LinkSpace",
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(66, 103, 178, 1),
-                      ),
-                      child: const Icon(Icons.group, color: Colors.white),
-                      onTap: () {
-                        setState(() {
-                          // 1cs 2ls 3ir 4jr
-                          showmarkertype = [false, true, false, false];
-                        });
-                      }),
-                  SpeedDialChild(
-                      backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                      label: "Community Service",
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(66, 103, 178, 1),
-                      ),
-                      child: const Icon(Icons.handshake, color: Colors.white),
-                      onTap: () {
-                        setState(() {
-                          // 1cs 2ls 3ir 4jr
-                          showmarkertype = [true, false, false, false];
-                        });
-                      }),
-                ],
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 8, 80, 8),
-          child: Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                onPressed: () => getLocation(),
-                child: const Icon(Icons.gps_fixed)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+              onPressed: () {
+                _currentIcon ? getLocation() : null;
+                setState(() {
+                  _currentIcon = !_currentIcon;
+                });
+              },
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 350),
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(
+                    scale: animation,
+                    child: child,
+                  );
+                },
+                child: _currentIcon
+                    ? Icon(
+                        Icons.gps_not_fixed_rounded,
+                        key: const ValueKey('download'),
+                      )
+                    : Icon(
+                        Icons.gps_fixed_rounded,
+                        key: const ValueKey('done'),
+                      ),
+              ),
+            ),
           ),
         ),
         _markerclicked

@@ -86,6 +86,7 @@ dependencies:
   pinput: ^1.2.2
   syncfusion_flutter_charts: ^19.4.54
   toggle_switch: ^1.4.0
+  getwidget: ^2.0.5
 
 dev_dependencies:
   flutter_test:
