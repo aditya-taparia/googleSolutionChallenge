@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
@@ -18,11 +17,10 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  Completer<GoogleMapController> _controller = Completer();
+  late LocationPermission permission;
   List<bool> check = [false, false, false];
 
-  final Completer<GoogleMapController> _controller = Completer();
-
-  late LocationPermission permission;
   final LatLng _current = const LatLng(15.5057, 80.0499);
   final Set<Marker> _markers = {};
   bool _mapload = true;
@@ -62,12 +60,13 @@ class _MapScreenState extends State<MapScreen> {
       value.docs.forEach((element) {
         Map<String, dynamic> val = element.data() as Map<String, dynamic>;
         userList.add(val);
-        print(element.data());
+        // print(element.data());
       });
     });
   }
 
-  void _onMapCreated(_controller) {
+  void _onMapCreated(controller) {
+    _controller.complete(controller);
     setState(() {
       _mapload = false;
       userList.forEach((element) {
@@ -172,7 +171,7 @@ class _MapScreenState extends State<MapScreen> {
                   initialCameraPosition: CameraPosition(
                     tilt: 30,
                     target: _current,
-                    zoom: 15,
+                    zoom: 5,
                   ),
                   onMapCreated: _onMapCreated,
                   onTap: (LatLng latLng) {
@@ -183,329 +182,337 @@ class _MapScreenState extends State<MapScreen> {
                   markers: _markers,
                 ),
               ),
-              Align(
-                alignment: const Alignment(0, -0.6),
-                child: SizedBox(
-                  height: 35,
-                  child: ListView(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSelected.asMap().forEach((index, value) {
-                                if (value == true) {
-                                  isSelected[index] = false;
-                                }
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 60.0),
+                  child: SizedBox(
+                    height: 35,
+                    child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isSelected.asMap().forEach((index, value) {
+                                  if (value == true) {
+                                    isSelected[index] = false;
+                                  }
+                                });
+                                isSelected[0] = true;
                               });
-                              isSelected[0] = true;
-                            });
-                          },
-                          child: Container(
-                            width: 70,
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: !isSelected[0]
-                                ? BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color.fromRGBO(
-                                            66, 103, 178, 1),
-                                        width: 2.0),
-                                    borderRadius: BorderRadius.circular(20),
-                                  )
-                                : selectedDecoration,
-                            child: Center(
-                              child: Text(
-                                "All",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: !isSelected[0]
-                                      ? const Color.fromRGBO(66, 103, 178, 1)
-                                      : Colors.white,
+                            },
+                            child: Container(
+                              width: 70,
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              decoration: !isSelected[0]
+                                  ? BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              66, 103, 178, 1),
+                                          width: 2.0),
+                                      borderRadius: BorderRadius.circular(20),
+                                    )
+                                  : selectedDecoration,
+                              child: Center(
+                                child: Text(
+                                  "All",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: !isSelected[0]
+                                        ? const Color.fromRGBO(66, 103, 178, 1)
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSelected.asMap().forEach((index, value) {
-                                if (value == true) {
-                                  isSelected[index] = false;
-                                }
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isSelected.asMap().forEach((index, value) {
+                                  if (value == true) {
+                                    isSelected[index] = false;
+                                  }
+                                });
+                                isSelected[2] = true;
                               });
-                              isSelected[1] = true;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            decoration: !isSelected[1]
-                                ? BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color.fromRGBO(
-                                            66, 103, 178, 1),
-                                        // change width to 1.5
-                                        width: 1.5),
-                                    borderRadius: BorderRadius.circular(20),
-                                  )
-                                : selectedDecoration,
-                            child: Center(
-                              child: Text(
-                                "Community Service",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: !isSelected[1]
-                                      ? const Color.fromRGBO(66, 103, 178, 1)
-                                      : Colors.white,
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              decoration: !isSelected[2]
+                                  ? BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              66, 103, 178, 1),
+                                          width: 2.0),
+                                      borderRadius: BorderRadius.circular(20),
+                                    )
+                                  : selectedDecoration,
+                              child: Center(
+                                child: Text(
+                                  "LinkSpaces",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: !isSelected[2]
+                                        ? const Color.fromRGBO(66, 103, 178, 1)
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSelected.asMap().forEach((index, value) {
-                                if (value == true) {
-                                  isSelected[index] = false;
-                                }
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isSelected.asMap().forEach((index, value) {
+                                  if (value == true) {
+                                    isSelected[index] = false;
+                                  }
+                                });
+                                isSelected[3] = true;
                               });
-                              isSelected[2] = true;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            decoration: !isSelected[2]
-                                ? BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color.fromRGBO(
-                                            66, 103, 178, 1),
-                                        width: 2.0),
-                                    borderRadius: BorderRadius.circular(20),
-                                  )
-                                : selectedDecoration,
-                            child: Center(
-                              child: Text(
-                                "LinkSpaces",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: !isSelected[2]
-                                      ? const Color.fromRGBO(66, 103, 178, 1)
-                                      : Colors.white,
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              decoration: !isSelected[3]
+                                  ? BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              66, 103, 178, 1),
+                                          width: 2.0),
+                                      borderRadius: BorderRadius.circular(20),
+                                    )
+                                  : selectedDecoration,
+                              child: Center(
+                                child: Text(
+                                  "Item Requests",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: !isSelected[3]
+                                        ? const Color.fromRGBO(66, 103, 178, 1)
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSelected.asMap().forEach((index, value) {
-                                if (value == true) {
-                                  isSelected[index] = false;
-                                }
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isSelected.asMap().forEach((index, value) {
+                                  if (value == true) {
+                                    isSelected[index] = false;
+                                  }
+                                });
+                                isSelected[4] = true;
                               });
-                              isSelected[3] = true;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            decoration: !isSelected[3]
-                                ? BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color.fromRGBO(
-                                            66, 103, 178, 1),
-                                        width: 2.0),
-                                    borderRadius: BorderRadius.circular(20),
-                                  )
-                                : selectedDecoration,
-                            child: Center(
-                              child: Text(
-                                "Item Requests",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: !isSelected[3]
-                                      ? const Color.fromRGBO(66, 103, 178, 1)
-                                      : Colors.white,
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              decoration: !isSelected[4]
+                                  ? BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              66, 103, 178, 1),
+                                          width: 2.0),
+                                      borderRadius: BorderRadius.circular(20),
+                                    )
+                                  : selectedDecoration,
+                              child: Center(
+                                child: Text(
+                                  "Job Requests",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: !isSelected[4]
+                                        ? const Color.fromRGBO(66, 103, 178, 1)
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSelected.asMap().forEach((index, value) {
-                                if (value == true) {
-                                  isSelected[index] = false;
-                                }
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isSelected.asMap().forEach((index, value) {
+                                  if (value == true) {
+                                    isSelected[index] = false;
+                                  }
+                                });
+                                isSelected[1] = true;
                               });
-                              isSelected[4] = true;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            decoration: !isSelected[4]
-                                ? BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color.fromRGBO(
-                                            66, 103, 178, 1),
-                                        width: 2.0),
-                                    borderRadius: BorderRadius.circular(20),
-                                  )
-                                : selectedDecoration,
-                            child: Center(
-                              child: Text(
-                                "Job Requests",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: !isSelected[4]
-                                      ? const Color.fromRGBO(66, 103, 178, 1)
-                                      : Colors.white,
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              decoration: !isSelected[1]
+                                  ? BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              66, 103, 178, 1),
+                                          // change width to 1.5
+                                          width: 1.5),
+                                      borderRadius: BorderRadius.circular(20),
+                                    )
+                                  : selectedDecoration,
+                              child: Center(
+                                child: Text(
+                                  "Community Service",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: !isSelected[1]
+                                        ? const Color.fromRGBO(66, 103, 178, 1)
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ]),
+                        ]),
+                  ),
                 ),
               ),
               (isSelected[0] | isSelected[1])
                   ? Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Align(
-                        alignment: Alignment(1, -0.45),
-                        child: FloatingActionButton(
-                          backgroundColor: Colors.white,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  StatefulBuilder(builder: (context, setState) {
-                                return AlertDialog(
-                                  title: Center(
-                                    child: const Text(
-                                      "Apply Filter",
-                                      style: TextStyle(fontSize: 25),
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(0, 120, 0, 0),
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.white,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: const Center(
+                                      child: Text(
+                                        "Apply Filter",
+                                        style: TextStyle(fontSize: 25),
+                                      ),
                                     ),
-                                  ),
-                                  content: Column(
-                                    // mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CheckboxListTile(
-                                        dense: true,
-                                        activeColor: Colors.orangeAccent,
-                                        title: Text(
-                                          'Orphanages',
-                                          style: TextStyle(fontSize: 20),
+                                    content: Column(
+                                      // mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CheckboxListTile(
+                                          dense: true,
+                                          activeColor: Colors.orangeAccent,
+                                          title: const Text(
+                                            'Orphanages',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          value: check[0],
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              check[0] = value!;
+                                            });
+                                          },
                                         ),
-                                        controlAffinity:
-                                            ListTileControlAffinity.leading,
-                                        value: check[0],
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            check[0] = value!;
-                                          });
+                                        CheckboxListTile(
+                                          dense: true,
+                                          activeColor: Colors.orangeAccent,
+                                          title: const Text(
+                                            'Old Age Homes',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          value: check[1],
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              check[1] = value!;
+                                            });
+                                          },
+                                        ),
+                                        CheckboxListTile(
+                                          dense: true,
+                                          activeColor: Colors.orangeAccent,
+                                          title: const Text(
+                                            'NGO\'s',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          value: check[2],
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              check[2] = value!;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    actions: <Widget>[
+                                      OutlinedButton(
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                            fontFamily:
+                                                GoogleFonts.varelaRound()
+                                                    .fontFamily,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
                                         },
                                       ),
-                                      CheckboxListTile(
-                                        dense: true,
-                                        activeColor: Colors.orangeAccent,
-                                        title: Text(
-                                          'Old Age Homes',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        controlAffinity:
-                                            ListTileControlAffinity.leading,
-                                        value: check[1],
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            check[1] = value!;
-                                          });
-                                        },
+                                      const SizedBox(
+                                        width: 5,
                                       ),
-                                      CheckboxListTile(
-                                        dense: true,
-                                        activeColor: Colors.orangeAccent,
-                                        title: Text(
-                                          'NGO\'s',
-                                          style: TextStyle(fontSize: 20),
+                                      ElevatedButton(
+                                        child: Text(
+                                          "Apply",
+                                          style: TextStyle(
+                                            fontFamily:
+                                                GoogleFonts.varelaRound()
+                                                    .fontFamily,
+                                          ),
                                         ),
-                                        controlAffinity:
-                                            ListTileControlAffinity.leading,
-                                        value: check[2],
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            check[2] = value!;
-                                          });
+                                        onPressed: () {
+                                          Navigator.pop(context);
                                         },
                                       ),
                                     ],
-                                  ),
-                                  actions: <Widget>[
-                                    OutlinedButton(
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                          fontFamily: GoogleFonts.varelaRound()
-                                              .fontFamily,
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    ElevatedButton(
-                                      child: Text(
-                                        "Apply",
-                                        style: TextStyle(
-                                          fontFamily: GoogleFonts.varelaRound()
-                                              .fontFamily,
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                  actionsAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                );
-                              }),
-                            );
-                          },
-                          child: Icon(
-                            Icons.tune_rounded,
-                            size: 30,
-                            color: Colors.black,
+                                    actionsAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                  );
+                                }),
+                              );
+                            },
+                            child: const Icon(
+                              Icons.tune_rounded,
+                              size: 30,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ))
@@ -554,13 +561,13 @@ class _MapScreenState extends State<MapScreen> {
                         );
                       },
                       child: _currentIcon
-                          ? Icon(
+                          ? const Icon(
                               Icons.gps_not_fixed_rounded,
-                              key: const ValueKey('download'),
+                              key: ValueKey('download'),
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.gps_fixed_rounded,
-                              key: const ValueKey('done'),
+                              key: ValueKey('done'),
                             ),
                     ),
                   ),
@@ -754,8 +761,30 @@ class _MapScreenState extends State<MapScreen> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-    final position = await Geolocator.getCurrentPosition();
-    print(position);
+
+    final GoogleMapController controller = await _controller.future;
+    final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
+
+    controller.animateCamera(
+        CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)));
+
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('Current-uid'),
+          position: LatLng(position.latitude, position.longitude),
+          infoWindow: const InfoWindow(
+            title: "Current ",
+          ),
+          onTap: () {
+            setState(() {
+              _markerclicked = true;
+            });
+          },
+        ),
+      );
+    });
   }
 
   getnearbylocations(String locationtype, LatLng current) async {}
