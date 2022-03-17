@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
-
+import 'package:google_place/google_place.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
@@ -48,6 +48,7 @@ class _MapScreenState extends State<MapScreen> {
   List<LatLng> ll = [];
   List<Map> userList = [];
   List<Map> userList2 = [];
+  List userList3 = [];
   //map window
   double _height = 100;
   bool _open = false;
@@ -78,8 +79,32 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void setmarkers() {
+  void setmarkers() async {
     _markers = {};
+    late List nearbymarkers1 = [];
+    late List nearbymarkers2 = [];
+    late List nearbymarkers3 = [];
+
+    if (isSelected[1]) {
+      if (check[0]) {
+        List a = await getnearbylocations("Orphanages", _current);
+        setState(() {
+          nearbymarkers1 = a;
+        });
+      }
+      if (check[1]) {
+        List a = await getnearbylocations("Old+Age+Homes", _current);
+        setState(() {
+          nearbymarkers2 = a;
+        });
+      }
+      if (check[2]) {
+        List a = await getnearbylocations("NGO", _current);
+        setState(() {
+          nearbymarkers3 = a;
+        });
+      }
+    }
 
     setState(() {
       //item markers
@@ -152,6 +177,73 @@ class _MapScreenState extends State<MapScreen> {
             ),
           );
         });
+      }
+
+//community service markers
+      if (isSelected[1]) {
+        // print(nearbymarkers);
+        // for (int i = 0; i < nearbymarkers.length; i++) {
+        //   print(nearbymarkers[i].lat);
+        //   _markers.add(
+        //     Marker(
+        //       markerId: MarkerId('id-1' + i.toString()),
+        //       position: LatLng(nearbymarkers[i].lat, nearbymarkers[i].lng),
+        //       onTap: () {
+        //         setState(() {
+        //           _markerclicked = true;
+        //         });
+        //       },
+        //     ),
+        //   );
+        // }
+        if (check[0]) {
+          nearbymarkers1.forEach((element) {
+            print(element.lat);
+            _markers.add(
+              Marker(
+                markerId: MarkerId('id-1' + element.toString()),
+                position: LatLng(element.lat, element.lng),
+                onTap: () {
+                  setState(() {
+                    _markerclicked = true;
+                  });
+                },
+              ),
+            );
+          });
+        }
+        if (check[1]) {
+          nearbymarkers2.forEach((element) {
+            print(element.lat);
+            _markers.add(
+              Marker(
+                markerId: MarkerId('id-1' + element.toString()),
+                position: LatLng(element.lat, element.lng),
+                onTap: () {
+                  setState(() {
+                    _markerclicked = true;
+                  });
+                },
+              ),
+            );
+          });
+        }
+        if (check[2]) {
+          nearbymarkers3.forEach((element) {
+            print(element.lat);
+            _markers.add(
+              Marker(
+                markerId: MarkerId('id-1' + element.toString()),
+                position: LatLng(element.lat, element.lng),
+                onTap: () {
+                  setState(() {
+                    _markerclicked = true;
+                  });
+                },
+              ),
+            );
+          });
+        }
       }
     });
   }
@@ -246,7 +338,7 @@ class _MapScreenState extends State<MapScreen> {
                   initialCameraPosition: CameraPosition(
                     tilt: 30,
                     target: _current,
-                    zoom: 5,
+                    zoom: 7,
                   ),
                   onMapCreated: _onMapCreated,
                   onTap: (LatLng latLng) {
@@ -474,7 +566,7 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                 ),
               ),
-              (isSelected[0] | isSelected[1])
+              (isSelected[1])
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Align(
@@ -579,6 +671,7 @@ class _MapScreenState extends State<MapScreen> {
                                         ),
                                         onPressed: () {
                                           Navigator.pop(context);
+                                          setmarkers();
                                         },
                                       ),
                                     ],
@@ -867,5 +960,22 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  getnearbylocations(String locationtype, LatLng current) async {}
+  getnearbylocations(String locationtype, LatLng current) async {
+    var googlePlace = GooglePlace("AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4");
+
+    final result = await googlePlace.search.getNearBySearch(
+        Location(lat: current.latitude, lng: current.longitude), 1500,
+        type: locationtype, keyword: locationtype);
+
+    if (result != null && result.results != null && mounted) {
+      for (int i = 0; i < result.results!.length; i++) {
+        userList3.add(result.results![0].geometry?.location);
+      }
+      // setState(() {
+      //   print(result.results![0].geometry?.location?.lat);
+      // });
+    }
+
+    return userList3;
+  }
 }
