@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,6 +9,7 @@ import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:google_place/google_place.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -55,6 +57,14 @@ class _MapScreenState extends State<MapScreen> {
   bool _markerclicked = false;
   bool _currentIcon = true;
 
+  Set<LatLng> community = {};
+  Set<LatLng> community1 = {};
+  Set<LatLng> community2 = {};
+  Set<LatLng> community3 = {};
+  late List nearbymarkers1 = [];
+  late List nearbymarkers2 = [];
+  late List nearbymarkers3 = [];
+
   void getdata() async {
     final Future<QuerySnapshot> _usersStream =
         FirebaseFirestore.instance.collection('Mapdata').get();
@@ -81,52 +91,45 @@ class _MapScreenState extends State<MapScreen> {
 
   void setmarkers() async {
     _markers = {};
-    Set<LatLng> community = {};
-    Set<LatLng> community1 = {};
-    Set<LatLng> community2 = {};
-    Set<LatLng> community3 = {};
-    late List nearbymarkers1 = [];
-    late List nearbymarkers2 = [];
-    late List nearbymarkers3 = [];
 
     if (isSelected[1]) {
       if (check[0]) {
-        List a = await getnearbylocations("Orphanages", _current);
+        List ll = await getLoc('Orphanages', 9.8959, 76.7184, 2000);
         setState(() {
-          nearbymarkers1 = a;
+          nearbymarkers1 = ll;
         });
       }
       if (check[1]) {
-        List b = await getnearbylocations("Old+Age+Homes", _current);
+        List ll = await getLoc('Old+Age+Homes', 9.8959, 76.7184, 2000);
         setState(() {
-          nearbymarkers2 = b;
+          nearbymarkers2 = ll;
         });
       }
       if (check[2]) {
-        List c = await getnearbylocations("NGO", _current);
+        List ll = await getLoc('NGO', 9.8959, 76.7184, 2000);
         setState(() {
-          nearbymarkers3 = c;
+          nearbymarkers3 = ll;
         });
       }
     }
 
     if (check[0]) {
-      for (int i = 0; i < nearbymarkers1.length; i++) {
-        //community.add(LatLng(nearbymarkers1[i].lat, nearbymarkers1[i].lng));
-        community1.add(LatLng(nearbymarkers1[i].lat, nearbymarkers1[i].lng));
-      }
+      nearbymarkers1.forEach((element) {
+        community1.add(LatLng(element["geometry"]["location"]["lat"],
+            element["geometry"]["location"]["lng"]));
+      });
     }
     if (check[1]) {
-      for (int i = 0; i < nearbymarkers2.length; i++) {
-        //community.add(LatLng(nearbymarkers2[i].lat, nearbymarkers2[i].lng));
-        community2.add(LatLng(nearbymarkers2[i].lat, nearbymarkers2[i].lng));
-      }
+      nearbymarkers2.forEach((element) {
+        community2.add(LatLng(element["geometry"]["location"]["lat"],
+            element["geometry"]["location"]["lng"]));
+      });
     }
     if (check[2]) {
-      for (int i = 0; i < nearbymarkers3.length; i++) {
-        //community.add(LatLng(nearbymarkers3[i].lat, nearbymarkers3[i].lng));
-        community3.add(LatLng(nearbymarkers3[i].lat, nearbymarkers3[i].lng));
-      }
+      nearbymarkers3.forEach((element) {
+        community3.add(LatLng(element["geometry"]["location"]["lat"],
+            element["geometry"]["location"]["lng"]));
+      });
     }
 
     setState(() {
@@ -134,7 +137,7 @@ class _MapScreenState extends State<MapScreen> {
       check[0] ? community = community.union(community1) : null;
       check[1] ? community = community.union(community2) : null;
       check[2] ? community = community.union(community3) : null;
-      print(community);
+
       //item markers
       if (isSelected[0] || isSelected[3]) {
         userList.forEach((element) {
@@ -228,6 +231,7 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onMapCreated(controller) {
     _markers = {};
+    community = {};
     _controller.complete(controller);
     setState(() {
       _mapload = false;
@@ -954,5 +958,21 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     return userList3;
+  }
+
+  getLoc(String query, double lat, double lng, double radius) async {
+    final response = await http.get(Uri.parse(
+        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
+            query +
+            '&location=' +
+            lat.toString() +
+            ',' +
+            lng.toString() +
+            '&radius=' +
+            radius.toString() +
+            '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
+    final jsonStudent = await jsonDecode(response.body);
+    print(query + jsonStudent["results"].length.toString());
+    return jsonStudent["results"];
   }
 }
