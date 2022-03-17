@@ -19,9 +19,9 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _controller = Completer();
   late LocationPermission permission;
-  List<bool> check = [false, false, false];
+  List<bool> check = [true, true, true];
 
-  final LatLng _current = const LatLng(15.5057, 80.0499);
+  late LatLng _current = const LatLng(15.5057, 80.0499);
   Set<Marker> _markers = {};
   bool _mapload = true;
   bool showgeolocationwidget = false;
@@ -81,6 +81,10 @@ class _MapScreenState extends State<MapScreen> {
 
   void setmarkers() async {
     _markers = {};
+    Set<LatLng> community = {};
+    Set<LatLng> community1 = {};
+    Set<LatLng> community2 = {};
+    Set<LatLng> community3 = {};
     late List nearbymarkers1 = [];
     late List nearbymarkers2 = [];
     late List nearbymarkers3 = [];
@@ -93,20 +97,44 @@ class _MapScreenState extends State<MapScreen> {
         });
       }
       if (check[1]) {
-        List a = await getnearbylocations("Old+Age+Homes", _current);
+        List b = await getnearbylocations("Old+Age+Homes", _current);
         setState(() {
-          nearbymarkers2 = a;
+          nearbymarkers2 = b;
         });
       }
       if (check[2]) {
-        List a = await getnearbylocations("NGO", _current);
+        List c = await getnearbylocations("NGO", _current);
         setState(() {
-          nearbymarkers3 = a;
+          nearbymarkers3 = c;
         });
       }
     }
 
+    if (check[0]) {
+      for (int i = 0; i < nearbymarkers1.length; i++) {
+        //community.add(LatLng(nearbymarkers1[i].lat, nearbymarkers1[i].lng));
+        community1.add(LatLng(nearbymarkers1[i].lat, nearbymarkers1[i].lng));
+      }
+    }
+    if (check[1]) {
+      for (int i = 0; i < nearbymarkers2.length; i++) {
+        //community.add(LatLng(nearbymarkers2[i].lat, nearbymarkers2[i].lng));
+        community2.add(LatLng(nearbymarkers2[i].lat, nearbymarkers2[i].lng));
+      }
+    }
+    if (check[2]) {
+      for (int i = 0; i < nearbymarkers3.length; i++) {
+        //community.add(LatLng(nearbymarkers3[i].lat, nearbymarkers3[i].lng));
+        community3.add(LatLng(nearbymarkers3[i].lat, nearbymarkers3[i].lng));
+      }
+    }
+
     setState(() {
+      community = {};
+      check[0] ? community = community.union(community1) : null;
+      check[1] ? community = community.union(community2) : null;
+      check[2] ? community = community.union(community3) : null;
+      print(community);
       //item markers
       if (isSelected[0] || isSelected[3]) {
         userList.forEach((element) {
@@ -181,69 +209,19 @@ class _MapScreenState extends State<MapScreen> {
 
 //community service markers
       if (isSelected[1]) {
-        // print(nearbymarkers);
-        // for (int i = 0; i < nearbymarkers.length; i++) {
-        //   print(nearbymarkers[i].lat);
-        //   _markers.add(
-        //     Marker(
-        //       markerId: MarkerId('id-1' + i.toString()),
-        //       position: LatLng(nearbymarkers[i].lat, nearbymarkers[i].lng),
-        //       onTap: () {
-        //         setState(() {
-        //           _markerclicked = true;
-        //         });
-        //       },
-        //     ),
-        //   );
-        // }
-        if (check[0]) {
-          nearbymarkers1.forEach((element) {
-            print(element.lat);
-            _markers.add(
-              Marker(
-                markerId: MarkerId('id-1' + element.toString()),
-                position: LatLng(element.lat, element.lng),
-                onTap: () {
-                  setState(() {
-                    _markerclicked = true;
-                  });
-                },
-              ),
-            );
-          });
-        }
-        if (check[1]) {
-          nearbymarkers2.forEach((element) {
-            print(element.lat);
-            _markers.add(
-              Marker(
-                markerId: MarkerId('id-1' + element.toString()),
-                position: LatLng(element.lat, element.lng),
-                onTap: () {
-                  setState(() {
-                    _markerclicked = true;
-                  });
-                },
-              ),
-            );
-          });
-        }
-        if (check[2]) {
-          nearbymarkers3.forEach((element) {
-            print(element.lat);
-            _markers.add(
-              Marker(
-                markerId: MarkerId('id-1' + element.toString()),
-                position: LatLng(element.lat, element.lng),
-                onTap: () {
-                  setState(() {
-                    _markerclicked = true;
-                  });
-                },
-              ),
-            );
-          });
-        }
+        community.forEach((element) {
+          _markers.add(
+            Marker(
+              markerId: MarkerId('id-1' + element.toString()),
+              position: element,
+              onTap: () {
+                setState(() {
+                  _markerclicked = true;
+                });
+              },
+            ),
+          );
+        });
       }
     });
   }
@@ -338,7 +316,7 @@ class _MapScreenState extends State<MapScreen> {
                   initialCameraPosition: CameraPosition(
                     tilt: 30,
                     target: _current,
-                    zoom: 7,
+                    zoom: 6,
                   ),
                   onMapCreated: _onMapCreated,
                   onTap: (LatLng latLng) {
@@ -943,6 +921,7 @@ class _MapScreenState extends State<MapScreen> {
         CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)));
 
     setState(() {
+      _current = LatLng(position.latitude, position.longitude);
       _markers.add(
         Marker(
           markerId: const MarkerId('Current-uid'),
@@ -970,10 +949,8 @@ class _MapScreenState extends State<MapScreen> {
     if (result != null && result.results != null && mounted) {
       for (int i = 0; i < result.results!.length; i++) {
         userList3.add(result.results![0].geometry?.location);
+        //  print(userList3[i].lat.toString() + " ," + userList3[i].lng.toString());
       }
-      // setState(() {
-      //   print(result.results![0].geometry?.location?.lat);
-      // });
     }
 
     return userList3;
