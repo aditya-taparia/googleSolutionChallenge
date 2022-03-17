@@ -32,82 +32,87 @@ earnings(List<int> fromamount, List<int> fromto) {
   return earnings.toString();
 }
 
-class _AnalyticsState extends State<Analytics> {
+class _AnalyticsState extends State<Analytics>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 0,
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(130.0),
-          child: AppBar(
-            flexibleSpace: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.account_balance_wallet,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Earnings : " + earnings(fromamount, fromto),
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Row(
-                    children: const [
-                      Icon(
-                        Icons.handshake,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        " Donations : 1000/-",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                const TabBar(
-                    indicatorColor: Colors.white,
-                    unselectedLabelColor: Colors.white70,
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          'Chart',
-                          style: TextStyle(fontSize: 20),
+    return Scaffold(
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 170,
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.account_balance_wallet,
+                          color: Colors.white,
                         ),
-                      ),
-                      Tab(
-                          child: Text(
-                        'History',
-                        style: TextStyle(fontSize: 20),
-                      )),
-                    ])
-              ],
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Earnings : " + earnings(fromamount, fromto),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 15,
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.handshake,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Donations : 1000/-",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              pinned: true,
+              floating: true,
+              forceElevated: innerBoxIsScrolled,
+              bottom: TabBar(
+                tabs: <Tab>[
+                  Tab(text: 'Charts'),
+                  Tab(text: 'History'),
+                ],
+                controller: _tabController,
+              ),
             ),
-          ),
-        ),
-        body: const TabBarView(
-          children: [
+          ];
+        },
+        body: TabBarView(
+          controller: _tabController,
+          children: <Widget>[
             Chart(),
             Transactions(),
           ],
