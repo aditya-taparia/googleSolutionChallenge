@@ -67,6 +67,7 @@ dependencies:
   geolocator: ^8.2.0
   geocode: ^1.0.1
   material_floating_search_bar: ^0.3.7
+  google_place: ^0.4.7
 
   #forumfloatingaction
   flutter_speed_dial: ^5.0.0+1
@@ -78,8 +79,8 @@ dependencies:
   # Dashboard
   dotted_border: ^2.0.0+2
   shimmer_animation: ^2.1.0+1
-  
-  # OTP 
+
+  # OTP
   sms_autofill: ^2.2.0
   pin_code_fields: ^7.3.0
   pin_entry_text_field: ^0.1.4
