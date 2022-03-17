@@ -22,7 +22,7 @@ class _MapScreenState extends State<MapScreen> {
   List<bool> check = [false, false, false];
 
   final LatLng _current = const LatLng(15.5057, 80.0499);
-  final Set<Marker> _markers = {};
+  Set<Marker> _markers = {};
   bool _mapload = true;
   bool showgeolocationwidget = false;
 
@@ -47,6 +47,7 @@ class _MapScreenState extends State<MapScreen> {
 
   List<LatLng> ll = [];
   List<Map> userList = [];
+  List<Map> userList2 = [];
   //map window
   double _height = 100;
   bool _open = false;
@@ -56,6 +57,7 @@ class _MapScreenState extends State<MapScreen> {
   void getdata() async {
     final Future<QuerySnapshot> _usersStream =
         FirebaseFirestore.instance.collection('Mapdata').get();
+
     _usersStream.then((value) {
       value.docs.forEach((element) {
         Map<String, dynamic> val = element.data() as Map<String, dynamic>;
@@ -63,32 +65,105 @@ class _MapScreenState extends State<MapScreen> {
         // print(element.data());
       });
     });
+
+    final Future<QuerySnapshot> _users2Stream =
+        FirebaseFirestore.instance.collection('Linkspace').get();
+
+    _users2Stream.then((value) {
+      value.docs.forEach((element) {
+        Map<String, dynamic> val = element.data() as Map<String, dynamic>;
+        userList2.add(val);
+        // print(element.data());
+      });
+    });
+  }
+
+  void setmarkers() {
+    _markers = {};
+
+    setState(() {
+      //item markers
+      if (isSelected[0] || isSelected[3]) {
+        userList.forEach((element) {
+          if (element["category"].contains("item")) {
+            _markers.add(
+              Marker(
+                markerId: MarkerId('id-1' + element.toString()),
+                position: LatLng(
+                    double.parse(element["location"].latitude.toString()),
+                    double.parse(element["location"].longitude.toString())),
+                onTap: () {
+                  setState(() {
+                    _markerclicked = true;
+                  });
+                },
+                infoWindow: InfoWindow(
+                  title: element["name"],
+                  snippet: 'Item/service Name',
+                ),
+              ),
+            );
+          }
+        });
+      }
+//Request Markers
+      if (isSelected[0] || isSelected[4]) {
+        userList.forEach((element) {
+          if (element["category"].contains("request")) {
+            _markers.add(
+              Marker(
+                markerId: MarkerId('id-1' + element.toString()),
+                position: LatLng(
+                    double.parse(element["location"].latitude.toString()),
+                    double.parse(element["location"].longitude.toString())),
+                onTap: () {
+                  setState(() {
+                    _markerclicked = true;
+                  });
+                },
+                infoWindow: InfoWindow(
+                  title: element["name"],
+                  snippet: 'Item/service Name',
+                ),
+              ),
+            );
+          }
+        });
+      }
+
+//Linkspace markers
+      if (isSelected[0] || isSelected[2]) {
+        userList2.forEach((element) {
+          _markers.add(
+            Marker(
+              markerId: MarkerId('id-1' + element.toString()),
+              position: LatLng(
+                  double.parse(element["locality"].latitude.toString()),
+                  double.parse(element["locality"].longitude.toString())),
+              onTap: () {
+                setState(() {
+                  _markerclicked = true;
+                });
+              },
+              infoWindow: InfoWindow(
+                title: 'LinkSpace',
+                snippet: element['location'],
+              ),
+            ),
+          );
+        });
+      }
+    });
   }
 
   void _onMapCreated(controller) {
+    _markers = {};
     _controller.complete(controller);
     setState(() {
       _mapload = false;
-      userList.forEach((element) {
-        _markers.add(
-          Marker(
-            markerId: MarkerId('id-1' + element.toString()),
-            position: LatLng(
-                double.parse(element["location"].latitude.toString()),
-                double.parse(element["location"].longitude.toString())),
-            onTap: () {
-              setState(() {
-                _markerclicked = true;
-              });
-            },
-            infoWindow: InfoWindow(
-              title: element["name"],
-              snippet: 'Item/service Name',
-            ),
-          ),
-        );
-      });
     });
+
+    setmarkers();
   }
 
   @override
@@ -205,6 +280,7 @@ class _MapScreenState extends State<MapScreen> {
                                 });
                                 isSelected[0] = true;
                               });
+                              setmarkers();
                             },
                             child: Container(
                               width: 70,
@@ -246,6 +322,7 @@ class _MapScreenState extends State<MapScreen> {
                                 });
                                 isSelected[2] = true;
                               });
+                              setmarkers();
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10, right: 10),
@@ -285,6 +362,7 @@ class _MapScreenState extends State<MapScreen> {
                                 });
                                 isSelected[3] = true;
                               });
+                              setmarkers();
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10, right: 10),
@@ -324,6 +402,7 @@ class _MapScreenState extends State<MapScreen> {
                                 });
                                 isSelected[4] = true;
                               });
+                              setmarkers();
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10, right: 10),
@@ -363,6 +442,7 @@ class _MapScreenState extends State<MapScreen> {
                                 });
                                 isSelected[1] = true;
                               });
+                              setmarkers();
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 10, right: 10),
