@@ -23,6 +23,8 @@ class _MapScreenState extends State<MapScreen> {
   late LocationPermission permission;
   List<bool> check = [true, true, true];
 
+  bool Maptoggle = true;
+
   late LatLng _current = const LatLng(15.5057, 80.0499);
   Set<Marker> _markers = {};
   bool _mapload = true;
@@ -331,6 +333,44 @@ class _MapScreenState extends State<MapScreen> {
                   markers: _markers,
                 ),
               ),
+              !Maptoggle
+                  ? Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white.withOpacity(0.5),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 100,
+                          ),
+                          Container(
+                            child: ListView.builder(
+                                itemCount: userList.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  if (isSelected[0]) {
+                                    return Builditemjoblist(
+                                        userList[index], context);
+                                  } else if (isSelected[3]) {
+                                    if (userList[index]["category"]
+                                        .contains("item")) {
+                                      return Builditemjoblist(
+                                          userList[index], context);
+                                    }
+                                  } else {
+                                    if (userList[index]["category"]
+                                        .contains("request")) {
+                                      return Builditemjoblist(
+                                          userList[index], context);
+                                    }
+                                  }
+                                  return Container();
+                                }),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 60.0),
@@ -386,43 +426,50 @@ class _MapScreenState extends State<MapScreen> {
                           const SizedBox(
                             width: 10,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelected.asMap().forEach((index, value) {
-                                  if (value == true) {
-                                    isSelected[index] = false;
-                                  }
-                                });
-                                isSelected[2] = true;
-                              });
-                              setmarkers();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              decoration: !isSelected[2]
-                                  ? BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              66, 103, 178, 1),
-                                          width: 2.0),
-                                      borderRadius: BorderRadius.circular(20),
-                                    )
-                                  : selectedDecoration,
-                              child: Center(
-                                child: Text(
-                                  "LinkSpaces",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: !isSelected[2]
-                                        ? const Color.fromRGBO(66, 103, 178, 1)
-                                        : Colors.white,
+                          Maptoggle
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isSelected
+                                          .asMap()
+                                          .forEach((index, value) {
+                                        if (value == true) {
+                                          isSelected[index] = false;
+                                        }
+                                      });
+                                      isSelected[2] = true;
+                                    });
+                                    setmarkers();
+                                  },
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    decoration: !isSelected[2]
+                                        ? BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    66, 103, 178, 1),
+                                                width: 2.0),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          )
+                                        : selectedDecoration,
+                                    child: Center(
+                                      child: Text(
+                                        "LinkSpaces",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: !isSelected[2]
+                                              ? const Color.fromRGBO(
+                                                  66, 103, 178, 1)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
+                                )
+                              : Container(),
                           const SizedBox(
                             width: 10,
                           ),
@@ -506,44 +553,51 @@ class _MapScreenState extends State<MapScreen> {
                           const SizedBox(
                             width: 10,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelected.asMap().forEach((index, value) {
-                                  if (value == true) {
-                                    isSelected[index] = false;
-                                  }
-                                });
-                                isSelected[1] = true;
-                              });
-                              setmarkers();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              decoration: !isSelected[1]
-                                  ? BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              66, 103, 178, 1),
-                                          // change width to 1.5
-                                          width: 1.5),
-                                      borderRadius: BorderRadius.circular(20),
-                                    )
-                                  : selectedDecoration,
-                              child: Center(
-                                child: Text(
-                                  "Community Service",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: !isSelected[1]
-                                        ? const Color.fromRGBO(66, 103, 178, 1)
-                                        : Colors.white,
+                          Maptoggle
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isSelected
+                                          .asMap()
+                                          .forEach((index, value) {
+                                        if (value == true) {
+                                          isSelected[index] = false;
+                                        }
+                                      });
+                                      isSelected[1] = true;
+                                    });
+                                    setmarkers();
+                                  },
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    decoration: !isSelected[1]
+                                        ? BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    66, 103, 178, 1),
+                                                // change width to 1.5
+                                                width: 1.5),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          )
+                                        : selectedDecoration,
+                                    child: Center(
+                                      child: Text(
+                                        "Community Service",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: !isSelected[1]
+                                              ? const Color.fromRGBO(
+                                                  66, 103, 178, 1)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
+                                )
+                              : Container(),
                         ]),
                   ),
                 ),
@@ -681,11 +735,20 @@ class _MapScreenState extends State<MapScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                    onPressed: () => getLocation(),
-                    child: const Icon(
-                      Icons.add_location_rounded,
-                      size: 30,
-                    ),
+                    onPressed: () {
+                      setState(() {
+                        Maptoggle = !Maptoggle;
+                      });
+                    },
+                    child: Maptoggle
+                        ? const Icon(
+                            Icons.add_location_rounded,
+                            size: 30,
+                          )
+                        : const Icon(
+                            Icons.map_rounded,
+                            size: 30,
+                          ),
                   ),
                 ),
               ),
@@ -975,4 +1038,97 @@ class _MapScreenState extends State<MapScreen> {
     print(query + jsonStudent["results"].length.toString());
     return jsonStudent["results"];
   }
+}
+
+Widget Builditemjoblist(Map userList, BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      decoration: BoxDecoration(
+          color: const Color.fromRGBO(232, 236, 241, 1),
+          borderRadius: BorderRadius.circular(20)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(""),
+                    Text("IMG"),
+                    Text("[" +
+                        userList["location"].latitude.toString() +
+                        " " +
+                        userList["location"].longitude.toString() +
+                        "]"),
+                  ],
+                ),
+                width: MediaQuery.of(context).size.width * 0.4,
+                height: 150,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                        color: const Color.fromRGBO(66, 103, 178, 1),
+                        width: 2.0),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                    child: Text(
+                      userList["category"]
+                          .toString()
+                          .replaceAll("[", "")
+                          .replaceAll("]", "")
+                          .replaceAll(",", " | "),
+                      style: const TextStyle(
+                          color: Color.fromRGBO(66, 103, 178, 1),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ),
+              Text(userList["name"].toString()),
+              Container(
+                height: 50,
+                width: 200,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: userList["Provide"].length,
+                    itemBuilder: (context, yindex) {
+                      return userList["Provide_done"][yindex] == 0
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(userList["Provide"][yindex].toString()),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                    userList["Provide_des"][yindex].toString()),
+                              ],
+                            )
+                          : Container();
+                    }),
+              )
+            ],
+          )
+        ],
+      ),
+    ),
+  );
 }
