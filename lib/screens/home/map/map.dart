@@ -6,10 +6,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
-
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -24,11 +24,16 @@ class _MapScreenState extends State<MapScreen> {
   List<bool> check = [true, true, true];
 
   bool Maptoggle = true;
+  Set<Polyline> _polylines = Set<Polyline>();
+  int _polylineIdCounter = 1;
+  var directions;
 
   late LatLng _current = const LatLng(15.5057, 80.0499);
   Set<Marker> _markers = {};
   bool _mapload = true;
   bool showgeolocationwidget = false;
+
+  late LatLng destination = const LatLng(15.5057, 80.0499);
 
 // heart symbol
   bool favselect = false;
@@ -66,6 +71,22 @@ class _MapScreenState extends State<MapScreen> {
   late List nearbymarkers1 = [];
   late List nearbymarkers2 = [];
   late List nearbymarkers3 = [];
+
+  void _setPolyline(List<PointLatLng> points) {
+    final String polylineIdVal = 'polyline_$_polylineIdCounter';
+    _polylineIdCounter++;
+
+    _polylines.add(Polyline(
+      polylineId: PolylineId(polylineIdVal),
+      width: 5,
+      color: Colors.blue,
+      points: points
+          .map(
+            (point) => LatLng(point.latitude, point.longitude),
+          )
+          .toList(),
+    ));
+  }
 
   void getdata() async {
     final Future<QuerySnapshot> _usersStream =
@@ -155,6 +176,9 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
+                    destination = LatLng(
+                        double.parse(element["location"].latitude.toString()),
+                        double.parse(element["location"].longitude.toString()));
                     _markerclicked = true;
                   });
                 },
@@ -179,6 +203,9 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
+                    destination = LatLng(
+                        double.parse(element["location"].latitude.toString()),
+                        double.parse(element["location"].longitude.toString()));
                     _markerclicked = true;
                   });
                 },
@@ -205,6 +232,9 @@ class _MapScreenState extends State<MapScreen> {
                   double.parse(element["locality"].longitude.toString())),
               onTap: () {
                 setState(() {
+                  destination = LatLng(
+                      double.parse(element["locality"].latitude.toString()),
+                      double.parse(element["locality"].longitude.toString()));
                   _markerclicked = true;
                 });
               },
@@ -228,6 +258,7 @@ class _MapScreenState extends State<MapScreen> {
               position: element,
               onTap: () {
                 setState(() {
+                  destination = element;
                   _markerclicked = true;
                 });
               },
@@ -338,6 +369,7 @@ class _MapScreenState extends State<MapScreen> {
                     });
                   },
                   markers: _markers,
+                  polylines: _polylines,
                 ),
               ),
               !Maptoggle
@@ -911,52 +943,94 @@ class _MapScreenState extends State<MapScreen> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Row(
-                                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        height: 100,
-                                        child: const Center(
-                                          child: Text("IMAGE 1"),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: const Color.fromRGBO(
-                                              211, 211, 211, 1),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
+                                  Container(
+                                    height: 110,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      children: [
+                                        Container(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
                                               0.4,
                                           height: 100,
                                           child: const Center(
-                                            child: Text("IMAGE 2"),
+                                            child: Text("IMAGE 1"),
                                           ),
                                           decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
                                                 211, 211, 211, 1),
                                             borderRadius:
                                                 BorderRadius.circular(20),
-                                          )),
-                                    ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.4,
+                                            height: 100,
+                                            child: const Center(
+                                              child: Text("IMAGE 2"),
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromRGBO(
+                                                  211, 211, 211, 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            )),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.4,
+                                            height: 100,
+                                            child: const Center(
+                                              child: Text("IMAGE 2"),
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromRGBO(
+                                                  211, 211, 211, 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            )),
+                                      ],
+                                    ),
                                   ),
                                   const SizedBox(
                                     height: 10,
                                   ),
                                   Align(
-                                    alignment: Alignment.bottomLeft,
-                                    child: ElevatedButton(
-                                        onPressed: () {},
-                                        child: const Text("Chat")),
+                                    alignment: Alignment.bottomCenter,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                            onPressed: () {},
+                                            child: const Text("Chat")),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () async {
+                                              var temp = await getDirections(
+                                                  _current, destination);
+
+                                              //print(directions);
+
+                                              _setPolyline(directions);
+                                            },
+                                            child: const Text("Drive"))
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),
@@ -1013,6 +1087,7 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+// PLACES API
   getLoc(String query, double lat, double lng, double radius) async {
     final response = await http.get(Uri.parse(
         'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
@@ -1027,6 +1102,37 @@ class _MapScreenState extends State<MapScreen> {
     final jsonStudent = await jsonDecode(response.body);
     print(query + jsonStudent["results"].length.toString());
     return jsonStudent["results"];
+  }
+
+//DIRECTIONS API
+  getDirections(LatLng origin, LatLng destination) async {
+    String originstring =
+        origin.toString().replaceAll("LatLng(", "").replaceAll(")", "");
+    String destinationstring =
+        destination.toString().replaceAll("LatLng(", "").replaceAll(")", "");
+
+    //print(originstring);
+    final String url =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=$originstring&destination=$destinationstring&&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4';
+
+    final response = await http.get(Uri.parse(url));
+    final json = await jsonDecode(response.body);
+    //print(json);
+    var result = {
+      'bounds_ne': json['routes'][0]['bounds']['northeast'],
+      'bounds_se': json['routes'][0]['bounds']['southwest'],
+      'start_location': json['routes'][0]['legs'][0]['start_location'],
+      'end_location': json['routes'][0]['legs'][0]['end_location'],
+      'polyline': json['routes'][0]['overview_polyline']['points'],
+      'polyline_decode': PolylinePoints()
+          .decodePolyline(json['routes'][0]['overview_polyline']['points']),
+    };
+
+    //print(result['polyline_decode']);
+
+    setState(() {
+      directions = result['polyline_decode'];
+    });
   }
 }
 
