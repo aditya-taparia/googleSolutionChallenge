@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,7 +34,12 @@ class _MapScreenState extends State<MapScreen> {
   bool _mapload = true;
   bool showgeolocationwidget = false;
 
+// drive
   late LatLng destination = const LatLng(15.5057, 80.0499);
+  bool _drive = false;
+  String remdist = "";
+  String remtime = "";
+  String endadd = "";
 
 // heart symbol
   bool favselect = false;
@@ -114,6 +120,25 @@ class _MapScreenState extends State<MapScreen> {
 
   void setmarkers() async {
     _markers = {};
+
+//Current location marker
+
+    _markers.add(
+      Marker(
+        markerId: MarkerId('id-geolocation'),
+        position: _current,
+        onTap: () {
+          setState(() {
+            _markerclicked = true;
+          });
+        },
+        //icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        infoWindow: InfoWindow(
+          title: 'User Name',
+          snippet: '-_-',
+        ),
+      ),
+    );
 
     if (isSelected[1]) {
       if (check[0]) {
@@ -413,60 +438,18 @@ class _MapScreenState extends State<MapScreen> {
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 60.0),
-                  child: SizedBox(
-                    height: 35,
-                    child: ListView(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelected.asMap().forEach((index, value) {
-                                  if (value == true) {
-                                    isSelected[index] = false;
-                                  }
-                                });
-                                isSelected[0] = true;
-                              });
-                              setmarkers();
-                            },
-                            child: Container(
-                              width: 70,
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              decoration: !isSelected[0]
-                                  ? BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              66, 103, 178, 1),
-                                          width: 2.0),
-                                      borderRadius: BorderRadius.circular(20),
-                                    )
-                                  : selectedDecoration,
-                              child: Center(
-                                child: Text(
-                                  "All",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: !isSelected[0]
-                                        ? const Color.fromRGBO(66, 103, 178, 1)
-                                        : Colors.white,
-                                  ),
+                  child: !_drive
+                      ? SizedBox(
+                          height: 35,
+                          child: ListView(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              children: [
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Maptoggle
-                              ? GestureDetector(
+                                GestureDetector(
                                   onTap: () {
                                     setState(() {
                                       isSelected
@@ -476,14 +459,15 @@ class _MapScreenState extends State<MapScreen> {
                                           isSelected[index] = false;
                                         }
                                       });
-                                      isSelected[2] = true;
+                                      isSelected[0] = true;
                                     });
                                     setmarkers();
                                   },
                                   child: Container(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    decoration: !isSelected[2]
+                                    width: 70,
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    decoration: !isSelected[0]
                                         ? BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
@@ -496,10 +480,10 @@ class _MapScreenState extends State<MapScreen> {
                                         : selectedDecoration,
                                     child: Center(
                                       child: Text(
-                                        "LinkSpaces",
+                                        "All",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: !isSelected[2]
+                                          color: !isSelected[0]
                                               ? const Color.fromRGBO(
                                                   66, 103, 178, 1)
                                               : Colors.white,
@@ -507,93 +491,59 @@ class _MapScreenState extends State<MapScreen> {
                                       ),
                                     ),
                                   ),
-                                )
-                              : Container(),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelected.asMap().forEach((index, value) {
-                                  if (value == true) {
-                                    isSelected[index] = false;
-                                  }
-                                });
-                                isSelected[3] = true;
-                              });
-                              setmarkers();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              decoration: !isSelected[3]
-                                  ? BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              66, 103, 178, 1),
-                                          width: 2.0),
-                                      borderRadius: BorderRadius.circular(20),
-                                    )
-                                  : selectedDecoration,
-                              child: Center(
-                                child: Text(
-                                  "Item Requests",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: !isSelected[3]
-                                        ? const Color.fromRGBO(66, 103, 178, 1)
-                                        : Colors.white,
-                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelected.asMap().forEach((index, value) {
-                                  if (value == true) {
-                                    isSelected[index] = false;
-                                  }
-                                });
-                                isSelected[4] = true;
-                              });
-                              setmarkers();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              decoration: !isSelected[4]
-                                  ? BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              66, 103, 178, 1),
-                                          width: 2.0),
-                                      borderRadius: BorderRadius.circular(20),
-                                    )
-                                  : selectedDecoration,
-                              child: Center(
-                                child: Text(
-                                  "Job Requests",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: !isSelected[4]
-                                        ? const Color.fromRGBO(66, 103, 178, 1)
-                                        : Colors.white,
-                                  ),
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Maptoggle
-                              ? GestureDetector(
+                                Maptoggle
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isSelected
+                                                .asMap()
+                                                .forEach((index, value) {
+                                              if (value == true) {
+                                                isSelected[index] = false;
+                                              }
+                                            });
+                                            isSelected[2] = true;
+                                          });
+                                          setmarkers();
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          decoration: !isSelected[2]
+                                              ? BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              66, 103, 178, 1),
+                                                      width: 2.0),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                )
+                                              : selectedDecoration,
+                                          child: Center(
+                                            child: Text(
+                                              "LinkSpaces",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: !isSelected[2]
+                                                    ? const Color.fromRGBO(
+                                                        66, 103, 178, 1)
+                                                    : Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
                                   onTap: () {
                                     setState(() {
                                       isSelected
@@ -603,31 +553,30 @@ class _MapScreenState extends State<MapScreen> {
                                           isSelected[index] = false;
                                         }
                                       });
-                                      isSelected[1] = true;
+                                      isSelected[3] = true;
                                     });
                                     setmarkers();
                                   },
                                   child: Container(
                                     padding:
                                         EdgeInsets.only(left: 10, right: 10),
-                                    decoration: !isSelected[1]
+                                    decoration: !isSelected[3]
                                         ? BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
                                                 color: const Color.fromRGBO(
                                                     66, 103, 178, 1),
-                                                // change width to 1.5
-                                                width: 1.5),
+                                                width: 2.0),
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                           )
                                         : selectedDecoration,
                                     child: Center(
                                       child: Text(
-                                        "Community Service",
+                                        "Item Requests",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: !isSelected[1]
+                                          color: !isSelected[3]
                                               ? const Color.fromRGBO(
                                                   66, 103, 178, 1)
                                               : Colors.white,
@@ -635,10 +584,168 @@ class _MapScreenState extends State<MapScreen> {
                                       ),
                                     ),
                                   ),
-                                )
-                              : Container(),
-                        ]),
-                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isSelected
+                                          .asMap()
+                                          .forEach((index, value) {
+                                        if (value == true) {
+                                          isSelected[index] = false;
+                                        }
+                                      });
+                                      isSelected[4] = true;
+                                    });
+                                    setmarkers();
+                                  },
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    decoration: !isSelected[4]
+                                        ? BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    66, 103, 178, 1),
+                                                width: 2.0),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          )
+                                        : selectedDecoration,
+                                    child: Center(
+                                      child: Text(
+                                        "Job Requests",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: !isSelected[4]
+                                              ? const Color.fromRGBO(
+                                                  66, 103, 178, 1)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Maptoggle
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isSelected
+                                                .asMap()
+                                                .forEach((index, value) {
+                                              if (value == true) {
+                                                isSelected[index] = false;
+                                              }
+                                            });
+                                            isSelected[1] = true;
+                                          });
+                                          setmarkers();
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          decoration: !isSelected[1]
+                                              ? BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              66, 103, 178, 1),
+                                                      // change width to 1.5
+                                                      width: 1.5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                )
+                                              : selectedDecoration,
+                                          child: Center(
+                                            child: Text(
+                                              "Community Service",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: !isSelected[1]
+                                                    ? const Color.fromRGBO(
+                                                        66, 103, 178, 1)
+                                                    : Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                              ]),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ExpandablePanel(
+                                    header: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20.0, top: 10),
+                                      child: Text(
+                                        remdist + " (" + remtime + ")",
+                                        style: const TextStyle(
+                                            color:
+                                                Color.fromRGBO(66, 103, 178, 1),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    collapsed: Container(),
+                                    expanded: Text("Destination : " + endadd),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          child: OutlinedButton(
+                                              onPressed: () {},
+                                              child:
+                                                  const Text("Next Direction")),
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          child: ElevatedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _drive = !_drive;
+                                                  _polylines = {};
+                                                });
+                                              },
+                                              child: Text("Cancel Drive")),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ), // ondrive widget
                 ),
               ),
               (isSelected[1])
@@ -1021,11 +1128,13 @@ class _MapScreenState extends State<MapScreen> {
                                         ),
                                         ElevatedButton(
                                             onPressed: () async {
+                                              setState(() {
+                                                _markerclicked = false;
+                                                _drive = true;
+                                                _polylines = {};
+                                              });
                                               var temp = await getDirections(
                                                   _current, destination);
-
-                                              //print(directions);
-
                                               _setPolyline(directions);
                                             },
                                             child: const Text("Drive"))
@@ -1124,13 +1233,17 @@ class _MapScreenState extends State<MapScreen> {
       'start_location': json['routes'][0]['legs'][0]['start_location'],
       'end_location': json['routes'][0]['legs'][0]['end_location'],
       'polyline': json['routes'][0]['overview_polyline']['points'],
+      'distance': json['routes'][0]['legs'][0]['distance']['text'],
+      'duration': json['routes'][0]['legs'][0]['duration']['text'],
+      'end_address': json['routes'][0]['legs'][0]['end_address'],
       'polyline_decode': PolylinePoints()
           .decodePolyline(json['routes'][0]['overview_polyline']['points']),
     };
 
-    //print(result['polyline_decode']);
-
     setState(() {
+      remdist = result['distance'];
+      remtime = result['duration'];
+      endadd = result['end_address'];
       directions = result['polyline_decode'];
     });
   }

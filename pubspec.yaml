@@ -68,6 +68,7 @@ dependencies:
   geocode: ^1.0.1
   material_floating_search_bar: ^0.3.7
   flutter_polyline_points: ^1.0.0
+  expandable: ^5.0.1
 
   #forumfloatingaction
   flutter_speed_dial: ^5.0.0+1
