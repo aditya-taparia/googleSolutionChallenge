@@ -36,6 +36,15 @@ earnings(List<dynamic> Earnings, List<dynamic> Spendings) {
   return earnings.toString();
 }
 
+points(List<dynamic> points) {
+  num total = 0;
+  for (int i = 0; i < points.length; i++) {
+    total = total + points[i];
+  }
+
+  return total.toString();
+}
+
 class _AnalyticsState extends State<Analytics>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
@@ -103,7 +112,7 @@ class _AnalyticsState extends State<Analytics>
                               left: 15,
                             ),
                             child: Row(
-                              children: const [
+                              children: [
                                 Icon(
                                   Icons.handshake,
                                   color: Colors.white,
@@ -112,7 +121,9 @@ class _AnalyticsState extends State<Analytics>
                                   width: 10,
                                 ),
                                 Text(
-                                  "Donations : 1000/-",
+                                  "Link points : " +
+                                      points(AnalyticsSnapShot
+                                          .data!['Linkpoints']),
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15),
                                 ),
@@ -125,11 +136,22 @@ class _AnalyticsState extends State<Analytics>
                       floating: true,
                       forceElevated: innerBoxIsScrolled,
                       bottom: TabBar(
+                        indicatorColor: Colors.white,
                         tabs: const <Tab>[
                           Tab(
-                            text: 'Charts',
+                            child: Text(
+                              'Charts',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          Tab(text: 'History'),
+                          Tab(
+                            child: Text(
+                              'History',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         ],
                         controller: _tabController,
                       ),
@@ -138,7 +160,7 @@ class _AnalyticsState extends State<Analytics>
                 },
                 body: TabBarView(
                   controller: _tabController,
-                  children: <Widget>[
+                  children: const <Widget>[
                     Chart(),
                     Transactions(),
                   ],
@@ -146,7 +168,7 @@ class _AnalyticsState extends State<Analytics>
               ),
             );
           }
-          return Loading();
+          return const Loading();
         });
   }
 }

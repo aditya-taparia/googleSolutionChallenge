@@ -33,7 +33,7 @@ class _BarState extends State<Bar> {
     return SfCartesianChart(
       plotAreaBorderWidth: 0,
       primaryXAxis: DateTimeAxis(
-          interval: xdata.length / 12,
+          interval: xdata.length / 10,
           majorGridLines: const MajorGridLines(width: 0),
           dateFormat: DateFormat('''MMM'''),
           edgeLabelPlacement: EdgeLabelPlacement.shift),
@@ -52,7 +52,7 @@ class _BarState extends State<Bar> {
       // tooltipBehavior: TooltipBehavior(enable: true),
       trackballBehavior: TrackballBehavior(
         enable: true,
-        markerSettings: TrackballMarkerSettings(
+        markerSettings: const TrackballMarkerSettings(
           markerVisibility: TrackballVisibilityMode.visible,
           height: 6,
           width: 8,

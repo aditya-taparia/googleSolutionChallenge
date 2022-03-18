@@ -37,9 +37,9 @@ class _SplineAreaState extends State<SplineArea> {
       ),
       plotAreaBorderWidth: 0,
       primaryXAxis: DateTimeAxis(
-          interval: xdata.length / 10,
+          interval: xdata.length / 12,
           majorGridLines: const MajorGridLines(width: 0),
-          dateFormat: DateFormat('''MMM/dd/yyyy'''),
+          dateFormat: DateFormat('''M/yy'''),
           edgeLabelPlacement: EdgeLabelPlacement.shift),
       primaryYAxis: NumericAxis(
           numberFormat: NumberFormat.compact(),
@@ -104,7 +104,7 @@ class _SplineAreaState extends State<SplineArea> {
         borderColor: Colors.amberAccent[700],
         color: Colors.amberAccent[700]!.withOpacity(0.25),
         borderWidth: 2,
-        name: 'Charity',
+        name: 'Linkpoints',
         xValueMapper: (_SplineAreaData data, _) => data.year,
         yValueMapper: (_SplineAreaData data, _) => data.y2,
       ),
