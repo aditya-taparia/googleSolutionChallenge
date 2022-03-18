@@ -88,6 +88,8 @@ dependencies:
   syncfusion_flutter_charts: ^19.4.54
   toggle_switch: ^1.4.0
   getwidget: ^2.0.5
+  bubble_tab_indicator: ^0.1.6
+  fl_chart: ^0.46.0
 
   # API Calls
   http: ^0.13.4
