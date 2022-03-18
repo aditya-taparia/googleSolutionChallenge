@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
-import 'package:google_place/google_place.dart';
+
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:http/http.dart' as http;
@@ -96,19 +96,22 @@ class _MapScreenState extends State<MapScreen> {
 
     if (isSelected[1]) {
       if (check[0]) {
-        List ll = await getLoc('Orphanages', 9.8959, 76.7184, 2000);
+        List ll = await getLoc(
+            'Orphanages', _current.latitude, _current.longitude, 2000);
         setState(() {
           nearbymarkers1 = ll;
         });
       }
       if (check[1]) {
-        List ll = await getLoc('Old+Age+Homes', 9.8959, 76.7184, 2000);
+        List ll = await getLoc(
+            'Old+Age+Homes', _current.latitude, _current.longitude, 2000);
         setState(() {
           nearbymarkers2 = ll;
         });
       }
       if (check[2]) {
-        List ll = await getLoc('NGO', 9.8959, 76.7184, 2000);
+        List ll =
+            await getLoc('NGO', _current.latitude, _current.longitude, 2000);
         setState(() {
           nearbymarkers3 = ll;
         });
@@ -179,6 +182,8 @@ class _MapScreenState extends State<MapScreen> {
                     _markerclicked = true;
                   });
                 },
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueOrange),
                 infoWindow: InfoWindow(
                   title: element["name"],
                   snippet: 'Item/service Name',
@@ -203,6 +208,8 @@ class _MapScreenState extends State<MapScreen> {
                   _markerclicked = true;
                 });
               },
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueAzure),
               infoWindow: InfoWindow(
                 title: 'LinkSpace',
                 snippet: element['location'],
@@ -1004,23 +1011,6 @@ class _MapScreenState extends State<MapScreen> {
         ),
       );
     });
-  }
-
-  getnearbylocations(String locationtype, LatLng current) async {
-    var googlePlace = GooglePlace("AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4");
-
-    final result = await googlePlace.search.getNearBySearch(
-        Location(lat: current.latitude, lng: current.longitude), 1500,
-        type: locationtype, keyword: locationtype);
-
-    if (result != null && result.results != null && mounted) {
-      for (int i = 0; i < result.results!.length; i++) {
-        userList3.add(result.results![0].geometry?.location);
-        //  print(userList3[i].lat.toString() + " ," + userList3[i].lng.toString());
-      }
-    }
-
-    return userList3;
   }
 
   getLoc(String query, double lat, double lng, double radius) async {
