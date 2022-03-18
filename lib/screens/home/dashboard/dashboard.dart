@@ -61,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
           transitionDuration: const Duration(milliseconds: 800),
           transitionCurve: Curves.easeInOutCubic,
           physics: const BouncingScrollPhysics(),
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(10),
           elevation: 0,
           border: const BorderSide(
             color: Color.fromRGBO(204, 204, 204, 1),
@@ -128,7 +128,227 @@ class _DashboardState extends State<Dashboard> {
                       elevation: 0,
                       backgroundColor: Colors.transparent,
                     ),
-                    body: SingleChildScrollView(
+                    body: DefaultTabController(
+                      length: 2,
+                      child: NestedScrollView(
+                        headerSliverBuilder:
+                            (BuildContext context, bool innerBoxIsScrolled) {
+                          return <Widget>[
+                            SliverOverlapAbsorber(
+                              handle: NestedScrollView
+                                  .sliverOverlapAbsorberHandleFor(context),
+                              sliver: SliverAppBar(
+                                stretch: true,
+                                automaticallyImplyLeading: false,
+                                backgroundColor: Colors.transparent,
+                                flexibleSpace: FlexibleSpaceBar(
+                                  collapseMode: CollapseMode.pin,
+                                  centerTitle: false,
+                                  titlePadding: const EdgeInsets.only(
+                                    bottom: 70.0,
+                                    left: 26.0,
+                                    right: 10.0,
+                                  ),
+                                  title: FittedBox(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Hello ${userSnapshot.data!['name']}',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                Color.fromRGBO(66, 103, 178, 1),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        FutureBuilder<String>(
+                                            future: getPlace(
+                                                userSnapshot.data!['location']),
+                                            initialData: 'No Location',
+                                            builder: (context, geodata) {
+                                              try {
+                                                if (geodata.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return Row(
+                                                    children: const [
+                                                      SizedBox(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Color.fromRGBO(
+                                                              66, 103, 178, 1),
+                                                          strokeWidth: 1.5,
+                                                        ),
+                                                        height: 10,
+                                                        width: 10,
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Text(
+                                                        'Getting Location...',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Color.fromRGBO(
+                                                              102, 102, 102, 1),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }
+                                                if (geodata.connectionState ==
+                                                    ConnectionState.done) {
+                                                  try {
+                                                    if (geodata.hasData) {
+                                                      return Text(
+                                                        geodata.data!,
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: Color.fromRGBO(
+                                                              102, 102, 102, 1),
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return const Text(
+                                                        'Location Not Found',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Color.fromRGBO(
+                                                              102, 102, 102, 1),
+                                                        ),
+                                                      );
+                                                    }
+                                                  } catch (e) {
+                                                    rethrow;
+                                                  }
+                                                } else {
+                                                  return Row(
+                                                    children: const [
+                                                      SizedBox(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Color.fromRGBO(
+                                                              66, 103, 178, 1),
+                                                          strokeWidth: 2.5,
+                                                        ),
+                                                        height: 15,
+                                                        width: 15,
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Text(
+                                                        'Getting Location...',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: Color.fromRGBO(
+                                                              102, 102, 102, 1),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }
+                                              } catch (e) {
+                                                rethrow;
+                                              }
+                                            }),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                expandedHeight: 150,
+                                floating: true,
+                                pinned: true,
+                                snap: false,
+                                forceElevated: false,
+                                bottom: PreferredSize(
+                                  preferredSize: const Size.fromHeight(60),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: TabBar(
+                                      isScrollable: true,
+                                      unselectedLabelColor: Colors.white,
+                                      indicatorPadding:
+                                          const EdgeInsets.symmetric(
+                                        vertical: 6.0,
+                                      ),
+                                      indicatorSize: TabBarIndicatorSize.label,
+                                      indicator: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: const Color.fromRGBO(
+                                            239, 239, 239, 1),
+                                      ),
+                                      tabs: const [
+                                        Tab(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 12.0,
+                                                vertical: 2.0,
+                                              ),
+                                              child: Text(
+                                                'Home',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 12.0,
+                                                vertical: 2.0,
+                                              ),
+                                              child: Text(
+                                                'Open Requests',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ];
+                        },
+                        body: const TabBarView(
+                          children: [
+                            Center(
+                              child: Text('Home'),
+                            ),
+                            Center(
+                              child: Text('Open Requests'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return const Loading();
+              }),
+        ),
+      ],
+    );
+
+    /* SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
@@ -694,266 +914,6 @@ class _DashboardState extends State<Dashboard> {
                           ],
                         ),
                       ),
-                    ),
-                  );
-                }
-                return const Loading();
-              }),
-        ),
-      ],
-    );
-
-    /* SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
-                  ),
-                  color: Color.fromRGBO(66, 103, 178, 1),
-                ),
-                height: 130,
-                padding: const EdgeInsets.fromLTRB(30, 20, 0, 0),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "Hi Aditya",
-                      style: TextStyle(fontSize: 26, color: Colors.white),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Kerala, India",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 105, 8, 8),
-                child: TextFormField(
-                  autofocus: false,
-                  keyboardType: TextInputType.text,
-                  onSaved: (value) {},
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      prefixIcon: const Icon(Icons.search),
-                      contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                      hintText: "What are you looking for ?",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      )),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  margin: const EdgeInsets.all(0),
-                  color: Colors.blueGrey[50],
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: SizedBox(
-                          height: 140,
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: const Align(
-                            alignment: Alignment.bottomRight,
-                            child: Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage('assets/addItem.png'),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        color: Colors.transparent,
-                        elevation: 0,
-                        margin: const EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: SizedBox(
-                          height: 175,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(10.0),
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Add Items',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.redAccent[400],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  margin: const EdgeInsets.all(0),
-                  color: Colors.blue[50],
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: SizedBox(
-                          height: 140,
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          child: const Align(
-                            alignment: Alignment.bottomRight,
-                            child: Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage('assets/earnings.png'),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        color: Colors.transparent,
-                        elevation: 0,
-                        margin: const EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: SizedBox(
-                          height: 175,
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(10.0),
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Earnings',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.blue[800],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              margin: const EdgeInsets.all(0),
-              color: Colors.blue[50],
-              child: Stack(
-                children: [
-                  SizedBox(
-                    height: 200,
-                    width: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: const Image(
-                        fit: BoxFit.cover,
-                        image: AssetImage('assets/map.jpg'),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    color: Colors.black38,
-                    elevation: 0,
-                    margin: const EdgeInsets.all(0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: SizedBox(
-                      height: 200,
-                      width: double.maxFinite,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(10.0),
-                        onTap: () {
-                          widget.bloc.changeNavigationIndex(Navigation.map);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
-                                Text(
-                                  'Explore Items Near You',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ); */
+                    ) */
   }
 }
