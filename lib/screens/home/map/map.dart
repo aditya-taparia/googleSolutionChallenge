@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,6 +9,7 @@ import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -19,9 +21,11 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _controller = Completer();
   late LocationPermission permission;
-  List<bool> check = [false, false, false];
+  List<bool> check = [true, true, true];
 
-  final LatLng _current = const LatLng(15.5057, 80.0499);
+  bool Maptoggle = true;
+
+  late LatLng _current = const LatLng(15.5057, 80.0499);
   Set<Marker> _markers = {};
   bool _mapload = true;
   bool showgeolocationwidget = false;
@@ -48,11 +52,20 @@ class _MapScreenState extends State<MapScreen> {
   List<LatLng> ll = [];
   List<Map> userList = [];
   List<Map> userList2 = [];
+  List userList3 = [];
   //map window
   double _height = 100;
   bool _open = false;
   bool _markerclicked = false;
   bool _currentIcon = true;
+
+  Set<LatLng> community = {};
+  Set<LatLng> community1 = {};
+  Set<LatLng> community2 = {};
+  Set<LatLng> community3 = {};
+  late List nearbymarkers1 = [];
+  late List nearbymarkers2 = [];
+  late List nearbymarkers3 = [];
 
   void getdata() async {
     final Future<QuerySnapshot> _usersStream =
@@ -78,10 +91,58 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void setmarkers() {
+  void setmarkers() async {
     _markers = {};
 
+    if (isSelected[1]) {
+      if (check[0]) {
+        List ll = await getLoc(
+            'Orphanages', _current.latitude, _current.longitude, 2000);
+        setState(() {
+          nearbymarkers1 = ll;
+        });
+      }
+      if (check[1]) {
+        List ll = await getLoc(
+            'Old+Age+Homes', _current.latitude, _current.longitude, 2000);
+        setState(() {
+          nearbymarkers2 = ll;
+        });
+      }
+      if (check[2]) {
+        List ll =
+            await getLoc('NGO', _current.latitude, _current.longitude, 2000);
+        setState(() {
+          nearbymarkers3 = ll;
+        });
+      }
+    }
+
+    if (check[0]) {
+      nearbymarkers1.forEach((element) {
+        community1.add(LatLng(element["geometry"]["location"]["lat"],
+            element["geometry"]["location"]["lng"]));
+      });
+    }
+    if (check[1]) {
+      nearbymarkers2.forEach((element) {
+        community2.add(LatLng(element["geometry"]["location"]["lat"],
+            element["geometry"]["location"]["lng"]));
+      });
+    }
+    if (check[2]) {
+      nearbymarkers3.forEach((element) {
+        community3.add(LatLng(element["geometry"]["location"]["lat"],
+            element["geometry"]["location"]["lng"]));
+      });
+    }
+
     setState(() {
+      community = {};
+      check[0] ? community = community.union(community1) : null;
+      check[1] ? community = community.union(community2) : null;
+      check[2] ? community = community.union(community3) : null;
+
       //item markers
       if (isSelected[0] || isSelected[3]) {
         userList.forEach((element) {
@@ -121,6 +182,8 @@ class _MapScreenState extends State<MapScreen> {
                     _markerclicked = true;
                   });
                 },
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueOrange),
                 infoWindow: InfoWindow(
                   title: element["name"],
                   snippet: 'Item/service Name',
@@ -145,10 +208,29 @@ class _MapScreenState extends State<MapScreen> {
                   _markerclicked = true;
                 });
               },
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueAzure),
               infoWindow: InfoWindow(
                 title: 'LinkSpace',
                 snippet: element['location'],
               ),
+            ),
+          );
+        });
+      }
+
+//community service markers
+      if (isSelected[1]) {
+        community.forEach((element) {
+          _markers.add(
+            Marker(
+              markerId: MarkerId('id-1' + element.toString()),
+              position: element,
+              onTap: () {
+                setState(() {
+                  _markerclicked = true;
+                });
+              },
             ),
           );
         });
@@ -158,6 +240,7 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onMapCreated(controller) {
     _markers = {};
+    community = {};
     _controller.complete(controller);
     setState(() {
       _mapload = false;
@@ -246,7 +329,7 @@ class _MapScreenState extends State<MapScreen> {
                   initialCameraPosition: CameraPosition(
                     tilt: 30,
                     target: _current,
-                    zoom: 5,
+                    zoom: 6,
                   ),
                   onMapCreated: _onMapCreated,
                   onTap: (LatLng latLng) {
@@ -257,6 +340,44 @@ class _MapScreenState extends State<MapScreen> {
                   markers: _markers,
                 ),
               ),
+              !Maptoggle
+                  ? Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white.withOpacity(0.5),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 100,
+                          ),
+                          Container(
+                            child: ListView.builder(
+                                itemCount: userList.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  if (isSelected[0]) {
+                                    return Builditemjoblist(
+                                        userList[index], context);
+                                  } else if (isSelected[3]) {
+                                    if (userList[index]["category"]
+                                        .contains("item")) {
+                                      return Builditemjoblist(
+                                          userList[index], context);
+                                    }
+                                  } else {
+                                    if (userList[index]["category"]
+                                        .contains("request")) {
+                                      return Builditemjoblist(
+                                          userList[index], context);
+                                    }
+                                  }
+                                  return Container();
+                                }),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 60.0),
@@ -312,43 +433,50 @@ class _MapScreenState extends State<MapScreen> {
                           const SizedBox(
                             width: 10,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelected.asMap().forEach((index, value) {
-                                  if (value == true) {
-                                    isSelected[index] = false;
-                                  }
-                                });
-                                isSelected[2] = true;
-                              });
-                              setmarkers();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              decoration: !isSelected[2]
-                                  ? BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              66, 103, 178, 1),
-                                          width: 2.0),
-                                      borderRadius: BorderRadius.circular(20),
-                                    )
-                                  : selectedDecoration,
-                              child: Center(
-                                child: Text(
-                                  "LinkSpaces",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: !isSelected[2]
-                                        ? const Color.fromRGBO(66, 103, 178, 1)
-                                        : Colors.white,
+                          Maptoggle
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isSelected
+                                          .asMap()
+                                          .forEach((index, value) {
+                                        if (value == true) {
+                                          isSelected[index] = false;
+                                        }
+                                      });
+                                      isSelected[2] = true;
+                                    });
+                                    setmarkers();
+                                  },
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    decoration: !isSelected[2]
+                                        ? BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    66, 103, 178, 1),
+                                                width: 2.0),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          )
+                                        : selectedDecoration,
+                                    child: Center(
+                                      child: Text(
+                                        "LinkSpaces",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: !isSelected[2]
+                                              ? const Color.fromRGBO(
+                                                  66, 103, 178, 1)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
+                                )
+                              : Container(),
                           const SizedBox(
                             width: 10,
                           ),
@@ -432,49 +560,56 @@ class _MapScreenState extends State<MapScreen> {
                           const SizedBox(
                             width: 10,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelected.asMap().forEach((index, value) {
-                                  if (value == true) {
-                                    isSelected[index] = false;
-                                  }
-                                });
-                                isSelected[1] = true;
-                              });
-                              setmarkers();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              decoration: !isSelected[1]
-                                  ? BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              66, 103, 178, 1),
-                                          // change width to 1.5
-                                          width: 1.5),
-                                      borderRadius: BorderRadius.circular(20),
-                                    )
-                                  : selectedDecoration,
-                              child: Center(
-                                child: Text(
-                                  "Community Service",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: !isSelected[1]
-                                        ? const Color.fromRGBO(66, 103, 178, 1)
-                                        : Colors.white,
+                          Maptoggle
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isSelected
+                                          .asMap()
+                                          .forEach((index, value) {
+                                        if (value == true) {
+                                          isSelected[index] = false;
+                                        }
+                                      });
+                                      isSelected[1] = true;
+                                    });
+                                    setmarkers();
+                                  },
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    decoration: !isSelected[1]
+                                        ? BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    66, 103, 178, 1),
+                                                // change width to 1.5
+                                                width: 1.5),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          )
+                                        : selectedDecoration,
+                                    child: Center(
+                                      child: Text(
+                                        "Community Service",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: !isSelected[1]
+                                              ? const Color.fromRGBO(
+                                                  66, 103, 178, 1)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
+                                )
+                              : Container(),
                         ]),
                   ),
                 ),
               ),
-              (isSelected[0] | isSelected[1])
+              (isSelected[1])
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Align(
@@ -579,6 +714,7 @@ class _MapScreenState extends State<MapScreen> {
                                         ),
                                         onPressed: () {
                                           Navigator.pop(context);
+                                          setmarkers();
                                         },
                                       ),
                                     ],
@@ -606,11 +742,20 @@ class _MapScreenState extends State<MapScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
-                    onPressed: () => getLocation(),
-                    child: const Icon(
-                      Icons.add_location_rounded,
-                      size: 30,
-                    ),
+                    onPressed: () {
+                      setState(() {
+                        Maptoggle = !Maptoggle;
+                      });
+                    },
+                    child: Maptoggle
+                        ? const Icon(
+                            Icons.add_location_rounded,
+                            size: 30,
+                          )
+                        : const Icon(
+                            Icons.map_rounded,
+                            size: 30,
+                          ),
                   ),
                 ),
               ),
@@ -850,6 +995,7 @@ class _MapScreenState extends State<MapScreen> {
         CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)));
 
     setState(() {
+      _current = LatLng(position.latitude, position.longitude);
       _markers.add(
         Marker(
           markerId: const MarkerId('Current-uid'),
@@ -867,5 +1013,112 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  getnearbylocations(String locationtype, LatLng current) async {}
+  getLoc(String query, double lat, double lng, double radius) async {
+    final response = await http.get(Uri.parse(
+        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
+            query +
+            '&location=' +
+            lat.toString() +
+            ',' +
+            lng.toString() +
+            '&radius=' +
+            radius.toString() +
+            '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
+    final jsonStudent = await jsonDecode(response.body);
+    print(query + jsonStudent["results"].length.toString());
+    return jsonStudent["results"];
+  }
+}
+
+Widget Builditemjoblist(Map userList, BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      decoration: BoxDecoration(
+          color: const Color.fromRGBO(232, 236, 241, 1),
+          borderRadius: BorderRadius.circular(20)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(""),
+                    Text("IMG"),
+                    Text("[" +
+                        userList["location"].latitude.toString() +
+                        " " +
+                        userList["location"].longitude.toString() +
+                        "]"),
+                  ],
+                ),
+                width: MediaQuery.of(context).size.width * 0.4,
+                height: 150,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                        color: const Color.fromRGBO(66, 103, 178, 1),
+                        width: 2.0),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                    child: Text(
+                      userList["category"]
+                          .toString()
+                          .replaceAll("[", "")
+                          .replaceAll("]", "")
+                          .replaceAll(",", " | "),
+                      style: const TextStyle(
+                          color: Color.fromRGBO(66, 103, 178, 1),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ),
+              Text(userList["name"].toString()),
+              Container(
+                height: 50,
+                width: 200,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: userList["Provide"].length,
+                    itemBuilder: (context, yindex) {
+                      return userList["Provide_done"][yindex] == 0
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(userList["Provide"][yindex].toString()),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                    userList["Provide_des"][yindex].toString()),
+                              ],
+                            )
+                          : Container();
+                    }),
+              )
+            ],
+          )
+        ],
+      ),
+    ),
+  );
 }
