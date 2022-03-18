@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +65,15 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
           if (AnalyticsSnapShot.hasData) {
             List<dynamic> arr1 = AnalyticsSnapShot.data!['Earnings'];
             List<dynamic> arr2 = AnalyticsSnapShot.data!['Spendings'];
+            List<dynamic> arr3 = AnalyticsSnapShot.data!['Linkpoints'];
+            List<double> arr4 =
+                arr1.map((e) => e.toDouble()).toList().cast<double>();
+            List<double> arr5 =
+                arr2.map((e) => e.toDouble()).toList().cast<double>();
+            List<double> arr6 =
+                arr3.map((e) => e.toDouble()).toList().cast<double>();
+            List<dynamic> charity =
+                AnalyticsSnapShot.data!['Community services'];
 
             return Scaffold(
               body: SingleChildScrollView(
@@ -148,27 +159,20 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                                     MediaQuery.of(context).size.height * 0.40,
                                 width: MediaQuery.of(context).size.width,
                                 child: TabBarView(children: [
-                                  const SplineArea([
-                                    "2019-12-11",
-                                    "2020-02-12",
-                                    "2021-01-23",
-                                    "2022-01-14",
-                                  ], [
-                                    1,
-                                    3,
-                                    4,
-                                    6,
-                                  ], [
-                                    5,
-                                    6,
-                                    7,
-                                    9,
-                                  ], [
-                                    2,
-                                    2,
-                                    5,
-                                    6,
-                                  ]),
+                                  SplineArea(const [
+                                    "2021-01-15",
+                                    "2021-02-15",
+                                    "2021-03-15",
+                                    "2021-04-15",
+                                    "2021-05-15",
+                                    "2021-06-15",
+                                    "2021-07-15",
+                                    "2021-08-15",
+                                    "2021-09-15",
+                                    "2021-10-15",
+                                    "2021-11-15",
+                                    "2021-12-15",
+                                  ], arr4, arr6, arr5),
                                   Container(
                                     decoration: BoxDecoration(
                                         borderRadius:
@@ -238,13 +242,14 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                           ),
                           Container(
                             height: 80,
-                            color: Colors.black12,
                             child: ListView.builder(
                                 itemCount: months.length,
                                 controller: _scrollController,
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
                                 itemBuilder: ((context, index) {
+                                  Color color = Colors.primaries[Random()
+                                      .nextInt(Colors.primaries.length)];
                                   return GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -252,26 +257,26 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                                       });
                                     },
                                     child: Container(
+                                      color: Colors.grey[10],
                                       width: 80,
                                       child: Column(
                                         children: [
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          Text(months[index]),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
                                           CircleAvatar(
-                                            backgroundColor:
-                                                Color.fromRGBO(66, 103, 178, 1),
+                                            backgroundColor: color,
                                             child: Text(
                                               months[index][0],
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white),
                                             ),
-                                          )
+                                          ),
+                                          Text(months[index]),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -327,20 +332,61 @@ class _ChartState extends State<Chart> with TickerProviderStateMixin {
                                   const SizedBox(
                                     height: 5,
                                   ),
-                                  const ListTile(
-                                    leading: CircleAvatar(
+                                  ListTile(
+                                    leading: const CircleAvatar(
                                       child: Icon(Icons.handshake),
                                     ),
-                                    title: Text("Charity"),
-                                    trailing: Text("+ ₹1000.00",
-                                        style: TextStyle(
+                                    title: const Text("Link points"),
+                                    trailing: Text(
+                                        "${arr3[monthselected == -1 ? getnowmonth() : monthselected]} points",
+                                        style: const TextStyle(
                                             color: Colors.blue,
                                             fontWeight: FontWeight.bold)),
                                   ),
                                 ],
                               ),
                             ),
-                          )
+                          ),
+                          const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                "Community Services",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(66, 103, 178, 1),
+                                    fontSize: 18),
+                              )),
+                          ListView.builder(
+                              itemCount: charity.length,
+                              controller: _scrollController,
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemBuilder: ((context, index) {
+                                return GestureDetector(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ExpansionTile(
+                                      leading: Text("${index + 1}"),
+                                      children: [
+                                        ListTile(
+                                            leading: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                "Performed on : ${charity[index]["Date"]}"),
+                                            Text(
+                                                "Donated to : ${charity[index]["Name"]}")
+                                          ],
+                                        )),
+                                      ],
+                                      title: Text(
+                                          "${charity[index]["Description"]}"),
+                                      // tileColor: Colors.blue[50],
+                                    ),
+                                  ),
+                                );
+                              })),
                         ],
                       );
                     }))
