@@ -16,13 +16,13 @@ class _LinkspacechatState extends State<Linkspacechat> {
   Map userList = {};
 
   Future<Map> getuserdata() async {
-    final Future<QuerySnapshot> _usersStream =
-        FirebaseFirestore.instance.collection('Userdata').get();
+    final QuerySnapshot<Map<String, dynamic>> _usersStream =
+        await FirebaseFirestore.instance.collection('Userdata').get();
 
-    _usersStream.then((value) {
-      value.docs.forEach((element) {
-        userList[element.id] = element['name'];
-      });
+    var temp = _usersStream.docs;
+
+    temp.forEach((element) {
+      userList[element.id] = element['name'];
     });
 
     return userList;
@@ -41,6 +41,10 @@ class _LinkspacechatState extends State<Linkspacechat> {
             }
 
             if (userdata.connectionState == ConnectionState.done) {
+              if (userdata == null) {
+                return Loading();
+              }
+
               if (userdata.hasData) {
                 return StreamBuilder<DocumentSnapshot>(
                     stream: FirebaseFirestore.instance
@@ -49,24 +53,60 @@ class _LinkspacechatState extends State<Linkspacechat> {
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (!snapshot.hasData) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
                         const Loading();
                       }
                       if (snapshot.connectionState == ConnectionState.active) {
                         return Scaffold(
                           body: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                             child: ListView.builder(
                                 itemCount: snapshot.data!['groupchat'].length,
                                 shrinkWrap: true,
                                 itemBuilder: ((context, index) {
-                                  return ListTile(
-                                    title: Text(userList[
-                                        snapshot.data!['groupchat']
-                                            [index.toString()][0]]),
-                                    subtitle: Text(snapshot.data!['groupchat']
-                                        [index.toString()][1]),
-                                  );
+                                  return user!.userid ==
+                                          snapshot.data!['groupchat']
+                                              [index.toString()][0]
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.5,
+                                              child: ListTile(
+                                                title: Text(userList[
+                                                    snapshot.data!['groupchat']
+                                                        [index.toString()][0]]),
+                                                subtitle: Text(
+                                                    snapshot.data!['groupchat']
+                                                        [index.toString()][1]),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.5,
+                                              child: ListTile(
+                                                title: Text(userList[
+                                                    snapshot.data!['groupchat']
+                                                        [index.toString()][0]]),
+                                                subtitle: Text(
+                                                    snapshot.data!['groupchat']
+                                                        [index.toString()][1]),
+                                              ),
+                                            ),
+                                          ],
+                                        );
                                 })),
                           ),
                         );
