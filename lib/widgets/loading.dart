@@ -8,7 +8,7 @@ class Loading extends StatelessWidget {
     return const Scaffold(
       body: Center(
         child: CircularProgressIndicator(
-          color: Color.fromRGBO(0, 92, 75, 1),
+          color: Color.fromRGBO(66, 103, 178, 1),
         ),
       ),
     );

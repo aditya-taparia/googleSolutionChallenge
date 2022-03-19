@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/widgets/loading_cards.dart';
+import 'package:googlesolutionchallenge/widgets/no_data_card.dart';
 import 'package:googlesolutionchallenge/widgets/request_data_cards.dart';
 import 'package:googlesolutionchallenge/widgets/service_data_cards.dart';
 import 'package:provider/provider.dart';
@@ -82,9 +84,14 @@ class _DashHomeState extends State<DashHome> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const LoadingCard();
                 }
-                if (snapshot.data!.docs.length == 0) {
-                  // TODO: No ongoing services Card
-                  return const Text("No ongoing services");
+                if (snapshot.data!.docs.isEmpty) {
+                  return NoDataCard(
+                    onTap: () {},
+                    title: 'No Ongoing Services',
+                    image: 'assets/ongoing-service.png',
+                    subtitle: 'Search Nearby',
+                    color: const Color.fromRGBO(66, 103, 178, 1),
+                  );
                 }
 
                 // id: print(snapshot.data!.docs[0].id);
@@ -112,11 +119,41 @@ class _DashHomeState extends State<DashHome> {
                 );
                 if (cards.length < 3) {
                   cards.add(
-                    const SizedBox(
-                      width: 150,
-                      child: Center(
-                        child: Text(
-                          'See More',
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(10),
+                        onTap: () {},
+                        child: DottedBorder(
+                          borderType: BorderType.RRect,
+                          strokeWidth: 2,
+                          radius: const Radius.circular(10),
+                          color: Colors.grey,
+                          dashPattern: const [5, 5],
+                          child: SizedBox(
+                            width: 150,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.explore_rounded,
+                                    size: 30,
+                                    color: Color.fromRGBO(66, 103, 178, 1),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'See More',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color.fromRGBO(66, 103, 178, 1),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -173,9 +210,14 @@ class _DashHomeState extends State<DashHome> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const LoadingCard();
                 }
-                if (snapshot.data!.docs.length == 0) {
-                  // TODO: No ongoing services Card
-                  return const Text("No Active Requests");
+                if (snapshot.data!.docs.isEmpty) {
+                  return NoDataCard(
+                    onTap: () {},
+                    title: 'No Active Requests',
+                    image: 'assets/active-request.png',
+                    subtitle: 'Make a Request',
+                    color: const Color.fromRGBO(15, 157, 88, 1),
+                  );
                 }
 
                 List<Widget> requestcards = List.generate(
@@ -197,11 +239,41 @@ class _DashHomeState extends State<DashHome> {
                 );
                 if (requestcards.length < 3) {
                   requestcards.add(
-                    const SizedBox(
-                      width: 150,
-                      child: Center(
-                        child: Text(
-                          'Add More',
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(10),
+                        onTap: () {},
+                        child: DottedBorder(
+                          borderType: BorderType.RRect,
+                          strokeWidth: 2,
+                          radius: const Radius.circular(10),
+                          color: Colors.grey,
+                          dashPattern: const [5, 5],
+                          child: SizedBox(
+                            width: 150,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.add_circle_rounded,
+                                    size: 30,
+                                    color: Color.fromRGBO(111, 185, 143, 1),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'Make a Request',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color.fromRGBO(111, 185, 143, 1),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),

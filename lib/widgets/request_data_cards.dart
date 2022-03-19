@@ -1,7 +1,6 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class RequestDataCard extends StatelessWidget {
   final String title;
@@ -42,12 +41,12 @@ class RequestDataCard extends StatelessWidget {
                     // Title
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.6,
-                      child: const Text(
-                        'Title',
-                        style: TextStyle(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
                           fontSize: 20,
-                          color: Color.fromRGBO(111, 185, 143,
-                              1), // Color.fromRGBO(250, 103, 117, 1),
+                          color: Color.fromRGBO(15, 157, 88,
+                              1), // Color.fromRGBO(111, 185, 143, 1),
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -60,7 +59,7 @@ class RequestDataCard extends StatelessWidget {
                 SizedBox(
                   height: 50,
                   child: Text(
-                    'DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription ',
+                    description,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
@@ -85,7 +84,7 @@ class RequestDataCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      'Expected Completion Date',
+                      DateFormat('dd-MM-yyyy').format(completionDate.toDate()),
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -93,29 +92,6 @@ class RequestDataCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 5),
-
-                // Accepted By
-                /* Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Accepted By:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      givenBy,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ), */
                 const SizedBox(height: 5),
 
                 // Promised Amount
@@ -131,7 +107,7 @@ class RequestDataCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      'Promised Amount',
+                      '₹ ${amount.toString()}',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -148,8 +124,7 @@ class RequestDataCard extends StatelessWidget {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         fixedSize: const Size(175, 40),
-                        primary: const Color.fromRGBO(111, 185, 143, 1),
-                        // const Color.fromRGBO(250, 103, 117, 1),
+                        primary: const Color.fromRGBO(15, 157, 88, 1),
                       ),
                       icon: const Icon(
                         Icons.info_outline_rounded,
