@@ -3,7 +3,8 @@ import 'package:googlesolutionchallenge/screens/home/chat/forumscreen.dart';
 import 'package:googlesolutionchallenge/screens/home/linkspace/linkspacechat.dart';
 
 class Forum extends StatefulWidget {
-  const Forum({Key? key}) : super(key: key);
+  final String id;
+  const Forum({Key? key, required this.id}) : super(key: key);
 
   @override
   _ForumState createState() => _ForumState();
@@ -35,10 +36,10 @@ class _ForumState extends State<Forum> {
                 )),
               ]),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             ForumScreen(),
-            Linkspacechat(),
+            Linkspacechat(id: widget.id),
           ],
         ),
       ),

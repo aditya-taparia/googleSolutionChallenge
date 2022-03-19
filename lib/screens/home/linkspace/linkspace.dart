@@ -44,7 +44,7 @@ class _LinkspaceState extends State<Linkspace> {
 
     return StreamBuilder<QuerySnapshot>(
       stream: _isspaceowned
-          ? Linkspacecollection.where('ownerid', isEqualTo: user.userid)
+          ? Linkspacecollection.where('member', arrayContains: user.userid)
               .snapshots()
           : Linkspacecollection.where('ownerid', isNotEqualTo: user.userid)
               .snapshots(),
@@ -185,7 +185,9 @@ class _LinkspaceState extends State<Linkspace> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const Forum()));
+                                        builder: (context) => Forum(
+                                              id: alldoc[index].id,
+                                            )));
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -366,14 +368,7 @@ class _LinkspaceState extends State<Linkspace> {
                                                     elevation: 0,
                                                   ),
                                                   onPressed: _isspaceowned
-                                                      ? () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          const Forum()));
-                                                        }
+                                                      ? () {}
                                                       : () {
                                                           showDialog(
                                                             context: context,
