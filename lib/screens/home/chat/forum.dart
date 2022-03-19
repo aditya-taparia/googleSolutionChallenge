@@ -38,7 +38,7 @@ class _ForumState extends State<Forum> {
         ),
         body: TabBarView(
           children: [
-            ForumScreen(),
+            ForumScreen(id: widget.id),
             Linkspacechat(id: widget.id),
           ],
         ),
