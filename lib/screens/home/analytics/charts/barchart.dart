@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class Bar extends StatefulWidget {
   final String name;
@@ -34,7 +35,7 @@ class _BarState extends State<Bar> {
       primaryXAxis: DateTimeAxis(
           interval: xdata.length / 10,
           majorGridLines: const MajorGridLines(width: 0),
-          dateFormat: DateFormat('''MMM/dd/yyyy'''),
+          dateFormat: DateFormat('''MMM'''),
           edgeLabelPlacement: EdgeLabelPlacement.shift),
       primaryYAxis: NumericAxis(
           numberFormat: NumberFormat.compact(),
@@ -51,10 +52,10 @@ class _BarState extends State<Bar> {
       // tooltipBehavior: TooltipBehavior(enable: true),
       trackballBehavior: TrackballBehavior(
         enable: true,
-        markerSettings: TrackballMarkerSettings(
+        markerSettings: const TrackballMarkerSettings(
           markerVisibility: TrackballVisibilityMode.visible,
           height: 6,
-          width: 6,
+          width: 8,
           borderWidth: 1,
         ),
         hideDelay: 2000,

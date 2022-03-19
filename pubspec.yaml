@@ -67,6 +67,8 @@ dependencies:
   geolocator: ^8.2.0
   geocode: ^1.0.1
   material_floating_search_bar: ^0.3.7
+  flutter_polyline_points: ^1.0.0
+  expandable: ^5.0.1
 
   #forumfloatingaction
   flutter_speed_dial: ^5.0.0+1
@@ -87,6 +89,8 @@ dependencies:
   syncfusion_flutter_charts: ^19.4.54
   toggle_switch: ^1.4.0
   getwidget: ^2.0.5
+  bubble_tab_indicator: ^0.1.6
+  fl_chart: ^0.46.0
 
   # API Calls
   http: ^0.13.4
