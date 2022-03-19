@@ -1,14 +1,11 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/forummodel.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/home.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/feed.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
-import 'package:googlesolutionchallenge/widgets/dash_cards.dart';
-import 'package:googlesolutionchallenge/widgets/info_cards.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +54,8 @@ class _DashboardState extends State<Dashboard> {
           fit: BoxFit.cover,
         ),
         FloatingSearchBar(
+          // TODO: Make animated text here
+          // title: Text('Search'),
           clearQueryOnClose: true,
           transitionDuration: const Duration(milliseconds: 800),
           transitionCurve: Curves.easeInOutCubic,
@@ -277,7 +276,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                       indicatorSize: TabBarIndicatorSize.label,
                                       indicator: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(5),
                                         color: const Color.fromRGBO(
                                             239, 239, 239, 1),
                                       ),
@@ -288,7 +287,7 @@ class _DashboardState extends State<Dashboard> {
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 12.0,
-                                                vertical: 2.0,
+                                                vertical: 4.0,
                                               ),
                                               child: Text(
                                                 'Home',
@@ -307,10 +306,10 @@ class _DashboardState extends State<Dashboard> {
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 12.0,
-                                                vertical: 2.0,
+                                                vertical: 4.0,
                                               ),
                                               child: Text(
-                                                'Open Requests',
+                                                'Feed',
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
@@ -330,12 +329,8 @@ class _DashboardState extends State<Dashboard> {
                         },
                         body: const TabBarView(
                           children: [
-                            Center(
-                              child: Text('Home'),
-                            ),
-                            Center(
-                              child: Text('Open Requests'),
-                            ),
+                            DashHome(),
+                            DashFeed(),
                           ],
                         ),
                       ),
@@ -910,7 +905,7 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                 ])),
 
-                            // User Interactions
+                            
                           ],
                         ),
                       ),
