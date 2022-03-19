@@ -58,7 +58,8 @@ class _MapScreenState extends State<MapScreen> {
     borderRadius: BorderRadius.circular(20),
   );
   List<bool> showmarkertype = [false, false, false, true];
-  List<bool> isSelected = [true, false, false, false, false];
+  List<bool> isSelected = [true, true, true, true, true];
+  List<bool> isFilled = [true, false, false, false, false];
 
   List<LatLng> ll = [];
   List<Map> userList = [];
@@ -452,14 +453,21 @@ class _MapScreenState extends State<MapScreen> {
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {
+                                      if (!isFilled[0]) {
+                                        isFilled[0] = true;
+                                      }
                                       isSelected
                                           .asMap()
                                           .forEach((index, value) {
-                                        if (value == true) {
-                                          isSelected[index] = false;
+                                        if (value == false) {
+                                          isSelected[index] = true;
                                         }
                                       });
-                                      isSelected[0] = true;
+                                      isFilled.asMap().forEach((index, value) {
+                                        if (value == true && index != 0) {
+                                          isFilled[index] = false;
+                                        }
+                                      });
                                     });
                                     setmarkers();
                                   },
@@ -467,7 +475,7 @@ class _MapScreenState extends State<MapScreen> {
                                     width: 70,
                                     padding: const EdgeInsets.only(
                                         left: 10, right: 10),
-                                    decoration: !isSelected[0]
+                                    decoration: !isFilled[0]
                                         ? BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
@@ -483,7 +491,7 @@ class _MapScreenState extends State<MapScreen> {
                                         "All",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: !isSelected[0]
+                                          color: !isFilled[0]
                                               ? const Color.fromRGBO(
                                                   66, 103, 178, 1)
                                               : Colors.white,
@@ -498,22 +506,56 @@ class _MapScreenState extends State<MapScreen> {
                                 Maptoggle
                                     ? GestureDetector(
                                         onTap: () {
+                                          int count = 0;
                                           setState(() {
+                                            print(isSelected[2]);
+                                            isFilled[2] = !isFilled[2];
+
+                                            if (isFilled[0]) {
+                                              isFilled[0] = false;
+                                            }
+                                            if (!isFilled[2]) {
+                                              isSelected[2] = !isSelected[2];
+                                            }
                                             isSelected
                                                 .asMap()
                                                 .forEach((index, value) {
-                                              if (value == true) {
+                                              if (isFilled[index] == false) {
                                                 isSelected[index] = false;
+                                              } else {
+                                                isSelected[index] = true;
                                               }
                                             });
-                                            isSelected[2] = true;
+
+                                            if (isSelected[2]) {
+                                              isSelected[0] = false;
+                                              isFilled[0] = false;
+                                            }
+                                            if (!isFilled[2]) {
+                                              for (int i = 0; i < 5; i++) {
+                                                if (!isFilled[i]) {
+                                                  count++;
+                                                }
+                                              }
+                                              if (count == 5) {
+                                                print('object');
+                                                setState(() {
+                                                  isSelected
+                                                      .asMap()
+                                                      .forEach((index, value) {
+                                                    isSelected[index] = true;
+                                                    isFilled[0] = true;
+                                                  });
+                                                });
+                                              }
+                                            }
                                           });
                                           setmarkers();
                                         },
                                         child: Container(
                                           padding: EdgeInsets.only(
                                               left: 10, right: 10),
-                                          decoration: !isSelected[2]
+                                          decoration: !isFilled[2]
                                               ? BoxDecoration(
                                                   color: Colors.white,
                                                   border: Border.all(
@@ -530,7 +572,7 @@ class _MapScreenState extends State<MapScreen> {
                                               "LinkSpaces",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: !isSelected[2]
+                                                color: !isFilled[2]
                                                     ? const Color.fromRGBO(
                                                         66, 103, 178, 1)
                                                     : Colors.white,
@@ -545,22 +587,55 @@ class _MapScreenState extends State<MapScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    int count = 0;
                                     setState(() {
+                                      print(isSelected[3]);
+                                      isFilled[3] = !isFilled[3];
+                                      if (isFilled[0]) {
+                                        isFilled[0] = false;
+                                      }
+                                      if (!isFilled[3]) {
+                                        isSelected[3] = !isSelected[3];
+                                      }
                                       isSelected
                                           .asMap()
                                           .forEach((index, value) {
-                                        if (value == true) {
+                                        if (isFilled[index] == false) {
                                           isSelected[index] = false;
+                                        } else {
+                                          isSelected[index] = true;
                                         }
                                       });
-                                      isSelected[3] = true;
+
+                                      if (isSelected[3]) {
+                                        isSelected[0] = false;
+                                        isFilled[0] = false;
+                                      }
+                                      if (!isFilled[3]) {
+                                        for (int i = 0; i < 5; i++) {
+                                          if (!isFilled[i]) {
+                                            count++;
+                                          }
+                                        }
+                                        if (count == 5) {
+                                          print('object');
+                                          setState(() {
+                                            isSelected
+                                                .asMap()
+                                                .forEach((index, value) {
+                                              isSelected[index] = true;
+                                              isFilled[0] = true;
+                                            });
+                                          });
+                                        }
+                                      }
                                     });
                                     setmarkers();
                                   },
                                   child: Container(
                                     padding:
                                         EdgeInsets.only(left: 10, right: 10),
-                                    decoration: !isSelected[3]
+                                    decoration: !isFilled[3]
                                         ? BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
@@ -576,7 +651,7 @@ class _MapScreenState extends State<MapScreen> {
                                         "Item Requests",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: !isSelected[3]
+                                          color: !isFilled[3]
                                               ? const Color.fromRGBO(
                                                   66, 103, 178, 1)
                                               : Colors.white,
@@ -590,22 +665,55 @@ class _MapScreenState extends State<MapScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    int count = 0;
                                     setState(() {
+                                      print(isSelected[4]);
+                                      isFilled[4] = !isFilled[4];
+                                      if (isFilled[0]) {
+                                        isFilled[0] = false;
+                                      }
+                                      if (!isFilled[4]) {
+                                        isSelected[4] = !isSelected[4];
+                                      }
                                       isSelected
                                           .asMap()
                                           .forEach((index, value) {
-                                        if (value == true) {
+                                        if (isFilled[index] == false) {
                                           isSelected[index] = false;
+                                        } else {
+                                          isSelected[index] = true;
                                         }
                                       });
-                                      isSelected[4] = true;
+
+                                      if (isSelected[4]) {
+                                        isSelected[0] = false;
+                                        isFilled[0] = false;
+                                      }
+                                      if (!isFilled[4]) {
+                                        for (int i = 0; i < 5; i++) {
+                                          if (!isFilled[i]) {
+                                            count++;
+                                          }
+                                        }
+                                        if (count == 5) {
+                                          print('object');
+                                          setState(() {
+                                            isSelected
+                                                .asMap()
+                                                .forEach((index, value) {
+                                              isSelected[index] = true;
+                                              isFilled[0] = true;
+                                            });
+                                          });
+                                        }
+                                      }
                                     });
                                     setmarkers();
                                   },
                                   child: Container(
                                     padding:
                                         EdgeInsets.only(left: 10, right: 10),
-                                    decoration: !isSelected[4]
+                                    decoration: !isFilled[4]
                                         ? BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
@@ -621,7 +729,7 @@ class _MapScreenState extends State<MapScreen> {
                                         "Job Requests",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: !isSelected[4]
+                                          color: !isFilled[4]
                                               ? const Color.fromRGBO(
                                                   66, 103, 178, 1)
                                               : Colors.white,
@@ -636,22 +744,55 @@ class _MapScreenState extends State<MapScreen> {
                                 Maptoggle
                                     ? GestureDetector(
                                         onTap: () {
+                                          int count = 0;
                                           setState(() {
+                                            print(isSelected[1]);
+                                            isFilled[1] = !isFilled[1];
+                                            if (isFilled[0]) {
+                                              isFilled[0] = false;
+                                            }
+                                            if (!isFilled[1]) {
+                                              isSelected[1] = !isSelected[1];
+                                            }
                                             isSelected
                                                 .asMap()
                                                 .forEach((index, value) {
-                                              if (value == true) {
+                                              if (isFilled[index] == false) {
                                                 isSelected[index] = false;
+                                              } else {
+                                                isSelected[index] = true;
                                               }
                                             });
-                                            isSelected[1] = true;
+
+                                            if (isSelected[1]) {
+                                              isSelected[0] = false;
+                                              isFilled[0] = false;
+                                            }
+                                            if (!isFilled[1]) {
+                                              for (int i = 0; i < 5; i++) {
+                                                if (!isFilled[i]) {
+                                                  count++;
+                                                }
+                                              }
+                                              if (count == 5) {
+                                                print('object');
+                                                setState(() {
+                                                  isSelected
+                                                      .asMap()
+                                                      .forEach((index, value) {
+                                                    isSelected[index] = true;
+                                                    isFilled[0] = true;
+                                                  });
+                                                });
+                                              }
+                                            }
                                           });
                                           setmarkers();
                                         },
                                         child: Container(
                                           padding: EdgeInsets.only(
                                               left: 10, right: 10),
-                                          decoration: !isSelected[1]
+                                          decoration: !isFilled[1]
                                               ? BoxDecoration(
                                                   color: Colors.white,
                                                   border: Border.all(
@@ -669,7 +810,7 @@ class _MapScreenState extends State<MapScreen> {
                                               "Community Service",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: !isSelected[1]
+                                                color: !isFilled[1]
                                                     ? const Color.fromRGBO(
                                                         66, 103, 178, 1)
                                                     : Colors.white,
