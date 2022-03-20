@@ -327,10 +327,12 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ];
                         },
-                        body: const TabBarView(
+                        body: TabBarView(
                           children: [
-                            DashHome(),
-                            DashFeed(),
+                            DashHome(
+                              bloc: widget.bloc,
+                            ),
+                            const DashFeed(),
                           ],
                         ),
                       ),

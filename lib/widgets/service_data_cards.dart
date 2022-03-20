@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/more_details_page.dart';
 import 'package:intl/intl.dart';
 
 // TODO: Tags for pending, completed, ongoing And hide the chat and mark as
@@ -78,7 +79,18 @@ class ServiceDataCard extends StatelessWidget {
                         'Details',
                         style: TextStyle(),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MoreDetailsPage(
+                              title: 'Service Details',
+                              postid: postid,
+                              chatid: chatid,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -178,8 +190,8 @@ class ServiceDataCard extends StatelessWidget {
                           spacing: 10,
                           runSpacing: 10,
                           children: [
-                            TextButton.icon(
-                              style: TextButton.styleFrom(
+                            OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
                                 fixedSize: const Size(175, 40),
                               ),
                               icon: const Icon(
