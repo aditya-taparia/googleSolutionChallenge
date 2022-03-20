@@ -81,6 +81,10 @@ class _MapScreenState extends State<MapScreen> {
   late List nearbymarkers2 = [];
   late List nearbymarkers3 = [];
 
+  //getting data for chat
+  String sendername = "";
+  String senderuid = "";
+
   void _setPolyline(List<PointLatLng> points) {
     final String polylineIdVal = 'polyline_$_polylineIdCounter';
     _polylineIdCounter++;
@@ -204,6 +208,8 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
+                    sendername = element["name"];
+                    senderuid = element["owner_id"];
                     destination = LatLng(
                         double.parse(element["location"].latitude.toString()),
                         double.parse(element["location"].longitude.toString()));
@@ -231,6 +237,8 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
+                    sendername = element["name"];
+                    senderuid = element["owner_id"];
                     destination = LatLng(
                         double.parse(element["location"].latitude.toString()),
                         double.parse(element["location"].longitude.toString()));
@@ -260,6 +268,8 @@ class _MapScreenState extends State<MapScreen> {
                   double.parse(element["locality"].longitude.toString())),
               onTap: () {
                 setState(() {
+                  sendername = element["name"];
+                  senderuid = element["ownerid"];
                   destination = LatLng(
                       double.parse(element["locality"].latitude.toString()),
                       double.parse(element["locality"].longitude.toString()));
@@ -1275,11 +1285,10 @@ class _MapScreenState extends State<MapScreen> {
                                       children: [
                                         ElevatedButton(
                                             onPressed: () {
-                                              // print(user!.userid);
                                               createchat(
                                                   user!.userid.toString(),
-                                                  'AKSNAKSNA',
-                                                  'Sagar',
+                                                  senderuid,
+                                                  sendername,
                                                   'Jeetesh');
                                             },
                                             child: const Text("Chat")),
@@ -1412,6 +1421,11 @@ class _MapScreenState extends State<MapScreen> {
 createchat(String userid, String s, String name1, String name2) async {
   bool t = false;
   String y = "";
+
+  final DocumentSnapshot<Map<String, dynamic>> _username =
+      await FirebaseFirestore.instance.collection('Userdata').doc(userid).get();
+
+  name2 = _username.data()!["name"];
   CollectionReference chatCollection =
       await FirebaseFirestore.instance.collection('chats');
   var x = chatCollection.where('users', isEqualTo: [s, userid]).get();
