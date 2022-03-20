@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:provider/provider.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -314,6 +316,7 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<Users?>(context);
     return Stack(
       children: [
         FloatingSearchBar(
@@ -1271,7 +1274,14 @@ class _MapScreenState extends State<MapScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              // print(user!.userid);
+                                              createchat(
+                                                  user!.userid.toString(),
+                                                  'AKSNAKSNA',
+                                                  'Sagar',
+                                                  'Jeetesh');
+                                            },
                                             child: const Text("Chat")),
                                         const SizedBox(
                                           width: 20,
@@ -1396,6 +1406,31 @@ class _MapScreenState extends State<MapScreen> {
       endadd = result['end_address'];
       directions = result['polyline_decode'];
     });
+  }
+}
+
+createchat(String userid, String s, String name1, String name2) async {
+  bool t = false;
+  String y = "";
+  CollectionReference chatCollection =
+      await FirebaseFirestore.instance.collection('chats');
+  var x = chatCollection.where('users', isEqualTo: [s, userid]).get();
+  x.then((value) => y = value.toString());
+
+  if (y.isEmpty) {
+    var x = chatCollection.where('users', isEqualTo: [userid, s]).get();
+    x.then((value) => y = value.toString());
+  }
+  if (y.isEmpty) {
+    final addchat = FirebaseFirestore.instance.collection("chats").doc();
+    final json = {
+      'chatdata': {},
+      'users': [userid, s],
+      'name': [name1, name2]
+    };
+    await addchat.set(json);
+  } else {
+    //navigate to chatclflugakfd.
   }
 }
 
