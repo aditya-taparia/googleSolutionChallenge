@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
-import 'package:googlesolutionchallenge/widgets/loading_cards.dart';
-import 'package:googlesolutionchallenge/widgets/no_data_card.dart';
+import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:googlesolutionchallenge/widgets/request_data_cards.dart';
 import 'package:provider/provider.dart';
 
@@ -30,18 +29,59 @@ class _YourRequestPageState extends State<YourRequestPage> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const LoadingCard();
+            return const Loading();
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingCard();
+            return const Loading();
           }
           if (snapshot.data!.docs.isEmpty) {
-            return NoDataCard(
-              onTap: () {},
-              title: 'No Active Requests',
-              image: 'assets/active-request.png',
-              subtitle: 'Make a Request',
-              color: const Color.fromRGBO(15, 157, 88, 1),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Center(
+                  child: Image(
+                    image: AssetImage('assets/active-request.png'),
+                    fit: BoxFit.fitWidth,
+                    height: 300,
+                    width: 300,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const Text(
+                  'No Active Requests at the Moment!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Color.fromRGBO(66, 103, 178, 1),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color.fromRGBO(66, 103, 178, 1),
+                    ),
+                    onPressed: () {},
+                    label: const Text(
+                      'Make a Request',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.add_rounded,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
             );
           }
 
@@ -75,18 +115,18 @@ class _YourRequestPageState extends State<YourRequestPage> {
                     color: Colors.grey,
                     dashPattern: const [5, 5],
                     child: SizedBox(
-                      width: 150,
+                      height: 100,
                       child: Center(
-                        child: Column(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: const [
                             Icon(
-                              Icons.add_circle_rounded,
+                              Icons.add_rounded,
                               size: 30,
                               color: Color.fromRGBO(111, 185, 143, 1),
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(width: 10),
                             Text(
                               'Make a Request',
                               style: TextStyle(
