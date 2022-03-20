@@ -220,7 +220,6 @@ class _WrapperState extends State<Wrapper> {
             return const Loading();
           }
           if (snapshot.hasError) {
-            //TODO: Make a error page
             return const Loading();
           }
           return snapshot.data!.exists ? const Home() : const MyStepper();

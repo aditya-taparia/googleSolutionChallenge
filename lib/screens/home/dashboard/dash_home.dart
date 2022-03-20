@@ -8,7 +8,6 @@ import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:googlesolutionchallenge/widgets/explore_item.dart';
 import 'package:googlesolutionchallenge/widgets/loading_cards.dart';
 import 'package:googlesolutionchallenge/widgets/no_data_card.dart';
-import 'package:googlesolutionchallenge/widgets/request_data_cards.dart';
 import 'package:googlesolutionchallenge/widgets/service_data_cards.dart';
 import 'package:provider/provider.dart';
 
@@ -91,7 +90,9 @@ class _DashHomeState extends State<DashHome> {
                 }
                 if (snapshot.data!.docs.isEmpty) {
                   return NoDataCard(
-                    onTap: () {},
+                    onTap: () {
+                      widget.bloc.changeNavigationIndex(Navigation.map);
+                    },
                     title: 'No Ongoing Services',
                     image: 'assets/ongoing-service.png',
                     subtitle: 'Search Nearby',
