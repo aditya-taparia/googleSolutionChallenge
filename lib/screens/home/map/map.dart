@@ -58,7 +58,7 @@ class _MapScreenState extends State<MapScreen> {
     borderRadius: BorderRadius.circular(20),
   );
   List<bool> showmarkertype = [false, false, false, true];
-  List<bool> isSelected = [true, true, true, true, true];
+  List<bool> isSelected = [true, false, true, true, true];
   List<bool> isFilled = [true, false, false, false, false];
 
   List<LatLng> ll = [];
@@ -413,7 +413,8 @@ class _MapScreenState extends State<MapScreen> {
                                 itemCount: userList.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  if (isSelected[0]) {
+                                  if (isSelected[0] ||
+                                      (isSelected[3] && isSelected[4])) {
                                     return Builditemjoblist(
                                         userList[index], context);
                                   } else if (isSelected[3]) {
@@ -462,6 +463,7 @@ class _MapScreenState extends State<MapScreen> {
                                         if (value == false) {
                                           isSelected[index] = true;
                                         }
+                                        isSelected[1] = false;
                                       });
                                       isFilled.asMap().forEach((index, value) {
                                         if (value == true && index != 0) {
@@ -544,8 +546,9 @@ class _MapScreenState extends State<MapScreen> {
                                                       .asMap()
                                                       .forEach((index, value) {
                                                     isSelected[index] = true;
-                                                    isFilled[0] = true;
                                                   });
+                                                  isFilled[0] = true;
+                                                  isSelected[1] = false;
                                                 });
                                               }
                                             }
@@ -624,8 +627,10 @@ class _MapScreenState extends State<MapScreen> {
                                                 .asMap()
                                                 .forEach((index, value) {
                                               isSelected[index] = true;
-                                              isFilled[0] = true;
                                             });
+                                            isFilled[0] = true;
+
+                                            isSelected[1] = false;
                                           });
                                         }
                                       }
@@ -702,8 +707,10 @@ class _MapScreenState extends State<MapScreen> {
                                                 .asMap()
                                                 .forEach((index, value) {
                                               isSelected[index] = true;
-                                              isFilled[0] = true;
                                             });
+                                            isFilled[0] = true;
+
+                                            isSelected[1] = false;
                                           });
                                         }
                                       }
@@ -781,8 +788,10 @@ class _MapScreenState extends State<MapScreen> {
                                                       .asMap()
                                                       .forEach((index, value) {
                                                     isSelected[index] = true;
-                                                    isFilled[0] = true;
                                                   });
+                                                  isFilled[0] = true;
+
+                                                  isSelected[1] = false;
                                                 });
                                               }
                                             }

@@ -77,7 +77,7 @@ class _AnalyticsState extends State<Analytics>
                     (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
-                      expandedHeight: 170,
+                      expandedHeight: 125,
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
