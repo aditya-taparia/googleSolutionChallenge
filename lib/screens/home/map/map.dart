@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -22,7 +23,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
   late LocationPermission permission;
   List<bool> check = [true, true, true];
 
@@ -1288,8 +1289,7 @@ class _MapScreenState extends State<MapScreen> {
                                               createchat(
                                                   user!.userid.toString(),
                                                   senderuid,
-                                                  sendername,
-                                                  'Jeetesh');
+                                                  sendername);
                                             },
                                             child: const Text("Chat")),
                                         const SizedBox(
@@ -1418,29 +1418,35 @@ class _MapScreenState extends State<MapScreen> {
   }
 }
 
-createchat(String userid, String s, String name1, String name2) async {
-  bool t = false;
+createchat(String currUserId, String othUserId, String name1) async {
   String y = "";
-
   final DocumentSnapshot<Map<String, dynamic>> _username =
-      await FirebaseFirestore.instance.collection('Userdata').doc(userid).get();
+      await FirebaseFirestore.instance
+          .collection('Userdata')
+          .doc(currUserId)
+          .get();
 
-  name2 = _username.data()!["name"];
+  String name2 = _username.data()!["name"];
+  Map othuserdata = {"name": name1, "id": othUserId, "imgUrl": ""};
+  Map currUserData = {"name": name2, "id": currUserId, "imgUrl": ""};
   CollectionReference chatCollection =
       await FirebaseFirestore.instance.collection('chats');
-  var x = chatCollection.where('users', isEqualTo: [s, userid]).get();
+  var x =
+      chatCollection.where('users', isEqualTo: [othUserId, currUserId]).get();
   x.then((value) => y = value.toString());
 
   if (y.isEmpty) {
-    var x = chatCollection.where('users', isEqualTo: [userid, s]).get();
+    var x =
+        chatCollection.where('users', isEqualTo: [currUserId, othUserId]).get();
     x.then((value) => y = value.toString());
+    print(currUserId + " " + othUserId);
   }
   if (y.isEmpty) {
     final addchat = FirebaseFirestore.instance.collection("chats").doc();
     final json = {
       'chatdata': {},
-      'users': [userid, s],
-      'name': [name1, name2]
+      'users': [currUserId, othUserId],
+      'name': [currUserData, othuserdata]
     };
     await addchat.set(json);
   } else {
