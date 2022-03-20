@@ -35,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
             List chatList = [];
             data.forEach((element) {
               chatList.add(element);
-              print(element.id);
+              //  print(element.id);
             });
             return Container(
               decoration: const BoxDecoration(
@@ -52,7 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       sender = chat["name"][0];
                     }
                     String img = sender["imgUrl"];
-                    print(sender);
+                    //print(sender);
                     return GestureDetector(
                       onTap: () => Navigator.push(
                           context,
