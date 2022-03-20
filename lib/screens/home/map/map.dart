@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/chatscreen.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
@@ -1290,6 +1291,7 @@ class _MapScreenState extends State<MapScreen> {
                                                   user!.userid.toString(),
                                                   senderuid,
                                                   sendername);
+                                              // ADITYATAPARIA change body to chat screen
                                             },
                                             child: const Text("Chat")),
                                         const SizedBox(
@@ -1419,7 +1421,7 @@ class _MapScreenState extends State<MapScreen> {
 }
 
 createchat(String currUserId, String othUserId, String name1) async {
-  String y = "";
+  int y = 0;
   final DocumentSnapshot<Map<String, dynamic>> _username =
       await FirebaseFirestore.instance
           .collection('Userdata')
@@ -1433,25 +1435,25 @@ createchat(String currUserId, String othUserId, String name1) async {
       await FirebaseFirestore.instance.collection('chats');
   var x =
       chatCollection.where('users', isEqualTo: [othUserId, currUserId]).get();
-  x.then((value) => y = value.toString());
-
-  if (y.isEmpty) {
-    var x =
-        chatCollection.where('users', isEqualTo: [currUserId, othUserId]).get();
-    x.then((value) => y = value.toString());
-    print(currUserId + " " + othUserId);
-  }
-  if (y.isEmpty) {
-    final addchat = FirebaseFirestore.instance.collection("chats").doc();
-    final json = {
-      'chatdata': {},
-      'users': [currUserId, othUserId],
-      'name': [currUserData, othuserdata]
-    };
-    await addchat.set(json);
-  } else {
-    //navigate to chatclflugakfd.
-  }
+  x.then((value) {
+    y = value.docs.length;
+    if (y == 0) {
+      var x = chatCollection
+          .where('users', isEqualTo: [currUserId, othUserId]).get();
+      x.then((value) async {
+        y = value.docs.length;
+        if (y == 0) {
+          final addchat = FirebaseFirestore.instance.collection("chats").doc();
+          final json = {
+            'chatdata': {},
+            'users': [currUserId, othUserId],
+            'name': [currUserData, othuserdata]
+          };
+          await addchat.set(json);
+        }
+      });
+    }
+  });
 }
 
 Widget Builditemjoblist(Map userList, BuildContext context) {
