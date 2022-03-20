@@ -23,7 +23,7 @@ class NoDataCard extends StatelessWidget {
         color: Colors.grey[50],
         elevation: 2,
         child: SizedBox(
-          height: 150,
+          height: 175,
           child: InkWell(
             onTap: onTap,
             child: Stack(

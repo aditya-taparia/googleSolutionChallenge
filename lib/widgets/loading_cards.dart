@@ -10,7 +10,7 @@ class LoadingCard extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Shimmer(
         child: Container(
-          height: 265,
+          height: 200,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             color: Colors.grey[100],
