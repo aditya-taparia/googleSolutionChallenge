@@ -1,8 +1,16 @@
+import 'dart:io';
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/services/image.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_core/firebase_core.dart' as firebase_core;
+import 'package:image_picker/image_picker.dart';
 
 class Linkspacechat extends StatefulWidget {
   final String id;
@@ -15,6 +23,8 @@ class Linkspacechat extends StatefulWidget {
 class _LinkspacechatState extends State<Linkspacechat> {
   final _msgcontroller = TextEditingController();
   Map userList = {};
+  var photoUrl;
+  final ImageData img = ImageData();
 
   Future<Map> getuserdata() async {
     final QuerySnapshot<Map<String, dynamic>> _usersStream =
@@ -36,7 +46,10 @@ class _LinkspacechatState extends State<Linkspacechat> {
       color: Colors.white,
       child: Row(children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () async {
+            photoUrl = await img.takeMedia('linkspace/', "myimh");
+            addmsgDB(photoUrl, widget.id, userid, length);
+          },
           icon: const Icon(Icons.photo),
           iconSize: 30,
           color: Theme.of(context).primaryColor,

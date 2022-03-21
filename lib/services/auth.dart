@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/auth/OTP.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -31,10 +32,10 @@ class AuthService {
     PhoneCodeSent codeSent;
     codeSent = (String verificationID, [int? forceResnedingtoken]) {
       showSnackBar(context, "Verification Code sent on the phone number");
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (builder) => Otptest(verificationID, phoneNumber)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (builder) => OTP(verificationID, phoneNumber)));
       if (kDebugMode) {
         print(verificationID);
       }

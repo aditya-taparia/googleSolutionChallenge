@@ -94,6 +94,8 @@ dependencies:
 
   # API Calls
   http: ^0.13.4
+  firebase_storage: ^10.2.9
+  image_picker: ^0.8.4+11
 
 dev_dependencies:
   flutter_test:
