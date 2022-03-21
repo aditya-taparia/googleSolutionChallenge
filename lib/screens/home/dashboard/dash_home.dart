@@ -3,6 +3,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/history_page.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/request_form.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/your_request_page.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:googlesolutionchallenge/widgets/explore_item.dart';
@@ -119,6 +120,9 @@ class _DashHomeState extends State<DashHome> {
                       givenBy: snapshot.data!.docs[index]['given-by-name'],
                       postid: snapshot.data!.docs[index].id,
                       status: snapshot.data!.docs[index]['completion-status'],
+                      paymentStatus: snapshot.data!.docs[index]
+                          ['payment-status'],
+                      postType: snapshot.data!.docs[index]['post-type'],
                     );
                   },
                   growable: true,
@@ -307,7 +311,14 @@ class _DashHomeState extends State<DashHome> {
                     backgroundColor: Colors.purple[50]!,
                     icon: Icons.add_location_rounded,
                     iconColor: Colors.purple,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RequestForm(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
