@@ -7,8 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/chatscreen.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -105,7 +103,7 @@ class _MapScreenState extends State<MapScreen> {
 
   void getdata() async {
     final Future<QuerySnapshot> _usersStream =
-        FirebaseFirestore.instance.collection('Mapdata').get();
+        FirebaseFirestore.instance.collection('Posts').get();
 
     _usersStream.then((value) {
       value.docs.forEach((element) {
@@ -201,7 +199,7 @@ class _MapScreenState extends State<MapScreen> {
       //item markers
       if (isSelected[0] || isSelected[3]) {
         userList.forEach((element) {
-          if (element["category"].contains("item")) {
+          if (element["category"].contains("item request")) {
             _markers.add(
               Marker(
                 markerId: MarkerId('id-1' + element.toString()),
@@ -210,8 +208,8 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
-                    sendername = element["name"];
-                    senderuid = element["owner_id"];
+                    sendername = element["given-by-name"];
+                    senderuid = element["given-by"];
                     destination = LatLng(
                         double.parse(element["location"].latitude.toString()),
                         double.parse(element["location"].longitude.toString()));
@@ -219,7 +217,7 @@ class _MapScreenState extends State<MapScreen> {
                   });
                 },
                 infoWindow: InfoWindow(
-                  title: element["name"],
+                  title: element["given-by-name"],
                   snippet: 'Item/service Name',
                 ),
               ),
@@ -230,7 +228,7 @@ class _MapScreenState extends State<MapScreen> {
 //Request Markers
       if (isSelected[0] || isSelected[4]) {
         userList.forEach((element) {
-          if (element["category"].contains("request")) {
+          if (element["category"].contains("job request")) {
             _markers.add(
               Marker(
                 markerId: MarkerId('id-1' + element.toString()),
@@ -239,8 +237,8 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
-                    sendername = element["name"];
-                    senderuid = element["owner_id"];
+                    sendername = element["given-by-name"];
+                    senderuid = element["given-by"];
                     destination = LatLng(
                         double.parse(element["location"].latitude.toString()),
                         double.parse(element["location"].longitude.toString()));
@@ -250,7 +248,7 @@ class _MapScreenState extends State<MapScreen> {
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueOrange),
                 infoWindow: InfoWindow(
-                  title: element["name"],
+                  title: element["given-by-name"],
                   snippet: 'Item/service Name',
                 ),
               ),
@@ -434,13 +432,13 @@ class _MapScreenState extends State<MapScreen> {
                                         userList[index], context);
                                   } else if (isSelected[3]) {
                                     if (userList[index]["category"]
-                                        .contains("item")) {
+                                        .contains("item request")) {
                                       return Builditemjoblist(
                                           userList[index], context);
                                     }
                                   } else {
                                     if (userList[index]["category"]
-                                        .contains("request")) {
+                                        .contains("job request")) {
                                       return Builditemjoblist(
                                           userList[index], context);
                                     }
