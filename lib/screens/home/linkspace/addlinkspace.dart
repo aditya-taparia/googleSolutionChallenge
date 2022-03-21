@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../models/user.dart';
 
 class Addlinkspace extends StatefulWidget {
@@ -94,42 +97,6 @@ class _AddlinkspaceState extends State<Addlinkspace> {
               const SizedBox(
                 height: 15,
               ),
-              /* Row(
-                children: const [
-                  Text("Radius of visibilty"),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Icon(
-                    Icons.info_rounded,
-                    color: Colors.grey,
-                    size: 20,
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              Slider(
-                value: _slidervalue,
-                onChanged: (value) {
-                  setState(() {
-                    _slidervalue = value;
-                  });
-                },
-                min: 0,
-                max: 50,
-                divisions: 25,
-              ),
-              _slidervalue >= 2
-                  ? Text(_slidervalue.toInt().toString() + "km")
-                  : const Text(
-                      "Must be atleast 2 km",
-                      style: TextStyle(color: Colors.red),
-                    ),
-              const SizedBox(
-                height: 15,
-              ),*/
               const SizedBox(
                 height: 15,
               ),
@@ -288,11 +255,11 @@ class _AddlinkspaceState extends State<Addlinkspace> {
         child: const Icon(
           Icons.done,
         ),
-        onPressed: () {
+        onPressed: () async {
           String name = lncontroller.text;
           String purp = ldcontroller.text;
           int type = widgettype;
-          String location = "IIIT Kottayam";
+          String location = await getaddress();
           String docname = user!.userid;
           createlinkspace(name, purp, type, docname, location);
 
@@ -300,6 +267,25 @@ class _AddlinkspaceState extends State<Addlinkspace> {
         },
       ),
     );
+  }
+
+  Future<String> getaddress() async {
+    final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
+
+    final response = await http.get(Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
+            position.latitude.toString() +
+            ',' +
+            position.longitude.toString() +
+            '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
+
+    final json = await jsonDecode(response.body);
+
+    String location =
+        json["results"][0]["address_components"][4]["long_name"].toString();
+
+    return location;
   }
 
   Future createlinkspace(String name, String purp, int type, String docname,

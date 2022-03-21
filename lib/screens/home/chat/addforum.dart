@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class Addforum extends StatefulWidget {
   final String id;
@@ -112,13 +113,21 @@ class _AddforumState extends State<Addforum> {
         });
   }
 
+  getdate() {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    return formattedDate.toString();
+  }
+
   Future sendpost(
       TextEditingController feedcontroller, String userid, param2) async {
     final feed = FirebaseFirestore.instance.collection("Feeds").doc();
+    String date = getdate();
     final json = {
       'Likes': 0,
       'Name': param2,
-      'date': "1/1/1",
+      'date': date,
       'feedtype': widget.id,
       'ownerid': userid,
       'postbody': feedcontroller.text,
