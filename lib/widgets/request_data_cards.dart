@@ -137,6 +137,7 @@ class RequestDataCard extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => MoreDetailsPage(
                           postid: requestId,
+                          isRequest: true,
                           title: 'Request Details',
                         ),
                       ),
