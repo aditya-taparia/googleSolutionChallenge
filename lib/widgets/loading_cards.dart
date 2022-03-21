@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class LoadingCard extends StatelessWidget {
-  const LoadingCard({Key? key}) : super(key: key);
+  final double? height;
+  const LoadingCard({Key? key, this.height}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +11,7 @@ class LoadingCard extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Shimmer(
         child: Container(
-          height: 200,
+          height: height ?? 200,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             color: Colors.grey[100],

@@ -17,6 +17,8 @@ class ServiceDataCard extends StatelessWidget {
   final String givenBy;
   final double amount;
   final bool isAccepted;
+  final String paymentStatus;
+  final String postType;
 
   const ServiceDataCard({
     Key? key,
@@ -29,6 +31,8 @@ class ServiceDataCard extends StatelessWidget {
     required this.postid,
     required this.status,
     required this.isAccepted,
+    required this.paymentStatus,
+    required this.postType,
   }) : super(key: key);
 
   @override
@@ -36,7 +40,7 @@ class ServiceDataCard extends StatelessWidget {
     return FittedBox(
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: 265,
+        height: 300,
         child: Card(
           color: isAccepted ? Colors.grey[50] : Colors.white,
           elevation: 2.5,
@@ -55,22 +59,16 @@ class ServiceDataCard extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: Text(
                         title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
-                          color: isAccepted
-                              ? const Color.fromRGBO(66, 103, 178, 1)
-                              : const Color.fromRGBO(219, 68, 55, 1),
+                          color: Color.fromRGBO(66, 103, 178, 1),
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     TextButton.icon(
-                      style: TextButton.styleFrom(
-                        primary: isAccepted
-                            ? Colors.grey[600]
-                            : Colors.deepOrange[600],
-                      ),
+                      style: TextButton.styleFrom(primary: Colors.grey[600]),
                       icon: const Icon(
                         Icons.info_outline_rounded,
                         size: 20,
@@ -97,7 +95,7 @@ class ServiceDataCard extends StatelessWidget {
                 const SizedBox(height: 5),
                 // Description
                 SizedBox(
-                  height: 60,
+                  height: 50,
                   child: Text(
                     description,
                     style: TextStyle(
@@ -105,8 +103,138 @@ class ServiceDataCard extends StatelessWidget {
                       color: Colors.grey[600],
                     ),
                     textAlign: TextAlign.justify,
-                    maxLines: 3,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+
+                // Tags
+                FittedBox(
+                  child: Wrap(
+                    spacing: 3,
+                    runSpacing: 1,
+                    children: [
+                      // Item Request, Job Request or Charity Chip
+                      Chip(
+                        avatar: Icon(
+                          postType == 'job request'
+                              ? Icons.work_outline_rounded
+                              : postType == 'item request'
+                                  ? Icons.category_rounded
+                                  : Icons.volunteer_activism_rounded,
+                          color: Colors.blue[800],
+                        ),
+                        label: Text(
+                          postType == 'job request'
+                              ? 'Job Request'
+                              : postType == 'item request'
+                                  ? 'Item Request'
+                                  : 'Charity',
+                          style: TextStyle(
+                            color: Colors.blue[800],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        backgroundColor: Colors.blue[50],
+                      ),
+                      // Accepted Chip
+                      !isAccepted
+                          ? Chip(
+                              avatar: const Icon(
+                                Icons.pending_actions_rounded,
+                                color: Colors.indigo,
+                              ),
+                              label: const Text(
+                                'Pending',
+                                style: TextStyle(
+                                  color: Colors.indigo,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              backgroundColor: Colors.indigo[50],
+                            )
+                          : const SizedBox(height: 0, width: 0),
+
+                      // Ongoing Chip
+                      status == 'ongoing' && isAccepted
+                          ? Chip(
+                              avatar: const Icon(
+                                Icons.pending_actions_rounded,
+                                color: Colors.orange,
+                              ),
+                              label: const Text(
+                                'Ongoing',
+                                style: TextStyle(
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              backgroundColor: Colors.orange[50],
+                            )
+                          : const SizedBox(height: 0, width: 0),
+
+                      // Overdue Chip
+                      DateTime.now().compareTo(DateTime.parse(
+                                      expectedCompletionDate
+                                          .toDate()
+                                          .toString())) >
+                                  0 &&
+                              status == 'ongoing' &&
+                              isAccepted
+                          ? Chip(
+                              avatar: const Icon(
+                                Icons.schedule_rounded,
+                                color: Colors.red,
+                              ),
+                              label: const Text(
+                                'Overdue',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              backgroundColor: Colors.red[50],
+                            )
+                          : const SizedBox(height: 0, width: 0),
+
+                      // Completed Chip
+                      status == 'completed' && isAccepted
+                          ? Chip(
+                              avatar: const Icon(
+                                Icons.check_rounded,
+                                color: Colors.green,
+                              ),
+                              label: const Text(
+                                'Completed',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              backgroundColor: Colors.green[50],
+                            )
+                          : const SizedBox(height: 0, width: 0),
+
+                      // Payment Completed Chip
+                      status == 'completed' &&
+                              paymentStatus == 'pending' &&
+                              isAccepted
+                          ? Chip(
+                              avatar: const Icon(
+                                Icons.attach_money_rounded,
+                                color: Colors.purple,
+                              ),
+                              label: const Text(
+                                'Payment Pending',
+                                style: TextStyle(
+                                  color: Colors.purple,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              backgroundColor: Colors.purple[50],
+                            )
+                          : const SizedBox(height: 0, width: 0),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -136,7 +264,7 @@ class ServiceDataCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
 
-                // Accepted By
+                // Given By
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -219,67 +347,39 @@ class ServiceDataCard extends StatelessWidget {
                                     ),
                                     onPressed: () {},
                                   )
-                                : Container(
-                                    height: 40,
-                                    width: 175,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color:
-                                          const Color.fromRGBO(15, 157, 88, 1),
+                                : ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: const Size(175, 40),
                                     ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(
-                                          Icons.check_circle_outline_rounded,
-                                          size: 24,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Completed',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
+                                    icon: const Icon(
+                                      Icons.attach_money_rounded,
+                                      size: 20,
                                     ),
+                                    label: const Text(
+                                      'Ask for Pay',
+                                      style: TextStyle(),
+                                    ),
+                                    onPressed: () {},
                                   ),
                           ],
                         ),
                       )
                     : Center(
-                        child: Container(
-                          height: 40,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.orange[400],
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(
-                                Icons.pending_actions_rounded,
-                                size: 24,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                'Pending',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              primary: const Color.fromRGBO(250, 103, 117, 1),
+                            ),
+                            icon: const Icon(
+                              Icons.delete_rounded,
+                              size: 20,
+                            ),
+                            label: const Text(
+                              'Withdraw',
+                              style: TextStyle(),
+                            ),
+                            onPressed: () {},
                           ),
                         ),
                       ),

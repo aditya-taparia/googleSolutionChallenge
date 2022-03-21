@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -211,6 +212,30 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].latitude.toString()),
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
+                  /* showBottomSheet(
+                      context: context,
+                      enableDrag: true,
+                      builder: (_) {
+                        return DraggableScrollableSheet(  
+                          minChildSize: 0.2,
+                          maxChildSize: 0.7,
+                          initialChildSize: 0.3,
+                          expand: false,
+                          builder: (_, controller) {
+                            return Container(
+                              color: Colors.amberAccent,
+                              child: ListView.builder(
+                                controller: controller,
+                                itemBuilder: (_, i) {
+                                  return ListTile(
+                                    title: Text(i.toString()),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      }); */
                   setState(() {
                     isLinkedspace = false;
                     sendername = element["given-by-name"];
@@ -1136,43 +1161,43 @@ class _MapScreenState extends State<MapScreen> {
                                 ConnectionState.active) {
                               var snap = snapshot.data!.docs;
 
-                              return Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: AnimatedContainer(
-                                    duration: const Duration(
-                                      milliseconds: 500,
-                                    ),
-                                    height: _height,
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(20.0),
-                                          topRight: Radius.circular(20.0),
-                                        )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (_open) {
-                                            setState(() {
-                                              _height = 100;
-                                              _open = false;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _height = 300;
-                                              _open = true;
-                                            });
-                                          }
-                                        },
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            shrinkWrap: true,
+                              return StatefulBuilder(
+                                  builder: (context, setState) {
+                                return Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 500,
+                                      ),
+                                      height: _height,
+                                      decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20.0),
+                                            topRight: Radius.circular(20.0),
+                                          )),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (_open) {
+                                              setState(() {
+                                                _height = 100;
+                                                _open = false;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                _height = 300;
+                                                _open = true;
+                                              });
+                                            }
+                                          },
+                                          child: CarouselSlider.builder(
                                             itemCount: snap.length,
                                             itemBuilder: (BuildContext context,
-                                                int index) {
+                                                int index, int pageViewIndex) {
                                               return SingleChildScrollView(
                                                 child: Container(
                                                   width: MediaQuery.of(context)
@@ -1450,10 +1475,20 @@ class _MapScreenState extends State<MapScreen> {
                                                   ),
                                                 ),
                                               );
-                                            }),
+                                            },
+                                            options: CarouselOptions(
+                                              autoPlay: false,
+                                              enlargeCenterPage: true,
+                                              viewportFraction: 0.9,
+                                              aspectRatio: 2.0,
+                                              initialPage: 0,
+                                              enableInfiniteScroll: false,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ));
+                                    ));
+                              });
                             }
                             return LoadingCard();
                           })
