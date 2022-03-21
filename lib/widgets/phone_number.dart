@@ -43,6 +43,12 @@ class _PhoneNumberState extends State<PhoneNumber> {
   }
 
   @override
+  void initState() {
+    widget.codeController.text = countryCode;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
