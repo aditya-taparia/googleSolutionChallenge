@@ -7,8 +7,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/individualchat.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
+import 'package:googlesolutionchallenge/widgets/loading_cards.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -35,6 +37,7 @@ class _MapScreenState extends State<MapScreen> {
   Set<Marker> _markers = {};
   bool _mapload = true;
   bool showgeolocationwidget = false;
+  bool isLinkedspace = false;
 
 // drive
   late LatLng destination = const LatLng(15.5057, 80.0499);
@@ -136,6 +139,7 @@ class _MapScreenState extends State<MapScreen> {
         position: _current,
         onTap: () {
           setState(() {
+            destination = _current;
             _markerclicked = true;
           });
         },
@@ -208,6 +212,7 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
+                    isLinkedspace = false;
                     sendername = element["given-by-name"];
                     senderuid = element["given-by"];
                     destination = LatLng(
@@ -237,6 +242,7 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
+                    isLinkedspace = false;
                     sendername = element["given-by-name"];
                     senderuid = element["given-by"];
                     destination = LatLng(
@@ -268,6 +274,7 @@ class _MapScreenState extends State<MapScreen> {
                   double.parse(element["locality"].longitude.toString())),
               onTap: () {
                 setState(() {
+                  isLinkedspace = true;
                   sendername = element["name"];
                   senderuid = element["ownerid"];
                   destination = LatLng(
@@ -1101,221 +1108,355 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               ),
               _markerclicked
-                  ? Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: AnimatedContainer(
-                        duration: const Duration(
-                          milliseconds: 500,
-                        ),
-                        height: _height,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20.0),
-                              topRight: Radius.circular(20.0),
-                            )),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              if (_open) {
-                                setState(() {
-                                  _height = 100;
-                                  _open = false;
-                                });
-                              } else {
-                                setState(() {
-                                  _height = 300;
-                                  _open = true;
-                                });
-                              }
-                            },
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                    child: !_open
-                                        ? const Icon(
-                                            Icons.keyboard_arrow_up,
-                                            size: 30,
-                                          )
-                                        : const Icon(
-                                            Icons.keyboard_arrow_down,
-                                            size: 30,
-                                          ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "ITEM NAME",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color: Color.fromRGBO(
-                                                  66, 103, 178, 1),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromRGBO(
-                                                  66, 103, 178, 1),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: const Text(
-                                              "Category",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      GestureDetector(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: favselect ? fav : fav2,
-                                        ),
+                  ? (destination == _current)
+                      ? Container() // TODO KOWSIK
+                      : StreamBuilder<QuerySnapshot>(
+                          stream: isLinkedspace
+                              ? FirebaseFirestore.instance
+                                  .collection('Linkspace')
+                                  .where('locality',
+                                      isEqualTo: GeoPoint(destination.latitude,
+                                          destination.longitude))
+                                  .snapshots()
+                              : FirebaseFirestore.instance
+                                  .collection('Posts')
+                                  .where('location',
+                                      isEqualTo: GeoPoint(destination.latitude,
+                                          destination.longitude))
+                                  .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text("Something went wrong");
+                            }
+                            if (!snapshot.hasData) {
+                              return LoadingCard(); // change to vector image
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.active) {
+                              var snap = snapshot.data!.docs;
+
+                              return Positioned(
+                                  bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: AnimatedContainer(
+                                    duration: const Duration(
+                                      milliseconds: 500,
+                                    ),
+                                    height: _height,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(20.0),
+                                          topRight: Radius.circular(20.0),
+                                        )),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
                                         onTap: () {
-                                          setState(() {
-                                            favselect = !favselect;
-                                          });
+                                          if (_open) {
+                                            setState(() {
+                                              _height = 100;
+                                              _open = false;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              _height = 300;
+                                              _open = true;
+                                            });
+                                          }
                                         },
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  const Text(
-                                    "Description",
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(66, 103, 178, 1),
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemCount: snap.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return SingleChildScrollView(
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      16.0,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Center(
+                                                        child: !_open
+                                                            ? const Icon(
+                                                                Icons
+                                                                    .keyboard_arrow_up,
+                                                                size: 30,
+                                                              )
+                                                            : const Icon(
+                                                                Icons
+                                                                    .keyboard_arrow_down,
+                                                                size: 30,
+                                                              ),
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                isLinkedspace
+                                                                    ? snap[index]
+                                                                        ['name']
+                                                                    : snap[index]
+                                                                        [
+                                                                        'title'],
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 20,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          66,
+                                                                          103,
+                                                                          178,
+                                                                          1),
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 20,
+                                                              ),
+                                                              !isLinkedspace
+                                                                  ? Container(
+                                                                      padding:
+                                                                          const EdgeInsets
+                                                                              .symmetric(
+                                                                        horizontal:
+                                                                            8,
+                                                                        vertical:
+                                                                            4,
+                                                                      ),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: const Color.fromRGBO(
+                                                                            66,
+                                                                            103,
+                                                                            178,
+                                                                            1),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20),
+                                                                      ),
+                                                                      child:
+                                                                          Text(
+                                                                        snap[index]
+                                                                            [
+                                                                            'post-type'],
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              12,
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : Container()
+                                                            ],
+                                                          ),
+                                                          GestureDetector(
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          8.0),
+                                                              child: favselect
+                                                                  ? fav
+                                                                  : fav2,
+                                                            ),
+                                                            onTap: () {
+                                                              setState(() {
+                                                                favselect =
+                                                                    !favselect;
+                                                              });
+                                                            },
+                                                          )
+                                                        ],
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      const Text(
+                                                        "Description",
+                                                        style: TextStyle(
+                                                          color: Color.fromRGBO(
+                                                              66, 103, 178, 1),
+                                                        ),
+                                                      ),
+                                                      Text(snap[index]
+                                                          ['description']),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Container(
+                                                        height: 110,
+                                                        child: ListView(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          shrinkWrap: true,
+                                                          children: [
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.4,
+                                                              height: 100,
+                                                              child:
+                                                                  const Center(
+                                                                child: Text(
+                                                                    "IMAGE 1"),
+                                                              ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: const Color
+                                                                        .fromRGBO(
+                                                                    211,
+                                                                    211,
+                                                                    211,
+                                                                    1),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.4,
+                                                                height: 100,
+                                                                child:
+                                                                    const Center(
+                                                                  child: Text(
+                                                                      "IMAGE 2"),
+                                                                ),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: const Color
+                                                                          .fromRGBO(
+                                                                      211,
+                                                                      211,
+                                                                      211,
+                                                                      1),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20),
+                                                                )),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.4,
+                                                                height: 100,
+                                                                child:
+                                                                    const Center(
+                                                                  child: Text(
+                                                                      "IMAGE 3"),
+                                                                ),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: const Color
+                                                                          .fromRGBO(
+                                                                      211,
+                                                                      211,
+                                                                      211,
+                                                                      1),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20),
+                                                                )),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            ElevatedButton(
+                                                                onPressed: () {
+                                                                  createchat(
+                                                                      user!
+                                                                          .userid
+                                                                          .toString(),
+                                                                      senderuid,
+                                                                      sendername);
+                                                                  // Navigator.push( //ADITYA JEETESH
+                                                                  //     context,
+                                                                  //     MaterialPageRoute(
+                                                                  //         builder: (context) => IndividualChat(
+                                                                  //             user: {},
+                                                                  //             id: snap[index]['chat-id'])));
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        "Chat")),
+                                                            const SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            ElevatedButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  setState(() {
+                                                                    _markerclicked =
+                                                                        false;
+                                                                    _drive =
+                                                                        true;
+                                                                    _polylines =
+                                                                        {};
+                                                                  });
+                                                                  var temp = await getDirections(
+                                                                      _current,
+                                                                      destination);
+                                                                  _setPolyline(
+                                                                      directions);
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        "Drive"))
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                      ),
                                     ),
-                                  ),
-                                  const Text(
-                                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam posuere ullamcorper varius. Suspendisse id auctor tellus, at imperdiet justo. Mauris vitae orci in odio dapibus consectetur. Etiam convallis lectus felis,"),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 110,
-                                    child: ListView(
-                                      scrollDirection: Axis.horizontal,
-                                      shrinkWrap: true,
-                                      children: [
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.4,
-                                          height: 100,
-                                          child: const Center(
-                                            child: Text("IMAGE 1"),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                211, 211, 211, 1),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.4,
-                                            height: 100,
-                                            child: const Center(
-                                              child: Text("IMAGE 2"),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromRGBO(
-                                                  211, 211, 211, 1),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            )),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.4,
-                                            height: 100,
-                                            child: const Center(
-                                              child: Text("IMAGE 2"),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromRGBO(
-                                                  211, 211, 211, 1),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              createchat(
-                                                  user!.userid.toString(),
-                                                  senderuid,
-                                                  sendername);
-                                              // ADITYATAPARIA change body to chat screen
-                                            },
-                                            child: const Text("Chat")),
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        ElevatedButton(
-                                            onPressed: () async {
-                                              setState(() {
-                                                _markerclicked = false;
-                                                _drive = true;
-                                                _polylines = {};
-                                              });
-                                              var temp = await getDirections(
-                                                  _current, destination);
-                                              _setPolyline(directions);
-                                            },
-                                            child: const Text("Drive"))
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ))
+                                  ));
+                            }
+                            return LoadingCard();
+                          })
                   : Container(),
             ],
           ),
@@ -1517,28 +1658,6 @@ Widget Builditemjoblist(Map userList, BuildContext context) {
                 ),
               ),
               Text(userList["name"].toString()),
-              Container(
-                height: 50,
-                width: 200,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: userList["Provide"].length,
-                    itemBuilder: (context, yindex) {
-                      return userList["Provide_done"][yindex] == 0
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(userList["Provide"][yindex].toString()),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                    userList["Provide_des"][yindex].toString()),
-                              ],
-                            )
-                          : Container();
-                    }),
-              )
             ],
           )
         ],
