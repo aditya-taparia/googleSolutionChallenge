@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
@@ -539,6 +538,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                               'Chat',
                                               style: TextStyle(),
                                             ),
+                                            // TODO: Chat Navigation
                                             onPressed: () {},
                                           ),
                                         )
@@ -562,6 +562,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                               'Request Pay',
                                               style: TextStyle(),
                                             ),
+                                            // TODO: Pay Request
                                             onPressed: () {},
                                           ),
                                         )
@@ -579,11 +580,115 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                                   'Mark As Done',
                                                   style: TextStyle(),
                                                 ),
-                                                onPressed: () {},
+                                                // Complete Request
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                            "Confirmation",
+                                                          ),
+                                                          content: const Text(
+                                                            "Are you sure you want to mark the request as complete?",
+                                                          ),
+                                                          actions: <Widget>[
+                                                            OutlinedButton(
+                                                              child: const Text(
+                                                                  "Yes"),
+                                                              onPressed:
+                                                                  () async {
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'Posts')
+                                                                    .doc(widget
+                                                                        .postid)
+                                                                    .set(
+                                                                  {
+                                                                    'completion-status':
+                                                                        'completed',
+                                                                  },
+                                                                  SetOptions(
+                                                                    merge: true,
+                                                                  ),
+                                                                ).then((value) {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                      content:
+                                                                          Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Icon(
+                                                                            Icons.check_rounded,
+                                                                            color:
+                                                                                Colors.green[800],
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            'Request marked as complete',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.green[800],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      duration: const Duration(
+                                                                          seconds:
+                                                                              2),
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .green[50],
+                                                                      behavior:
+                                                                          SnackBarBehavior
+                                                                              .floating,
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10),
+                                                                      ),
+                                                                      elevation:
+                                                                          3,
+                                                                    ),
+                                                                  );
+                                                                });
+                                                              },
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            ElevatedButton(
+                                                              child: const Text(
+                                                                  "No"),
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                          ],
+                                                          actionsAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                        );
+                                                      });
+                                                },
                                               ),
                                             )
                                           : Container(),
-                                  SizedBox(
+                                  // TODO: Will do later, drive to the location
+
+                                  /* SizedBox(
                                     width: 175,
                                     child: OutlinedButton.icon(
                                       icon: Icon(
@@ -601,7 +706,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                       ),
                                       onPressed: () {},
                                     ),
-                                  ),
+                                  ), */
                                   SizedBox(
                                     width: 175,
                                     child: ElevatedButton.icon(
@@ -617,11 +722,121 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                         'Withdraw',
                                         style: TextStyle(),
                                       ),
+                                      // Withdraw Request
                                       onPressed: () {
-                                        // TODO: Remove from waiting list and accepted-by
-                                        // TODO: Show a dialog to confirm
-                                        // TODO: Navigate to dashboard with a message
-                                        Navigator.pop(context);
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text(
+                                                  "Confirmation",
+                                                ),
+                                                content: const Text(
+                                                  "Are you sure you want to withdraw your name from the request?",
+                                                ),
+                                                actions: <Widget>[
+                                                  OutlinedButton(
+                                                    child: const Text("Yes"),
+                                                    onPressed: () async {
+                                                      Map<String, dynamic>
+                                                          json = {};
+                                                      json['waiting-list'] =
+                                                          FieldValue
+                                                              .arrayRemove([
+                                                        user.userid
+                                                      ]);
+                                                      if (user.userid ==
+                                                          snapshot.data![
+                                                              'accepted-by']) {
+                                                        json['accepted-by'] =
+                                                            '';
+                                                        json['accepted-by-name'] =
+                                                            '';
+                                                        json['chat-id'] = '';
+                                                      }
+
+                                                      FirebaseFirestore.instance
+                                                          .collection('Posts')
+                                                          .doc(widget.postid)
+                                                          .set(
+                                                            json,
+                                                            SetOptions(
+                                                              merge: true,
+                                                            ),
+                                                          )
+                                                          .then((value) {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .check_rounded,
+                                                                  color: Colors
+                                                                          .green[
+                                                                      800],
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                Text(
+                                                                  'Successfully Removed',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                            .green[
+                                                                        800],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            duration:
+                                                                const Duration(
+                                                                    seconds: 2),
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .green[50],
+                                                            behavior:
+                                                                SnackBarBehavior
+                                                                    .floating,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                            elevation: 3,
+                                                          ),
+                                                        );
+                                                      });
+                                                    },
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  ElevatedButton(
+                                                    child: const Text("No"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                                actionsAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                              );
+                                            });
                                       },
                                     ),
                                   )
