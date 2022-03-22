@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import '../../../models/user.dart';
 
 class Addlinkspace extends StatefulWidget {
   const Addlinkspace({Key? key}) : super(key: key);

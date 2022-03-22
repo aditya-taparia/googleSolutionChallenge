@@ -140,6 +140,7 @@ Widget switchcase(
                           elevation: 5,
                         ),
                         onPressed: () {
+                          // TODO: Call db to add the user
                           UserDatabaseService(uid: userid).setUserData(
                               nameController.text, emailController.text);
                           continueStep();

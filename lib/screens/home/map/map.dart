@@ -1164,9 +1164,23 @@ class _MapScreenState extends State<MapScreen> {
                               return StatefulBuilder(
                                   builder: (context, setState) {
                                 return Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
+                                  bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onVerticalDragUpdate: (details) {
+                                      int sensitivity = 8;
+                                      if (details.delta.dy > sensitivity) {
+                                        setState(() {
+                                          _height = 100;
+                                        });
+                                      } else if (details.delta.dy <
+                                          -sensitivity) {
+                                        setState(() {
+                                          _height = 300;
+                                        });
+                                      }
+                                    },
                                     child: AnimatedContainer(
                                       duration: const Duration(
                                         milliseconds: 500,
@@ -1487,7 +1501,9 @@ class _MapScreenState extends State<MapScreen> {
                                           ),
                                         ),
                                       ),
-                                    ));
+                                    ),
+                                  ),
+                                );
                               });
                             }
                             return LoadingCard();

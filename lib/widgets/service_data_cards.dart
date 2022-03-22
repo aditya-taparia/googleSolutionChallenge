@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/more_details_page.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 // TODO: Tags for pending, completed, ongoing And hide the chat and mark as
 // completed button if the service is pending And show request pay button when
@@ -37,6 +39,7 @@ class ServiceDataCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<Users>(context);
     return FittedBox(
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -330,6 +333,7 @@ class ServiceDataCard extends StatelessWidget {
                                 'Chat',
                                 style: TextStyle(),
                               ),
+                              // TODO: Chat Navigation
                               onPressed: () {},
                             ),
                             status == 'ongoing'
@@ -345,20 +349,117 @@ class ServiceDataCard extends StatelessWidget {
                                       'Mark As Done',
                                       style: TextStyle(),
                                     ),
-                                    onPressed: () {},
+                                    // Mark As Done
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                "Confirmation",
+                                              ),
+                                              content: const Text(
+                                                "Are you sure you want to mark the request as complete?",
+                                              ),
+                                              actions: <Widget>[
+                                                OutlinedButton(
+                                                  child: const Text("Yes"),
+                                                  onPressed: () async {
+                                                    FirebaseFirestore.instance
+                                                        .collection('Posts')
+                                                        .doc(postid)
+                                                        .set(
+                                                      {
+                                                        'completion-status':
+                                                            'completed',
+                                                      },
+                                                      SetOptions(
+                                                        merge: true,
+                                                      ),
+                                                    ).then((value) {
+                                                      Navigator.pop(context);
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .check_rounded,
+                                                                color: Colors
+                                                                    .green[800],
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              Text(
+                                                                'Request marked as complete',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                          .green[
+                                                                      800],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          duration:
+                                                              const Duration(
+                                                                  seconds: 2),
+                                                          backgroundColor:
+                                                              Colors.green[50],
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          elevation: 3,
+                                                        ),
+                                                      );
+                                                    });
+                                                  },
+                                                ),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
+                                                ElevatedButton(
+                                                  child: const Text("No"),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                              actionsAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                            );
+                                          });
+                                    },
                                   )
                                 : ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
                                       fixedSize: const Size(175, 40),
                                     ),
                                     icon: const Icon(
-                                      Icons.attach_money_rounded,
+                                      Icons.qr_code_rounded,
                                       size: 20,
                                     ),
                                     label: const Text(
-                                      'Ask for Pay',
+                                      'Generate QR',
                                       style: TextStyle(),
                                     ),
+                                    // TODO: QR code generation??
                                     onPressed: () {},
                                   ),
                           ],
@@ -379,7 +480,103 @@ class ServiceDataCard extends StatelessWidget {
                               'Withdraw',
                               style: TextStyle(),
                             ),
-                            onPressed: () {},
+                            // Withdraw
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        "Confirmation",
+                                      ),
+                                      content: const Text(
+                                        "Are you sure you want to withdraw your name from the request?",
+                                      ),
+                                      actions: <Widget>[
+                                        OutlinedButton(
+                                          child: const Text("Yes"),
+                                          onPressed: () async {
+                                            Map<String, dynamic> json = {};
+                                            json['waiting-list'] =
+                                                FieldValue.arrayRemove(
+                                                    [user.userid]);
+                                            if (isAccepted) {
+                                              json['accepted-by'] = '';
+                                              json['accepted-by-name'] = '';
+                                              json['chat-id'] = '';
+                                            }
+
+                                            FirebaseFirestore.instance
+                                                .collection('Posts')
+                                                .doc(postid)
+                                                .set(
+                                                  json,
+                                                  SetOptions(
+                                                    merge: true,
+                                                  ),
+                                                )
+                                                .then((value) {
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.check_rounded,
+                                                        color:
+                                                            Colors.green[800],
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        'Successfully Removed',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Colors.green[800],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  duration: const Duration(
+                                                      seconds: 2),
+                                                  backgroundColor:
+                                                      Colors.green[50],
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  elevation: 3,
+                                                ),
+                                              );
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        ElevatedButton(
+                                          child: const Text("No"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                      actionsAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                    );
+                                  });
+                            },
                           ),
                         ),
                       ),

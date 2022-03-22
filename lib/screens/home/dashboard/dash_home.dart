@@ -81,6 +81,7 @@ class _DashHomeState extends State<DashHome> {
                   .where('waiting-list', arrayContains: user!.userid)
                   .where('accepted-by', whereIn: ['', user.userid])
                   .where('payment-status', isEqualTo: 'pending')
+                  .orderBy('expected-completion-time')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
