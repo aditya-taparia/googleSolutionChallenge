@@ -4,6 +4,7 @@ import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class IndividualChat extends StatefulWidget {
   const IndividualChat({Key? key, required this.user, required this.id})
@@ -17,7 +18,19 @@ class IndividualChat extends StatefulWidget {
 
 class _IndividualChatState extends State<IndividualChat> {
   final _msgcontroller = TextEditingController();
-  buildMessage(String message, String time, bool isUser) {
+
+  Future ReadMsg(String id, int read) async {
+    final linkspace = FirebaseFirestore.instance.collection("chats").doc(id);
+    linkspace.update({
+      "read": [0, read]
+    });
+  }
+
+  buildMessage(String message, Timestamp time, bool isUser) {
+    DateTime d = time.toDate();
+    // var dt = DateTime.fromMillisecondsSinceEpoch(d);
+// 12 Hour format:
+    var d12 = DateFormat('MM/dd/yyyy, hh:mm a').format(d);
     return Container(
       margin: isUser
           ? const EdgeInsets.only(top: 10, bottom: 8, left: 80)
@@ -39,7 +52,7 @@ class _IndividualChatState extends State<IndividualChat> {
           Align(
             alignment: Alignment.bottomRight,
             child: Text(
-              time,
+              d12,
               style: TextStyle(
                   color: !isUser ? Colors.grey : Colors.white, fontSize: 12),
             ),
@@ -49,7 +62,7 @@ class _IndividualChatState extends State<IndividualChat> {
     );
   }
 
-  buildMessageComposer(String userid, length) {
+  buildMessageComposer(String userid, length, read) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       height: 70,
@@ -75,7 +88,7 @@ class _IndividualChatState extends State<IndividualChat> {
             print(_msgcontroller.text);
 
             String msg = _msgcontroller.text;
-            addmsgDB(msg, widget.id, userid, length);
+            addmsgDB(msg, widget.id, userid, length, read);
             _msgcontroller.clear();
           },
           icon: const Icon(Icons.send),
@@ -102,10 +115,20 @@ class _IndividualChatState extends State<IndividualChat> {
           if (snapshot.connectionState == ConnectionState.active) {
             print(snapshot.data!['chatdata']);
             Map data = snapshot.data!['chatdata'];
+            Map sender;
+            int read;
+            if (snapshot.data!["name"][0]["id"] == user!.userid.toString()) {
+              sender = snapshot.data!["name"][1];
+              read = snapshot.data!["read"][1];
+            } else {
+              sender = snapshot.data!["name"][0];
+              read = snapshot.data!["read"][0];
+            }
+            ReadMsg(widget.id, read);
             return Scaffold(
               backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
               appBar: AppBar(
-                title: Text(widget.user["name"]),
+                title: Text(sender["name"]),
                 elevation: 0,
               ),
               body: GestureDetector(
@@ -130,17 +153,15 @@ class _IndividualChatState extends State<IndividualChat> {
                                 print(data[index.toString()]);
 
                                 final bool isUser =
-                                    data[index.toString()][0] == user!.userid;
-                                return buildMessage(
-                                    data[index.toString()][1],
-                                    data[index.toString()][2].toString(),
-                                    isUser);
+                                    data[index.toString()][0] == user.userid;
+                                return buildMessage(data[index.toString()][1],
+                                    data[index.toString()][2], isUser);
                               }),
                         ),
                       ),
                     ),
                     buildMessageComposer(
-                        user!.userid, snapshot.data!['chatdata'].length),
+                        user.userid, snapshot.data!['chatdata'].length, read),
                   ],
                 ),
               ),
@@ -151,7 +172,7 @@ class _IndividualChatState extends State<IndividualChat> {
         });
   }
 
-  Future addmsgDB(String msg, String id, userid, length) async {
+  Future addmsgDB(String msg, String id, userid, length, read) async {
     final linkspace = FirebaseFirestore.instance.collection("chats").doc(id);
     var time = DateTime.now();
 
@@ -160,5 +181,6 @@ class _IndividualChatState extends State<IndividualChat> {
         length.toString(): [userid, msg, time]
       }
     }, SetOptions(merge: true));
+    ReadMsg(id, read + 1);
   }
 }

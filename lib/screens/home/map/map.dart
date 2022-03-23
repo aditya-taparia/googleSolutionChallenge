@@ -1836,7 +1836,8 @@ createchat(String currUserId, String othUserId, String name1) async {
           final json = {
             'chatdata': {},
             'users': [currUserId, othUserId],
-            'name': [currUserData, othuserdata]
+            'name': [currUserData, othuserdata],
+            'read': [0, 0]
           };
           await addchat.set(json);
         }

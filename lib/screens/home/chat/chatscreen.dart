@@ -46,11 +46,15 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemBuilder: (BuildContext context, int index) {
                     final chat = chatList[index].data();
                     Map sender;
+                    int read;
                     if (chat["name"][0]["id"] == user.userid.toString()) {
                       sender = chat["name"][1];
+                      read = chat["read"][0];
                     } else {
                       sender = chat["name"][0];
+                      read = chat["read"][1];
                     }
+                    print(read);
                     String img = sender["imgUrl"];
                     //print(sender);
                     return GestureDetector(
@@ -63,7 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         padding: const EdgeInsets.only(left: 3.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: true
+                            color: read > 0
                                 ? const Color.fromRGBO(66, 103, 178, 0.29)
                                 : Colors.white,
                             borderRadius: const BorderRadius.all(
@@ -102,7 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                             MediaQuery.of(context).size.width *
                                                 0.6,
                                         child: Text(
-                                          "chat.text",
+                                          "Hii There !!!",
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                               fontSize: 15, color: Colors.grey),
@@ -123,7 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  false
+                                  read > 0
                                       ? Container(
                                           width: 40,
                                           height: 20,
@@ -153,7 +157,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   }),
             );
           } else {
-            return Text("kuch nhi hua");
+            return Loading();
           }
         });
   }
