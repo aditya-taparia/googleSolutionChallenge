@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -1134,7 +1135,205 @@ class _MapScreenState extends State<MapScreen> {
               ),
               _markerclicked
                   ? (destination == _current)
-                      ? Container() // TODO KOWSIK
+                      ? Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onVerticalDragUpdate: (details) {
+                              int sensitivity = 8;
+                              if (details.delta.dy > sensitivity) {
+                                setState(() {
+                                  _height = 100;
+                                });
+                              } else if (details.delta.dy < -sensitivity) {
+                                setState(() {
+                                  _height = 300;
+                                });
+                              }
+                            },
+                            child: AnimatedContainer(
+                                duration: const Duration(
+                                  milliseconds: 500,
+                                ),
+                                height: _height,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.0),
+                                      topRight: Radius.circular(20.0),
+                                    )),
+                                child: SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          if (_open) {
+                                            setState(() {
+                                              _height = 100;
+                                              _open = false;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              _height = 300;
+                                              _open = true;
+                                            });
+                                          }
+                                        },
+                                        child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                16.0,
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Center(
+                                                    child: !_open
+                                                        ? const Icon(
+                                                            Icons
+                                                                .keyboard_arrow_up,
+                                                            size: 30,
+                                                          )
+                                                        : const Icon(
+                                                            Icons
+                                                                .keyboard_arrow_down,
+                                                            size: 30,
+                                                          ),
+                                                  ),
+                                                  const Text(
+                                                    ' Add Item or Job Request',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Color.fromRGBO(
+                                                          66, 103, 178, 1),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 50,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      DottedBorder(
+                                                        borderType:
+                                                            BorderType.RRect,
+                                                        strokeWidth: 2,
+                                                        radius: const Radius
+                                                            .circular(10),
+                                                        color: Colors.grey,
+                                                        dashPattern: const [
+                                                          5,
+                                                          5
+                                                        ],
+                                                        child: SizedBox(
+                                                          width: 160,
+                                                          height: 160,
+                                                          child: Center(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: const [
+                                                                Icon(
+                                                                  Icons.add,
+                                                                  size: 30,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          66,
+                                                                          103,
+                                                                          178,
+                                                                          1),
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                Text(
+                                                                  'Add item Request',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        18,
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            66,
+                                                                            103,
+                                                                            178,
+                                                                            1),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      DottedBorder(
+                                                        borderType:
+                                                            BorderType.RRect,
+                                                        strokeWidth: 2,
+                                                        radius: const Radius
+                                                            .circular(10),
+                                                        color: Colors.grey,
+                                                        dashPattern: const [
+                                                          5,
+                                                          5
+                                                        ],
+                                                        child: SizedBox(
+                                                          height: 160,
+                                                          width: 160,
+                                                          child: Center(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: const [
+                                                                Icon(
+                                                                  Icons.add,
+                                                                  size: 30,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          66,
+                                                                          103,
+                                                                          178,
+                                                                          1),
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                Center(
+                                                                  child: Text(
+                                                                    'Add job Request',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Color.fromRGBO(
+                                                                          66,
+                                                                          103,
+                                                                          178,
+                                                                          1),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ]))),
+                                  ),
+                                )),
+                          ),
+                        ) // TODO KOWSIK
                       : StreamBuilder<QuerySnapshot>(
                           stream: isLinkedspace
                               ? FirebaseFirestore.instance

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/screens/home/analytics/chart.dart';
-import 'package:googlesolutionchallenge/screens/home/analytics/transactions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/user.dart';
@@ -52,7 +51,7 @@ class _AnalyticsState extends State<Analytics>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
   }
 
   @override
@@ -136,18 +135,11 @@ class _AnalyticsState extends State<Analytics>
                       floating: true,
                       forceElevated: innerBoxIsScrolled,
                       bottom: TabBar(
-                        indicatorColor: Colors.white,
+                        indicatorColor: Colors.transparent,
                         tabs: const <Tab>[
                           Tab(
                             child: Text(
-                              'Charts',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Tab(
-                            child: Text(
-                              'History',
+                              'Analytics',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
@@ -162,7 +154,6 @@ class _AnalyticsState extends State<Analytics>
                   controller: _tabController,
                   children: const <Widget>[
                     Chart(),
-                    Transactions(),
                   ],
                 ),
               ),

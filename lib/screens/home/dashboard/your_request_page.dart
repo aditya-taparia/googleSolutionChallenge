@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/request_form.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:googlesolutionchallenge/widgets/request_data_cards.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,8 @@ class _YourRequestPageState extends State<YourRequestPage> {
         stream: FirebaseFirestore.instance
             .collection('Posts')
             .where('given-by', isEqualTo: user!.userid)
-            .where('completion-status', isEqualTo: 'ongoing')
+            .where('payment-status', isEqualTo: 'pending')
+            .orderBy('expected-completion-time')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -89,7 +91,18 @@ class _YourRequestPageState extends State<YourRequestPage> {
             snapshot.data!.docs.length,
             (index) {
               return RequestDataCard(
+                postId: snapshot.data!.docs[index].id,
                 title: snapshot.data!.docs[index]['title'],
+                waitingCount: snapshot.data!.docs[index]['waiting-list'].length,
+                acceptedBy: snapshot.data!.docs[index]['accepted-by'],
+                acceptedByName: snapshot.data!.docs[index]['accepted-by-name'],
+                chatId: snapshot.data!.docs[index]['chat-id'],
+                completionStatus: snapshot.data!.docs[index]
+                    ['completion-status'],
+                paymentStatus: snapshot.data!.docs[index]['payment-status'],
+                postType: snapshot.data!.docs[index]['post-type']
+                    .toString()
+                    .toLowerCase(),
                 amount:
                     snapshot.data!.docs[index]['promised-amount'].toDouble(),
                 description: snapshot.data!.docs[index]['description'],
@@ -107,7 +120,12 @@ class _YourRequestPageState extends State<YourRequestPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(10),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const RequestForm();
+                    }));
+                  },
                   child: DottedBorder(
                     borderType: BorderType.RRect,
                     strokeWidth: 2,

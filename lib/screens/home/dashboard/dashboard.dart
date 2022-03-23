@@ -1,6 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geocode/geocode.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dash_home.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dash_feed.dart';
@@ -34,9 +36,23 @@ class _DashboardState extends State<Dashboard> {
 
   // Can use this to get the region
   Future<String>? getPlace(GeoPoint point) async {
-    final value = await GeoCode()
-        .reverseGeocoding(latitude: point.latitude, longitude: point.longitude);
-    return value.region!;
+    final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
+
+    final response = await http.get(Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
+            position.latitude.toString() +
+            ',' +
+            position.longitude.toString() +
+            '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
+
+    final json = await jsonDecode(response.body);
+    String location =
+        json["results"][0]["address_components"][5]["long_name"].toString() +
+            ', ' +
+            json["results"][0]["address_components"][6]["long_name"].toString();
+
+    return location;
   }
 
   @override

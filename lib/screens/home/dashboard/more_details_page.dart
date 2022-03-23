@@ -1,8 +1,8 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/request_form.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:googlesolutionchallenge/widgets/loading_cards.dart';
 import 'package:intl/intl.dart';
@@ -101,152 +101,310 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                               const SizedBox(height: 10),
 
                               // Tags
-                              Wrap(
-                                spacing: 5,
-                                runSpacing: 0,
-                                children: [
-                                  // Post Type Chip
-                                  Chip(
-                                    avatar: Icon(
-                                      snapshot.data!['post-type'] ==
-                                              'job request'
-                                          ? Icons.work_outline_rounded
-                                          : snapshot.data!['post-type'] ==
-                                                  'item request'
-                                              ? Icons.category_rounded
-                                              : Icons
-                                                  .volunteer_activism_rounded,
-                                      color: Colors.blue[800],
+                              snapshot.data!['given-by'] == user!.userid
+                                  ? Wrap(
+                                      spacing: 5,
+                                      runSpacing: 0,
+                                      children: [
+                                        // Post Type Chip
+                                        Chip(
+                                          avatar: Icon(
+                                            snapshot.data!['post-type'] ==
+                                                    'job request'
+                                                ? Icons.work_outline_rounded
+                                                : snapshot.data!['post-type'] ==
+                                                        'item request'
+                                                    ? Icons.category_rounded
+                                                    : Icons
+                                                        .volunteer_activism_rounded,
+                                            color: Colors.blue[800],
+                                          ),
+                                          label: Text(
+                                            snapshot.data!['post-type'] ==
+                                                    'job request'
+                                                ? 'Job Request'
+                                                : snapshot.data!['post-type'] ==
+                                                        'item request'
+                                                    ? 'Item Request'
+                                                    : 'Charity',
+                                            style: TextStyle(
+                                              color: Colors.blue[800],
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          backgroundColor: Colors.blue[50],
+                                        ),
+
+                                        // Accepted or Not Chip
+                                        (snapshot.data!['accepted-by'] == '')
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.pending_actions_rounded,
+                                                  color: Colors.indigo,
+                                                ),
+                                                label: const Text(
+                                                  'Pending',
+                                                  style: TextStyle(
+                                                    color: Colors.indigo,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.indigo[50],
+                                              )
+                                            : Container(),
+
+                                        // Ongoing Chip
+                                        (snapshot.data!['completion-status'] ==
+                                                    'ongoing' &&
+                                                snapshot.data!['accepted-by'] !=
+                                                    '')
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.pending_actions_rounded,
+                                                  color: Colors.orange,
+                                                ),
+                                                label: const Text(
+                                                  'Ongoing',
+                                                  style: TextStyle(
+                                                    color: Colors.orange,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.orange[50],
+                                              )
+                                            : Container(),
+
+                                        // Overdue Chip
+                                        (DateTime.now().compareTo(DateTime
+                                                            .parse(snapshot
+                                                                .data![
+                                                                    'expected-completion-time']
+                                                                .toDate()
+                                                                .toString())) >
+                                                        0 &&
+                                                    snapshot.data![
+                                                            'completion-status'] ==
+                                                        'ongoing') &&
+                                                snapshot.data!['accepted-by'] !=
+                                                    ''
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.schedule_rounded,
+                                                  color: Colors.red,
+                                                ),
+                                                label: const Text(
+                                                  'Overdue',
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor: Colors.red[50],
+                                              )
+                                            : Container(),
+
+                                        // Completed Chip
+                                        (snapshot.data!['completion-status'] ==
+                                                    'completed' &&
+                                                snapshot.data!['accepted-by'] !=
+                                                    '')
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.check_rounded,
+                                                  color: Colors.green,
+                                                ),
+                                                label: const Text(
+                                                  'Completed',
+                                                  style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.green[50],
+                                              )
+                                            : Container(),
+
+                                        // Money Pending Chip
+                                        (snapshot.data!['completion-status'] ==
+                                                    'completed' &&
+                                                snapshot.data![
+                                                        'payment-status'] ==
+                                                    'pending' &&
+                                                snapshot.data!['accepted-by'] !=
+                                                    '')
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.attach_money_rounded,
+                                                  color: Colors.purple,
+                                                ),
+                                                label: const Text(
+                                                  'Payment Pending',
+                                                  style: TextStyle(
+                                                    color: Colors.purple,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.purple[50],
+                                              )
+                                            : Container(),
+                                      ],
+                                    )
+                                  : Wrap(
+                                      spacing: 5,
+                                      runSpacing: 0,
+                                      children: [
+                                        // Post Type Chip
+                                        Chip(
+                                          avatar: Icon(
+                                            snapshot.data!['post-type'] ==
+                                                    'job request'
+                                                ? Icons.work_outline_rounded
+                                                : snapshot.data!['post-type'] ==
+                                                        'item request'
+                                                    ? Icons.category_rounded
+                                                    : Icons
+                                                        .volunteer_activism_rounded,
+                                            color: Colors.blue[800],
+                                          ),
+                                          label: Text(
+                                            snapshot.data!['post-type'] ==
+                                                    'job request'
+                                                ? 'Job Request'
+                                                : snapshot.data!['post-type'] ==
+                                                        'item request'
+                                                    ? 'Item Request'
+                                                    : 'Charity',
+                                            style: TextStyle(
+                                              color: Colors.blue[800],
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          backgroundColor: Colors.blue[50],
+                                        ),
+
+                                        // Accepted or Not Chip
+                                        !(snapshot.data!['accepted-by'] ==
+                                                user.userid)
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.pending_actions_rounded,
+                                                  color: Colors.indigo,
+                                                ),
+                                                label: const Text(
+                                                  'Pending',
+                                                  style: TextStyle(
+                                                    color: Colors.indigo,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.indigo[50],
+                                              )
+                                            : Container(),
+
+                                        // Ongoing Chip
+                                        (snapshot.data!['completion-status'] ==
+                                                    'ongoing' &&
+                                                snapshot.data!['accepted-by'] ==
+                                                    user.userid)
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.pending_actions_rounded,
+                                                  color: Colors.orange,
+                                                ),
+                                                label: const Text(
+                                                  'Ongoing',
+                                                  style: TextStyle(
+                                                    color: Colors.orange,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.orange[50],
+                                              )
+                                            : Container(),
+
+                                        // Overdue Chip
+                                        (DateTime.now().compareTo(DateTime
+                                                            .parse(snapshot
+                                                                .data![
+                                                                    'expected-completion-time']
+                                                                .toDate()
+                                                                .toString())) >
+                                                        0 &&
+                                                    snapshot.data![
+                                                            'completion-status'] ==
+                                                        'ongoing') &&
+                                                snapshot.data!['accepted-by'] ==
+                                                    user.userid
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.schedule_rounded,
+                                                  color: Colors.red,
+                                                ),
+                                                label: const Text(
+                                                  'Overdue',
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor: Colors.red[50],
+                                              )
+                                            : Container(),
+
+                                        // Completed Chip
+                                        (snapshot.data!['completion-status'] ==
+                                                    'completed' &&
+                                                snapshot.data!['accepted-by'] ==
+                                                    user.userid)
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.check_rounded,
+                                                  color: Colors.green,
+                                                ),
+                                                label: const Text(
+                                                  'Completed',
+                                                  style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.green[50],
+                                              )
+                                            : Container(),
+
+                                        // Money Pending Chip
+                                        (snapshot.data!['completion-status'] ==
+                                                    'completed' &&
+                                                snapshot.data![
+                                                        'payment-status'] ==
+                                                    'pending' &&
+                                                snapshot.data!['accepted-by'] ==
+                                                    user.userid)
+                                            ? Chip(
+                                                avatar: const Icon(
+                                                  Icons.attach_money_rounded,
+                                                  color: Colors.purple,
+                                                ),
+                                                label: const Text(
+                                                  'Payment Pending',
+                                                  style: TextStyle(
+                                                    color: Colors.purple,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.purple[50],
+                                              )
+                                            : Container(),
+                                      ],
                                     ),
-                                    label: Text(
-                                      snapshot.data!['post-type'] ==
-                                              'job request'
-                                          ? 'Job Request'
-                                          : snapshot.data!['post-type'] ==
-                                                  'item request'
-                                              ? 'Item Request'
-                                              : 'Charity',
-                                      style: TextStyle(
-                                        color: Colors.blue[800],
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    backgroundColor: Colors.blue[50],
-                                  ),
-
-                                  // Accepted or Not Chip
-                                  !(snapshot.data!['accepted-by'] ==
-                                          user!.userid)
-                                      ? Chip(
-                                          avatar: const Icon(
-                                            Icons.pending_actions_rounded,
-                                            color: Colors.indigo,
-                                          ),
-                                          label: const Text(
-                                            'Pending',
-                                            style: TextStyle(
-                                              color: Colors.indigo,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.indigo[50],
-                                        )
-                                      : Container(),
-
-                                  // Ongoing Chip
-                                  (snapshot.data!['completion-status'] ==
-                                              'ongoing' &&
-                                          snapshot.data!['accepted-by'] ==
-                                              user.userid)
-                                      ? Chip(
-                                          avatar: const Icon(
-                                            Icons.pending_actions_rounded,
-                                            color: Colors.orange,
-                                          ),
-                                          label: const Text(
-                                            'Ongoing',
-                                            style: TextStyle(
-                                              color: Colors.orange,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.orange[50],
-                                        )
-                                      : Container(),
-
-                                  // Overdue Chip
-                                  (DateTime.now().compareTo(DateTime.parse(snapshot
-                                                      .data![
-                                                          'expected-completion-time']
-                                                      .toDate()
-                                                      .toString())) >
-                                                  0 &&
-                                              snapshot.data![
-                                                      'completion-status'] ==
-                                                  'ongoing') &&
-                                          snapshot.data!['accepted-by'] ==
-                                              user.userid
-                                      ? Chip(
-                                          avatar: const Icon(
-                                            Icons.schedule_rounded,
-                                            color: Colors.red,
-                                          ),
-                                          label: const Text(
-                                            'Overdue',
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.red[50],
-                                        )
-                                      : Container(),
-
-                                  // Completed Chip
-                                  (snapshot.data!['completion-status'] ==
-                                              'completed' &&
-                                          snapshot.data!['accepted-by'] ==
-                                              user.userid)
-                                      ? Chip(
-                                          avatar: const Icon(
-                                            Icons.check_rounded,
-                                            color: Colors.green,
-                                          ),
-                                          label: const Text(
-                                            'Completed',
-                                            style: TextStyle(
-                                              color: Colors.green,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.green[50],
-                                        )
-                                      : Container(),
-
-                                  // Money Pending Chip
-                                  (snapshot.data!['completion-status'] ==
-                                              'completed' &&
-                                          snapshot.data!['payment-status'] ==
-                                              'pending' &&
-                                          snapshot.data!['accepted-by'] ==
-                                              user.userid)
-                                      ? Chip(
-                                          avatar: const Icon(
-                                            Icons.attach_money_rounded,
-                                            color: Colors.purple,
-                                          ),
-                                          label: const Text(
-                                            'Payment Pending',
-                                            style: TextStyle(
-                                              color: Colors.purple,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.purple[50],
-                                        )
-                                      : Container(),
-                                ],
-                              ),
                               const SizedBox(height: 10),
 
                               // Expected Completion Date
@@ -375,95 +533,199 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                               ),
                                             ),
                                             const SizedBox(height: 5),
-                                            ListView.builder(
-                                                shrinkWrap: true,
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                itemCount: snapshot
-                                                    .data!['waiting-list']
-                                                    .length,
-                                                itemBuilder: ((context, index) {
-                                                  return FutureBuilder<
-                                                          DocumentSnapshot>(
-                                                      future: FirebaseFirestore
-                                                          .instance
-                                                          .collection(
-                                                              'Userdata')
-                                                          .doc(snapshot.data![
-                                                                  'waiting-list']
-                                                              [index])
-                                                          .get(),
-                                                      builder:
-                                                          ((context, snapshot) {
-                                                        if (snapshot.hasError) {
-                                                          return const LoadingCard(
-                                                            height: 50,
-                                                          );
-                                                        }
+                                            snapshot.data!['waiting-list']
+                                                        .length ==
+                                                    0
+                                                ? const Text(
+                                                    'No one in the waiting list',
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  )
+                                                : ListView.builder(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemCount: snapshot
+                                                        .data!['waiting-list']
+                                                        .length,
+                                                    itemBuilder:
+                                                        ((context, index) {
+                                                      return FutureBuilder<
+                                                              DocumentSnapshot>(
+                                                          future: FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'Userdata')
+                                                              .doc(snapshot
+                                                                          .data![
+                                                                      'waiting-list']
+                                                                  [index])
+                                                              .get(),
+                                                          builder: ((context,
+                                                              usersnapshot) {
+                                                            if (usersnapshot
+                                                                .hasError) {
+                                                              return const LoadingCard(
+                                                                height: 50,
+                                                              );
+                                                            }
 
-                                                        if (snapshot.hasData &&
-                                                            !snapshot
-                                                                .data!.exists) {
-                                                          return const Text(
-                                                              "Document does not exist");
-                                                        }
-                                                        if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .done) {
-                                                          return Card(
-                                                            child: ListTile(
-                                                              onTap: () {},
-                                                              leading:
-                                                                  CircleAvatar(
-                                                                backgroundColor: Colors
-                                                                        .primaries[
-                                                                    Random().nextInt(Colors
-                                                                        .primaries
-                                                                        .length)],
-                                                                child: Text(
-                                                                  snapshot.data![
-                                                                      'name'][0],
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        18,
+                                                            if (usersnapshot
+                                                                    .hasData &&
+                                                                !usersnapshot
+                                                                    .data!
+                                                                    .exists) {
+                                                              return const Text(
+                                                                  "Document does not exist");
+                                                            }
+                                                            if (usersnapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .done) {
+                                                              return Card(
+                                                                child: ListTile(
+                                                                  onTap: () {},
+                                                                  leading:
+                                                                      CircleAvatar(
+                                                                    backgroundColor: Colors
+                                                                            .primaries[
+                                                                        Random().nextInt(Colors
+                                                                            .primaries
+                                                                            .length)],
+                                                                    child: Text(
+                                                                      usersnapshot
+                                                                              .data![
+                                                                          'name'][0],
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            18,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  title: Text(
+                                                                      usersnapshot
+                                                                              .data![
+                                                                          'name']),
+                                                                  subtitle: Text(
+                                                                      '${usersnapshot.data!['points'].toString()} Link Points'),
+                                                                  trailing:
+                                                                      CircleAvatar(
+                                                                    backgroundColor:
+                                                                        Colors.green[
+                                                                            50],
+                                                                    child:
+                                                                        IconButton(
+                                                                      icon: const Icon(
+                                                                          Icons
+                                                                              .check_rounded),
+                                                                      onPressed:
+                                                                          () {
+                                                                        showDialog(
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (context) {
+                                                                              return AlertDialog(
+                                                                                title: const Text(
+                                                                                  "Confirmation",
+                                                                                ),
+                                                                                content: Column(
+                                                                                  mainAxisSize: MainAxisSize.min,
+                                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      "Do you wish to accept ${usersnapshot.data!['name']} to complete your request?",
+                                                                                    ),
+                                                                                    const SizedBox(height: 10),
+                                                                                    Text(
+                                                                                      'You can\'t change this unless the person drops out.',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey[700],
+                                                                                        fontSize: 14,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                actions: <Widget>[
+                                                                                  OutlinedButton(
+                                                                                    child: const Text("Yes"),
+                                                                                    onPressed: () async {
+                                                                                      // TODO: Chat Id Generation
+                                                                                      FirebaseFirestore.instance.collection('Posts').doc(widget.postid).update(
+                                                                                        {
+                                                                                          'accepted-by': usersnapshot.data!.id,
+                                                                                          'accepted-by-name': usersnapshot.data!['name'],
+                                                                                        },
+                                                                                      ).then((value) {
+                                                                                        Navigator.pop(context);
+                                                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                                                          SnackBar(
+                                                                                            content: Row(
+                                                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                                              children: [
+                                                                                                Icon(
+                                                                                                  Icons.check_rounded,
+                                                                                                  color: Colors.green[800],
+                                                                                                ),
+                                                                                                const SizedBox(
+                                                                                                  width: 5,
+                                                                                                ),
+                                                                                                Text(
+                                                                                                  '${usersnapshot.data!['name']} has been accepted!',
+                                                                                                  style: TextStyle(
+                                                                                                    color: Colors.green[800],
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                            duration: const Duration(seconds: 2),
+                                                                                            backgroundColor: Colors.green[50],
+                                                                                            behavior: SnackBarBehavior.floating,
+                                                                                            shape: RoundedRectangleBorder(
+                                                                                              borderRadius: BorderRadius.circular(10),
+                                                                                            ),
+                                                                                            elevation: 3,
+                                                                                          ),
+                                                                                        );
+                                                                                      });
+                                                                                    },
+                                                                                  ),
+                                                                                  const SizedBox(
+                                                                                    width: 5,
+                                                                                  ),
+                                                                                  ElevatedButton(
+                                                                                    child: const Text("No"),
+                                                                                    onPressed: () {
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                  ),
+                                                                                ],
+                                                                                actionsAlignment: MainAxisAlignment.spaceAround,
+                                                                              );
+                                                                            });
+                                                                      },
+                                                                      color: Colors
+                                                                              .green[
+                                                                          500],
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              title: Text(
-                                                                  snapshot.data![
-                                                                      'name']),
-                                                              subtitle: Text(
-                                                                  snapshot.data![
-                                                                      'email']),
-                                                              trailing:
-                                                                  CircleAvatar(
-                                                                backgroundColor:
-                                                                    Colors.green[
-                                                                        50],
-                                                                child:
-                                                                    IconButton(
-                                                                  icon: const Icon(
-                                                                      Icons
-                                                                          .check_rounded),
-                                                                  onPressed:
-                                                                      () {},
-                                                                  color: Colors
-                                                                          .green[
-                                                                      500],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        }
-                                                        return const LoadingCard(
-                                                          height: 50,
-                                                        );
-                                                      }));
-                                                })),
+                                                              );
+                                                            }
+                                                            return const LoadingCard(
+                                                              height: 50,
+                                                            );
+                                                          }));
+                                                    })),
                                           ],
                                         )
                                       : Container()
@@ -539,6 +801,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                               'Chat',
                                               style: TextStyle(),
                                             ),
+                                            // TODO: Chat Navigation
                                             onPressed: () {},
                                           ),
                                         )
@@ -562,6 +825,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                               'Request Pay',
                                               style: TextStyle(),
                                             ),
+                                            // TODO: Pay Request
                                             onPressed: () {},
                                           ),
                                         )
@@ -579,11 +843,115 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                                   'Mark As Done',
                                                   style: TextStyle(),
                                                 ),
-                                                onPressed: () {},
+                                                // Complete Request
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                            "Confirmation",
+                                                          ),
+                                                          content: const Text(
+                                                            "Are you sure you want to mark the request as complete?",
+                                                          ),
+                                                          actions: <Widget>[
+                                                            OutlinedButton(
+                                                              child: const Text(
+                                                                  "Yes"),
+                                                              onPressed:
+                                                                  () async {
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'Posts')
+                                                                    .doc(widget
+                                                                        .postid)
+                                                                    .set(
+                                                                  {
+                                                                    'completion-status':
+                                                                        'completed',
+                                                                  },
+                                                                  SetOptions(
+                                                                    merge: true,
+                                                                  ),
+                                                                ).then((value) {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                      content:
+                                                                          Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Icon(
+                                                                            Icons.check_rounded,
+                                                                            color:
+                                                                                Colors.green[800],
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            'Request marked as complete',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.green[800],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      duration: const Duration(
+                                                                          seconds:
+                                                                              2),
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .green[50],
+                                                                      behavior:
+                                                                          SnackBarBehavior
+                                                                              .floating,
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10),
+                                                                      ),
+                                                                      elevation:
+                                                                          3,
+                                                                    ),
+                                                                  );
+                                                                });
+                                                              },
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            ElevatedButton(
+                                                              child: const Text(
+                                                                  "No"),
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                          ],
+                                                          actionsAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                        );
+                                                      });
+                                                },
                                               ),
                                             )
                                           : Container(),
-                                  SizedBox(
+                                  // TODO: Will do later, drive to the location
+
+                                  /* SizedBox(
                                     width: 175,
                                     child: OutlinedButton.icon(
                                       icon: Icon(
@@ -601,7 +969,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                       ),
                                       onPressed: () {},
                                     ),
-                                  ),
+                                  ), */
                                   SizedBox(
                                     width: 175,
                                     child: ElevatedButton.icon(
@@ -617,11 +985,121 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                         'Withdraw',
                                         style: TextStyle(),
                                       ),
+                                      // Withdraw Request
                                       onPressed: () {
-                                        // TODO: Remove from waiting list and accepted-by
-                                        // TODO: Show a dialog to confirm
-                                        // TODO: Navigate to dashboard with a message
-                                        Navigator.pop(context);
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text(
+                                                  "Confirmation",
+                                                ),
+                                                content: const Text(
+                                                  "Are you sure you want to withdraw your name from the request?",
+                                                ),
+                                                actions: <Widget>[
+                                                  OutlinedButton(
+                                                    child: const Text("Yes"),
+                                                    onPressed: () async {
+                                                      Map<String, dynamic>
+                                                          json = {};
+                                                      json['waiting-list'] =
+                                                          FieldValue
+                                                              .arrayRemove([
+                                                        user.userid
+                                                      ]);
+                                                      if (user.userid ==
+                                                          snapshot.data![
+                                                              'accepted-by']) {
+                                                        json['accepted-by'] =
+                                                            '';
+                                                        json['accepted-by-name'] =
+                                                            '';
+                                                        json['chat-id'] = '';
+                                                      }
+
+                                                      FirebaseFirestore.instance
+                                                          .collection('Posts')
+                                                          .doc(widget.postid)
+                                                          .set(
+                                                            json,
+                                                            SetOptions(
+                                                              merge: true,
+                                                            ),
+                                                          )
+                                                          .then((value) {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .check_rounded,
+                                                                  color: Colors
+                                                                          .green[
+                                                                      800],
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                Text(
+                                                                  'Successfully Removed',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                            .green[
+                                                                        800],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            duration:
+                                                                const Duration(
+                                                                    seconds: 2),
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .green[50],
+                                                            behavior:
+                                                                SnackBarBehavior
+                                                                    .floating,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                            elevation: 3,
+                                                          ),
+                                                        );
+                                                      });
+                                                    },
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  ElevatedButton(
+                                                    child: const Text("No"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                                actionsAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                              );
+                                            });
                                       },
                                     ),
                                   )
@@ -692,7 +1170,36 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                             onPressed: snapshot.data![
                                                         'completion-status'] ==
                                                     'ongoing'
-                                                ? () {}
+                                                ? () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return RequestForm(
+                                                            isEditRequest: true,
+                                                            title: snapshot
+                                                                .data!['title'],
+                                                            description: snapshot
+                                                                    .data![
+                                                                'description'],
+                                                            date: snapshot
+                                                                    .data![
+                                                                'expected-completion-time'],
+                                                            amount: double
+                                                                .parse(snapshot
+                                                                    .data![
+                                                                        'promised-amount']
+                                                                    .toString()),
+                                                            postType: snapshot
+                                                                    .data![
+                                                                'post-type'],
+                                                            postId:
+                                                                widget.postid,
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  }
                                                 : null,
                                           ),
                                         )
@@ -726,6 +1233,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                       style: ElevatedButton.styleFrom(
                                         primary: const Color.fromRGBO(
                                             250, 103, 117, 1),
+                                        onSurface: Colors.grey,
                                       ),
                                       icon: const Icon(
                                         Icons.delete_rounded,
@@ -735,12 +1243,108 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                         'Delete',
                                         style: TextStyle(),
                                       ),
-                                      onPressed: () {
-                                        // TODO: Remove from waiting list and accepted-by
-                                        // TODO: Show a dialog to confirm
-                                        // TODO: Navigate to dashboard with a message
-                                        Navigator.pop(context);
-                                      },
+                                      onPressed:
+                                          snapshot.data!['completion-status'] ==
+                                                  'ongoing'
+                                              ? () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                            "Confirmation",
+                                                          ),
+                                                          content: const Text(
+                                                            "Are you sure you want to delete the request?",
+                                                          ),
+                                                          actions: <Widget>[
+                                                            OutlinedButton(
+                                                              child: const Text(
+                                                                  "Yes"),
+                                                              onPressed:
+                                                                  () async {
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'Posts')
+                                                                    .doc(widget
+                                                                        .postid)
+                                                                    .delete()
+                                                                    .then(
+                                                                        (value) {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                      content:
+                                                                          Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Icon(
+                                                                            Icons.check_rounded,
+                                                                            color:
+                                                                                Colors.green[800],
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            'Successfully Deleted',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.green[800],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      duration: const Duration(
+                                                                          seconds:
+                                                                              2),
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .green[50],
+                                                                      behavior:
+                                                                          SnackBarBehavior
+                                                                              .floating,
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10),
+                                                                      ),
+                                                                      elevation:
+                                                                          3,
+                                                                    ),
+                                                                  );
+                                                                });
+                                                              },
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            ElevatedButton(
+                                                              child: const Text(
+                                                                  "No"),
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                          ],
+                                                          actionsAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                        );
+                                                      });
+                                                }
+                                              : null,
                                     ),
                                   )
                                 ],
