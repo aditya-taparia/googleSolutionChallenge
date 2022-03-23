@@ -112,126 +112,148 @@ class _LinkspacechatState extends State<Linkspacechat> {
                         return GestureDetector(
                           onTap: (() => FocusScope.of(context).unfocus()),
                           child: Scaffold(
-                            body: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            body: Stack(
                               children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                                  child: ListView.builder(
-                                      itemCount:
-                                          snapshot.data!['groupchat'].length,
-                                      shrinkWrap: true,
-                                      itemBuilder: ((context, index) {
-                                        return user!.userid ==
-                                                snapshot.data!['groupchat']
-                                                    [index.toString()][0]
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Container(
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        color: Color.fromRGBO(
-                                                            66, 103, 178, 1),
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    20)),
-                                                      ),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.5,
-                                                      child: ListTile(
-                                                        title: Text(
-                                                          snapshot.data![
-                                                                  'groupchat'][
-                                                              index
-                                                                  .toString()][1],
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 18),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        color: Color.fromARGB(
-                                                            255, 235, 232, 232),
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    20)),
-                                                      ),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.5,
-                                                      child: ListTile(
-                                                        title: Text(
-                                                          userList[snapshot
-                                                                      .data![
-                                                                  'groupchat'][
-                                                              index
-                                                                  .toString()][0]],
-                                                          style:
-                                                              const TextStyle(
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                                      child: ListView.builder(
+                                          itemCount: snapshot
+                                              .data!['groupchat'].length,
+                                          shrinkWrap: true,
+                                          itemBuilder: ((context, index) {
+                                            return user!.userid ==
+                                                    snapshot.data!['groupchat']
+                                                        [index.toString()][0]
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Container(
+                                                          decoration:
+                                                              const BoxDecoration(
                                                             color:
                                                                 Color.fromRGBO(
                                                                     66,
                                                                     103,
                                                                     178,
                                                                     1),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            20)),
+                                                          ),
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.5,
+                                                          child: ListTile(
+                                                            title: Text(
+                                                              snapshot.data![
+                                                                      'groupchat']
+                                                                  [index
+                                                                      .toString()][1],
+                                                              style: const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 18),
+                                                            ),
                                                           ),
                                                         ),
-                                                        subtitle: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 4.0),
-                                                          child: Text(
-                                                            snapshot.data![
-                                                                    'groupchat']
-                                                                [index
-                                                                    .toString()][1],
-                                                            style: const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                                fontSize: 18,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                      ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
-                                              );
-                                      })),
+                                                  )
+                                                : Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    235,
+                                                                    232,
+                                                                    232),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            20)),
+                                                          ),
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.5,
+                                                          child: ListTile(
+                                                            title: Text(
+                                                              userList[snapshot
+                                                                          .data![
+                                                                      'groupchat']
+                                                                  [index
+                                                                      .toString()][0]],
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        66,
+                                                                        103,
+                                                                        178,
+                                                                        1),
+                                                              ),
+                                                            ),
+                                                            subtitle: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 4.0),
+                                                              child: Text(
+                                                                snapshot.data![
+                                                                        'groupchat']
+                                                                    [index
+                                                                        .toString()][1],
+                                                                style: const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300,
+                                                                    fontSize:
+                                                                        18,
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                          })),
+                                    ),
+                                  ],
                                 ),
-                                buildMessageComposer(user!.userid,
-                                    snapshot.data!['groupchat'].length),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: buildMessageComposer(user!.userid,
+                                      snapshot.data!['groupchat'].length),
+                                )
                               ],
                             ),
                           ),

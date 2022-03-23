@@ -38,56 +38,57 @@ class _NotifyState extends State<Notify> {
                   itemCount: snapshot.data!["notifications"].length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      leading: const Icon(Icons.notifications_active),
-                      title: Text(
-                          snapshot.data!["notifications"][index.toString()][0]),
-                      subtitle: Text(
-                        snapshot.data!["notifications"][index.toString()][1],
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                      trailing: Stack(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.more_vert,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                showcontainer = true;
-                              });
-                            },
-                          ),
-                          showcontainer
-                              ? Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    color: Colors.white,
-                                    width: 80,
-                                    height: 40,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Delete"),
-                                        GestureDetector(
-                                          child: Icon(
-                                            Icons.delete_outline,
-                                            color: Colors.red,
-                                          ),
-                                          onTap: () {
-                                            setState(() {
-                                              showcontainer = false;
-                                            });
-                                          },
+                        leading: const Icon(Icons.notifications_active),
+                        title: Text(snapshot.data!["notifications"]
+                            [index.toString()][0]),
+                        subtitle: Text(
+                          snapshot.data!["notifications"][index.toString()][1],
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        trailing: StatefulBuilder(builder: (context, setState) {
+                          return Stack(
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.more_vert,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    showcontainer = true;
+                                  });
+                                },
+                              ),
+                              showcontainer
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        color: Colors.white,
+                                        width: 80,
+                                        height: 40,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Delete"),
+                                            GestureDetector(
+                                              child: Icon(
+                                                Icons.delete_outline,
+                                                color: Colors.red,
+                                              ),
+                                              onTap: () {
+                                                setState(() {
+                                                  showcontainer = false;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Text("")
-                        ],
-                      ),
-                    );
+                                      ),
+                                    )
+                                  : Text("")
+                            ],
+                          );
+                        }));
                   });
             }
             return Loading();
