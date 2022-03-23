@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -29,13 +30,14 @@ class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
   late LocationPermission permission;
   List<bool> check = [true, true, true];
-
+  double radius = 500.0;
   bool Maptoggle = true;
   Set<Polyline> _polylines = Set<Polyline>();
   int _polylineIdCounter = 1;
   var directions;
 
   late LatLng _current = const LatLng(15.5057, 80.0499);
+
   Set<Marker> _markers = {};
   bool _mapload = true;
   bool showgeolocationwidget = false;
@@ -77,6 +79,7 @@ class _MapScreenState extends State<MapScreen> {
   bool _open = false;
   bool _markerclicked = false;
   bool _currentIcon = true;
+  double twopointdistance = 0;
 
   Set<LatLng> community = {};
   Set<LatLng> community1 = {};
@@ -113,8 +116,12 @@ class _MapScreenState extends State<MapScreen> {
     _usersStream.then((value) {
       value.docs.forEach((element) {
         Map<String, dynamic> val = element.data() as Map<String, dynamic>;
-        userList.add(val);
-        // print(element.data());
+        LatLng temp = LatLng(double.parse(val['location'].latitude.toString()),
+            double.parse(val['location'].longitude.toString()));
+        twopointdistance = getraddist(temp, _current);
+        if (twopointdistance <= radius) {
+          userList.add(val);
+        }
       });
     });
 
@@ -124,7 +131,12 @@ class _MapScreenState extends State<MapScreen> {
     _users2Stream.then((value) {
       value.docs.forEach((element) {
         Map<String, dynamic> val = element.data() as Map<String, dynamic>;
-        userList2.add(val);
+        LatLng temp = LatLng(double.parse(val['locality'].latitude.toString()),
+            double.parse(val['locality'].longitude.toString()));
+        twopointdistance = getraddist(temp, _current);
+        if (twopointdistance <= radius) {
+          userList2.add(val);
+        }
         // print(element.data());
       });
     });
@@ -213,30 +225,6 @@ class _MapScreenState extends State<MapScreen> {
                     double.parse(element["location"].latitude.toString()),
                     double.parse(element["location"].longitude.toString())),
                 onTap: () {
-                  /* showBottomSheet(
-                      context: context,
-                      enableDrag: true,
-                      builder: (_) {
-                        return DraggableScrollableSheet(  
-                          minChildSize: 0.2,
-                          maxChildSize: 0.7,
-                          initialChildSize: 0.3,
-                          expand: false,
-                          builder: (_, controller) {
-                            return Container(
-                              color: Colors.amberAccent,
-                              child: ListView.builder(
-                                controller: controller,
-                                itemBuilder: (_, i) {
-                                  return ListTile(
-                                    title: Text(i.toString()),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      }); */
                   setState(() {
                     isLinkedspace = false;
                     sendername = element["given-by-name"];
@@ -360,6 +348,15 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
+    Set<Circle> circles = Set.from([
+      Circle(
+        fillColor: Colors.blue.withOpacity(0.15),
+        strokeColor: Colors.transparent,
+        circleId: CircleId("circleid"),
+        center: LatLng(_current.latitude, _current.longitude),
+        radius: radius * 1000,
+      )
+    ]);
     return Stack(
       children: [
         FloatingSearchBar(
@@ -434,6 +431,7 @@ class _MapScreenState extends State<MapScreen> {
                     target: _current,
                     zoom: 6,
                   ),
+                  circles: circles,
                   onMapCreated: _onMapCreated,
                   onTap: (LatLng latLng) {
                     setState(() {
@@ -1807,6 +1805,18 @@ class _MapScreenState extends State<MapScreen> {
       directions = result['polyline_decode'];
     });
   }
+}
+
+double getraddist(LatLng element, LatLng current) {
+  var p = 0.017453292519943295;
+  var c = cos;
+  var a = 0.5 -
+      c((current.latitude - element.latitude) * p) / 2 +
+      c(element.latitude * p) *
+          c(current.latitude * p) *
+          (1 - c((current.longitude - element.longitude) * p)) /
+          2;
+  return 12742 * 1.609344 * asin(sqrt(a));
 }
 
 createchat(String currUserId, String othUserId, String name1) async {
