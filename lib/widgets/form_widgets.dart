@@ -110,6 +110,7 @@ class DateTimePicker extends StatelessWidget {
   final TextEditingController controller;
   final TextEditingController sendcontroller;
   final String? Function(String?)? validator;
+  final bool isEdit;
   const DateTimePicker({
     Key? key,
     required this.label,
@@ -117,10 +118,22 @@ class DateTimePicker extends StatelessWidget {
     required this.controller,
     required this.sendcontroller,
     this.validator,
+    this.isEdit = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (!isEdit) {
+      sendcontroller.text = DateTime.now().toString();
+    }
+    if (!isEdit) {
+      controller.text = DateFormat.yMMMMd().format(DateTime.now()).toString();
+    }
+    DateTime _dateTime = DateTime.now();
+    if (isEdit) {
+      _dateTime = DateTime.parse(sendcontroller.text);
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
@@ -132,11 +145,7 @@ class DateTimePicker extends StatelessWidget {
                 ? DateTime.parse(sendcontroller.text)
                 : DateTime.now(),
             initialDatePickerMode: DatePickerMode.day,
-            firstDate: DateTime(
-              DateTime.now().year,
-              DateTime.now().month,
-              DateTime.now().day,
-            ),
+            firstDate: !isEdit ? DateTime.now() : _dateTime,
             lastDate: DateTime(
               DateTime.now().year + 1,
             ),
@@ -163,10 +172,6 @@ class DateTimePicker extends StatelessWidget {
           if (picked != null) {
             controller.text = DateFormat.yMMMMd().format(picked).toString();
             sendcontroller.text = picked.toString();
-          } else if (controller.text.isEmpty) {
-            controller.text =
-                DateFormat.yMMMMd().format(DateTime.now()).toString();
-            sendcontroller.text = DateTime.now().toString();
           }
         },
         autofocus: true,
@@ -229,7 +234,12 @@ class DateTimePicker extends StatelessWidget {
           fontSize: 16,
           color: Colors.black,
         ),
-        onChanged: (value) {},
+        onChanged: (value) {
+          if (controller.text == null || controller.text.isEmpty) {
+            controller.text =
+                DateFormat.yMMMMd().format(DateTime.now()).toString();
+          }
+        },
         onFieldSubmitted: (value) {
           controller.text = value;
         },
@@ -245,12 +255,14 @@ class DropdownField extends StatelessWidget {
   final void Function(String?)? onChanged;
   final String? Function(String?)? validator;
   final List<String> options;
+  final String? initialValue;
   const DropdownField({
     Key? key,
     required this.label,
     this.onChanged,
     this.validator,
     required this.options,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -260,6 +272,7 @@ class DropdownField extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: DropdownButtonFormField(
         validator: validator,
+        value: initialValue,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 10.0,

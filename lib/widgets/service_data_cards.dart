@@ -397,7 +397,7 @@ class ServiceDataCard extends StatelessWidget {
                                                                     .green[800],
                                                               ),
                                                               const SizedBox(
-                                                                width: 5,
+                                                                width: 10,
                                                               ),
                                                               Text(
                                                                 'Request marked as complete',

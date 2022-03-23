@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/request_form.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:googlesolutionchallenge/widgets/loading_cards.dart';
 import 'package:intl/intl.dart';
@@ -374,95 +375,111 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                               ),
                                             ),
                                             const SizedBox(height: 5),
-                                            ListView.builder(
-                                                shrinkWrap: true,
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                itemCount: snapshot
-                                                    .data!['waiting-list']
-                                                    .length,
-                                                itemBuilder: ((context, index) {
-                                                  return FutureBuilder<
-                                                          DocumentSnapshot>(
-                                                      future: FirebaseFirestore
-                                                          .instance
-                                                          .collection(
-                                                              'Userdata')
-                                                          .doc(snapshot.data![
-                                                                  'waiting-list']
-                                                              [index])
-                                                          .get(),
-                                                      builder:
-                                                          ((context, snapshot) {
-                                                        if (snapshot.hasError) {
-                                                          return const LoadingCard(
-                                                            height: 50,
-                                                          );
-                                                        }
+                                            snapshot.data!['waiting-list']
+                                                        .length ==
+                                                    0
+                                                ? const Text(
+                                                    'No one in the waiting list',
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  )
+                                                : ListView.builder(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemCount: snapshot
+                                                        .data!['waiting-list']
+                                                        .length,
+                                                    itemBuilder:
+                                                        ((context, index) {
+                                                      return FutureBuilder<
+                                                              DocumentSnapshot>(
+                                                          future: FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'Userdata')
+                                                              .doc(snapshot
+                                                                          .data![
+                                                                      'waiting-list']
+                                                                  [index])
+                                                              .get(),
+                                                          builder: ((context,
+                                                              snapshot) {
+                                                            if (snapshot
+                                                                .hasError) {
+                                                              return const LoadingCard(
+                                                                height: 50,
+                                                              );
+                                                            }
 
-                                                        if (snapshot.hasData &&
-                                                            !snapshot
-                                                                .data!.exists) {
-                                                          return const Text(
-                                                              "Document does not exist");
-                                                        }
-                                                        if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .done) {
-                                                          return Card(
-                                                            child: ListTile(
-                                                              onTap: () {},
-                                                              leading:
-                                                                  CircleAvatar(
-                                                                backgroundColor: Colors
-                                                                        .primaries[
-                                                                    Random().nextInt(Colors
-                                                                        .primaries
-                                                                        .length)],
-                                                                child: Text(
-                                                                  snapshot.data![
-                                                                      'name'][0],
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        18,
+                                                            if (snapshot
+                                                                    .hasData &&
+                                                                !snapshot.data!
+                                                                    .exists) {
+                                                              return const Text(
+                                                                  "Document does not exist");
+                                                            }
+                                                            if (snapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .done) {
+                                                              return Card(
+                                                                child: ListTile(
+                                                                  onTap: () {},
+                                                                  leading:
+                                                                      CircleAvatar(
+                                                                    backgroundColor: Colors
+                                                                            .primaries[
+                                                                        Random().nextInt(Colors
+                                                                            .primaries
+                                                                            .length)],
+                                                                    child: Text(
+                                                                      snapshot.data![
+                                                                          'name'][0],
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            18,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  title: Text(snapshot
+                                                                          .data![
+                                                                      'name']),
+                                                                  subtitle: Text(
+                                                                      snapshot.data![
+                                                                          'email']),
+                                                                  trailing:
+                                                                      CircleAvatar(
+                                                                    backgroundColor:
+                                                                        Colors.green[
+                                                                            50],
+                                                                    child:
+                                                                        IconButton(
+                                                                      icon: const Icon(
+                                                                          Icons
+                                                                              .check_rounded),
+                                                                      onPressed:
+                                                                          () {},
+                                                                      color: Colors
+                                                                              .green[
+                                                                          500],
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              title: Text(
-                                                                  snapshot.data![
-                                                                      'name']),
-                                                              subtitle: Text(
-                                                                  snapshot.data![
-                                                                      'email']),
-                                                              trailing:
-                                                                  CircleAvatar(
-                                                                backgroundColor:
-                                                                    Colors.green[
-                                                                        50],
-                                                                child:
-                                                                    IconButton(
-                                                                  icon: const Icon(
-                                                                      Icons
-                                                                          .check_rounded),
-                                                                  onPressed:
-                                                                      () {},
-                                                                  color: Colors
-                                                                          .green[
-                                                                      500],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        }
-                                                        return const LoadingCard(
-                                                          height: 50,
-                                                        );
-                                                      }));
-                                                })),
+                                                              );
+                                                            }
+                                                            return const LoadingCard(
+                                                              height: 50,
+                                                            );
+                                                          }));
+                                                    })),
                                           ],
                                         )
                                       : Container()
@@ -907,7 +924,36 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                             onPressed: snapshot.data![
                                                         'completion-status'] ==
                                                     'ongoing'
-                                                ? () {}
+                                                ? () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return RequestForm(
+                                                            isEditRequest: true,
+                                                            title: snapshot
+                                                                .data!['title'],
+                                                            description: snapshot
+                                                                    .data![
+                                                                'description'],
+                                                            date: snapshot
+                                                                    .data![
+                                                                'expected-completion-time'],
+                                                            amount: double
+                                                                .parse(snapshot
+                                                                    .data![
+                                                                        'promised-amount']
+                                                                    .toString()),
+                                                            postType: snapshot
+                                                                    .data![
+                                                                'post-type'],
+                                                            postId:
+                                                                widget.postid,
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  }
                                                 : null,
                                           ),
                                         )
@@ -941,6 +987,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                       style: ElevatedButton.styleFrom(
                                         primary: const Color.fromRGBO(
                                             250, 103, 117, 1),
+                                        onSurface: Colors.grey,
                                       ),
                                       icon: const Icon(
                                         Icons.delete_rounded,
@@ -950,12 +997,16 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                         'Delete',
                                         style: TextStyle(),
                                       ),
-                                      onPressed: () {
-                                        // TODO: Remove from waiting list and accepted-by
-                                        // TODO: Show a dialog to confirm
-                                        // TODO: Navigate to dashboard with a message
-                                        Navigator.pop(context);
-                                      },
+                                      onPressed:
+                                          snapshot.data!['completion-status'] ==
+                                                  'ongoing'
+                                              ? () {
+                                                  // TODO: Remove from waiting list and accepted-by
+                                                  // TODO: Show a dialog to confirm
+                                                  // TODO: Navigate to dashboard with a message
+                                                  Navigator.pop(context);
+                                                }
+                                              : null,
                                     ),
                                   )
                                 ],

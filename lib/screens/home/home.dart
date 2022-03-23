@@ -7,6 +7,7 @@ import 'package:googlesolutionchallenge/screens/home/chat/chatscreen.dart';
 import 'package:googlesolutionchallenge/screens/home/linkspace/linkspace.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
 import 'package:googlesolutionchallenge/screens/home/map/map.dart';
+import 'package:googlesolutionchallenge/screens/utils/editprofile.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/services/auth.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -96,12 +97,12 @@ class _HomeState extends State<Home> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  const CircleAvatar(
+                                  CircleAvatar(
                                     backgroundColor: Colors.white,
                                     radius: 30,
                                     child: Text(
-                                      'U',
-                                      style: TextStyle(
+                                      userSnapshot.data!['name'][0],
+                                      style: const TextStyle(
                                         fontSize: 25,
                                         color: Color.fromRGBO(66, 103, 178, 1),
                                         fontWeight: FontWeight.bold,
@@ -252,7 +253,14 @@ class _HomeState extends State<Home> {
                           'Edit Profile',
                           style: TextStyle(fontSize: 18),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Edit(),
+                            ),
+                          );
+                        },
                       ),
                       Divider(
                         height: 1,
