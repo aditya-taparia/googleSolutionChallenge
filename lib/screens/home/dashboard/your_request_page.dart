@@ -26,7 +26,8 @@ class _YourRequestPageState extends State<YourRequestPage> {
         stream: FirebaseFirestore.instance
             .collection('Posts')
             .where('given-by', isEqualTo: user!.userid)
-            .where('completion-status', isEqualTo: 'ongoing')
+            .where('payment-status', isEqualTo: 'pending')
+            .orderBy('expected-completion-time')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -90,7 +91,18 @@ class _YourRequestPageState extends State<YourRequestPage> {
             snapshot.data!.docs.length,
             (index) {
               return RequestDataCard(
+                postId: snapshot.data!.docs[index].id,
                 title: snapshot.data!.docs[index]['title'],
+                waitingCount: snapshot.data!.docs[index]['waiting-list'].length,
+                acceptedBy: snapshot.data!.docs[index]['accepted-by'],
+                acceptedByName: snapshot.data!.docs[index]['accepted-by-name'],
+                chatId: snapshot.data!.docs[index]['chat-id'],
+                completionStatus: snapshot.data!.docs[index]
+                    ['completion-status'],
+                paymentStatus: snapshot.data!.docs[index]['payment-status'],
+                postType: snapshot.data!.docs[index]['post-type']
+                    .toString()
+                    .toLowerCase(),
                 amount:
                     snapshot.data!.docs[index]['promised-amount'].toDouble(),
                 description: snapshot.data!.docs[index]['description'],

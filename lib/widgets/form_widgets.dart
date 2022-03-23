@@ -132,6 +132,9 @@ class DateTimePicker extends StatelessWidget {
     DateTime _dateTime = DateTime.now();
     if (isEdit) {
       _dateTime = DateTime.parse(sendcontroller.text);
+      if (_dateTime.compareTo(DateTime.now()) > 0) {
+        _dateTime = DateTime.now();
+      }
     }
 
     return Padding(
@@ -235,7 +238,7 @@ class DateTimePicker extends StatelessWidget {
           color: Colors.black,
         ),
         onChanged: (value) {
-          if (controller.text == null || controller.text.isEmpty) {
+          if (controller.text.isEmpty) {
             controller.text =
                 DateFormat.yMMMMd().format(DateTime.now()).toString();
           }
