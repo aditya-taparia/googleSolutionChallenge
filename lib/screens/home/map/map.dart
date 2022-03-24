@@ -11,9 +11,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/individualchat.dart';
+import 'package:googlesolutionchallenge/screens/home/linkspace/forum.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
-import 'package:googlesolutionchallenge/widgets/loading_cards.dart';
+import 'package:googlesolutionchallenge/widgets/map_data_card.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -78,7 +79,7 @@ class _MapScreenState extends State<MapScreen> {
   double _height = 100;
   bool _open = false;
   bool _markerclicked = false;
-  bool _currentIcon = true;
+  bool _gpsIcons = true;
   double twopointdistance = 0;
 
   Set<LatLng> community = {};
@@ -110,14 +111,12 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void getdata() async {
-    final Future<QuerySnapshot> _usersStream =
-        FirebaseFirestore.instance.collection('Posts').get();
+    final Future<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('Posts').get();
 
     _usersStream.then((value) {
       value.docs.forEach((element) {
         Map<String, dynamic> val = element.data() as Map<String, dynamic>;
-        LatLng temp = LatLng(double.parse(val['location'].latitude.toString()),
-            double.parse(val['location'].longitude.toString()));
+        LatLng temp = LatLng(double.parse(val['location'].latitude.toString()), double.parse(val['location'].longitude.toString()));
         twopointdistance = getraddist(temp, _current);
         if (twopointdistance <= radius) {
           userList.add(val);
@@ -125,14 +124,12 @@ class _MapScreenState extends State<MapScreen> {
       });
     });
 
-    final Future<QuerySnapshot> _users2Stream =
-        FirebaseFirestore.instance.collection('Linkspace').get();
+    final Future<QuerySnapshot> _users2Stream = FirebaseFirestore.instance.collection('Linkspace').get();
 
     _users2Stream.then((value) {
       value.docs.forEach((element) {
         Map<String, dynamic> val = element.data() as Map<String, dynamic>;
-        LatLng temp = LatLng(double.parse(val['locality'].latitude.toString()),
-            double.parse(val['locality'].longitude.toString()));
+        LatLng temp = LatLng(double.parse(val['locality'].latitude.toString()), double.parse(val['locality'].longitude.toString()));
         twopointdistance = getraddist(temp, _current);
         if (twopointdistance <= radius) {
           userList2.add(val);
@@ -167,22 +164,19 @@ class _MapScreenState extends State<MapScreen> {
 
     if (isSelected[1]) {
       if (check[0]) {
-        List ll = await getLoc(
-            'Orphanages', _current.latitude, _current.longitude, 2000);
+        List ll = await getLoc('Orphanages', _current.latitude, _current.longitude, 2000);
         setState(() {
           nearbymarkers1 = ll;
         });
       }
       if (check[1]) {
-        List ll = await getLoc(
-            'Old+Age+Homes', _current.latitude, _current.longitude, 2000);
+        List ll = await getLoc('Old+Age+Homes', _current.latitude, _current.longitude, 2000);
         setState(() {
           nearbymarkers2 = ll;
         });
       }
       if (check[2]) {
-        List ll =
-            await getLoc('NGO', _current.latitude, _current.longitude, 2000);
+        List ll = await getLoc('NGO', _current.latitude, _current.longitude, 2000);
         setState(() {
           nearbymarkers3 = ll;
         });
@@ -191,20 +185,17 @@ class _MapScreenState extends State<MapScreen> {
 
     if (check[0]) {
       nearbymarkers1.forEach((element) {
-        community1.add(LatLng(element["geometry"]["location"]["lat"],
-            element["geometry"]["location"]["lng"]));
+        community1.add(LatLng(element["geometry"]["location"]["lat"], element["geometry"]["location"]["lng"]));
       });
     }
     if (check[1]) {
       nearbymarkers2.forEach((element) {
-        community2.add(LatLng(element["geometry"]["location"]["lat"],
-            element["geometry"]["location"]["lng"]));
+        community2.add(LatLng(element["geometry"]["location"]["lat"], element["geometry"]["location"]["lng"]));
       });
     }
     if (check[2]) {
       nearbymarkers3.forEach((element) {
-        community3.add(LatLng(element["geometry"]["location"]["lat"],
-            element["geometry"]["location"]["lng"]));
+        community3.add(LatLng(element["geometry"]["location"]["lat"], element["geometry"]["location"]["lng"]));
       });
     }
 
@@ -221,17 +212,14 @@ class _MapScreenState extends State<MapScreen> {
             _markers.add(
               Marker(
                 markerId: MarkerId('id-1' + element.toString()),
-                position: LatLng(
-                    double.parse(element["location"].latitude.toString()),
-                    double.parse(element["location"].longitude.toString())),
+                position: LatLng(double.parse(element["location"].latitude.toString()), double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
                     isLinkedspace = false;
                     sendername = element["given-by-name"];
                     senderuid = element["given-by"];
-                    destination = LatLng(
-                        double.parse(element["location"].latitude.toString()),
-                        double.parse(element["location"].longitude.toString()));
+                    destination =
+                        LatLng(double.parse(element["location"].latitude.toString()), double.parse(element["location"].longitude.toString()));
                     _markerclicked = true;
                   });
                 },
@@ -251,22 +239,18 @@ class _MapScreenState extends State<MapScreen> {
             _markers.add(
               Marker(
                 markerId: MarkerId('id-1' + element.toString()),
-                position: LatLng(
-                    double.parse(element["location"].latitude.toString()),
-                    double.parse(element["location"].longitude.toString())),
+                position: LatLng(double.parse(element["location"].latitude.toString()), double.parse(element["location"].longitude.toString())),
                 onTap: () {
                   setState(() {
                     isLinkedspace = false;
                     sendername = element["given-by-name"];
                     senderuid = element["given-by"];
-                    destination = LatLng(
-                        double.parse(element["location"].latitude.toString()),
-                        double.parse(element["location"].longitude.toString()));
+                    destination =
+                        LatLng(double.parse(element["location"].latitude.toString()), double.parse(element["location"].longitude.toString()));
                     _markerclicked = true;
                   });
                 },
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueOrange),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
                 infoWindow: InfoWindow(
                   title: element["given-by-name"],
                   snippet: 'Item/service Name',
@@ -283,22 +267,17 @@ class _MapScreenState extends State<MapScreen> {
           _markers.add(
             Marker(
               markerId: MarkerId('id-1' + element.toString()),
-              position: LatLng(
-                  double.parse(element["locality"].latitude.toString()),
-                  double.parse(element["locality"].longitude.toString())),
+              position: LatLng(double.parse(element["locality"].latitude.toString()), double.parse(element["locality"].longitude.toString())),
               onTap: () {
                 setState(() {
                   isLinkedspace = true;
                   sendername = element["name"];
                   senderuid = element["ownerid"];
-                  destination = LatLng(
-                      double.parse(element["locality"].latitude.toString()),
-                      double.parse(element["locality"].longitude.toString()));
+                  destination = LatLng(double.parse(element["locality"].latitude.toString()), double.parse(element["locality"].longitude.toString()));
                   _markerclicked = true;
                 });
               },
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueAzure),
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
               infoWindow: InfoWindow(
                 title: 'LinkSpace',
                 snippet: element['location'],
@@ -348,15 +327,18 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
-    Set<Circle> circles = Set.from([
+    Set<Circle> circles = {
       Circle(
         fillColor: Colors.blue.withOpacity(0.15),
         strokeColor: Colors.transparent,
-        circleId: CircleId("circleid"),
+        circleId: const CircleId("circleid"),
         center: LatLng(_current.latitude, _current.longitude),
         radius: radius * 1000,
       )
-    ]);
+    };
+    int _activeItem = 0;
+    final CarouselController _carouselcontroller = CarouselController();
+
     return Stack(
       children: [
         FloatingSearchBar(
@@ -393,8 +375,7 @@ class _MapScreenState extends State<MapScreen> {
                   color: Colors.grey[800],
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Notify()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Notify()));
                 },
               ),
             ),
@@ -457,21 +438,15 @@ class _MapScreenState extends State<MapScreen> {
                                 itemCount: userList.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  if (isSelected[0] ||
-                                      (isSelected[3] && isSelected[4])) {
-                                    return Builditemjoblist(
-                                        userList[index], context);
+                                  if (isSelected[0] || (isSelected[3] && isSelected[4])) {
+                                    return Builditemjoblist(userList[index], context);
                                   } else if (isSelected[3]) {
-                                    if (userList[index]["category"]
-                                        .contains("item request")) {
-                                      return Builditemjoblist(
-                                          userList[index], context);
+                                    if (userList[index]["category"].contains("item request")) {
+                                      return Builditemjoblist(userList[index], context);
                                     }
                                   } else {
-                                    if (userList[index]["category"]
-                                        .contains("job request")) {
-                                      return Builditemjoblist(
-                                          userList[index], context);
+                                    if (userList[index]["category"].contains("job request")) {
+                                      return Builditemjoblist(userList[index], context);
                                     }
                                   }
                                   return Container();
@@ -482,465 +457,383 @@ class _MapScreenState extends State<MapScreen> {
                     )
                   : Container(),
               SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0),
-                  child: !_drive
-                      ? SizedBox(
-                          height: 35,
-                          child: ListView(
-                              physics: const BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              children: [
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (!isFilled[0]) {
-                                        isFilled[0] = true;
+                child: StatefulBuilder(builder: (context, setState) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 60.0),
+                    child: !_drive
+                        ? SizedBox(
+                            height: 35,
+                            child: ListView(physics: const BouncingScrollPhysics(), scrollDirection: Axis.horizontal, shrinkWrap: true, children: [
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (!isFilled[0]) {
+                                      isFilled[0] = true;
+                                    }
+                                    isSelected.asMap().forEach((index, value) {
+                                      if (value == false) {
+                                        isSelected[index] = true;
                                       }
-                                      isSelected
-                                          .asMap()
-                                          .forEach((index, value) {
-                                        if (value == false) {
-                                          isSelected[index] = true;
-                                        }
-                                        isSelected[1] = false;
-                                      });
-                                      isFilled.asMap().forEach((index, value) {
-                                        if (value == true && index != 0) {
-                                          isFilled[index] = false;
-                                        }
-                                      });
+                                      isSelected[1] = false;
                                     });
-                                    setmarkers();
-                                  },
-                                  child: Container(
-                                    width: 70,
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 10),
-                                    decoration: !isFilled[0]
-                                        ? BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: const Color.fromRGBO(
-                                                    66, 103, 178, 1),
-                                                width: 2.0),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          )
-                                        : selectedDecoration,
-                                    child: Center(
-                                      child: Text(
-                                        "All",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: !isFilled[0]
-                                              ? const Color.fromRGBO(
-                                                  66, 103, 178, 1)
-                                              : Colors.white,
-                                        ),
+                                    isFilled.asMap().forEach((index, value) {
+                                      if (value == true && index != 0) {
+                                        isFilled[index] = false;
+                                      }
+                                    });
+                                  });
+                                  setmarkers();
+                                },
+                                child: Container(
+                                  width: 70,
+                                  padding: const EdgeInsets.only(left: 10, right: 10),
+                                  decoration: !isFilled[0]
+                                      ? BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(color: const Color.fromRGBO(66, 103, 178, 1), width: 1.5),
+                                          borderRadius: BorderRadius.circular(20),
+                                        )
+                                      : selectedDecoration,
+                                  child: Center(
+                                    child: Text(
+                                      "All",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: !isFilled[0] ? const Color.fromRGBO(66, 103, 178, 1) : Colors.white,
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Maptoggle
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          int count = 0;
-                                          setState(() {
-                                            print(isSelected[2]);
-                                            isFilled[2] = !isFilled[2];
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Maptoggle
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        int count = 0;
+                                        setState(() {
+                                          print(isSelected[2]);
+                                          isFilled[2] = !isFilled[2];
 
-                                            if (isFilled[0]) {
-                                              isFilled[0] = false;
-                                            }
-                                            if (!isFilled[2]) {
-                                              isSelected[2] = !isSelected[2];
-                                            }
-                                            isSelected
-                                                .asMap()
-                                                .forEach((index, value) {
-                                              if (isFilled[index] == false) {
-                                                isSelected[index] = false;
-                                              } else {
-                                                isSelected[index] = true;
-                                              }
-                                            });
-
-                                            if (isSelected[2]) {
-                                              isSelected[0] = false;
-                                              isFilled[0] = false;
-                                            }
-                                            if (!isFilled[2]) {
-                                              for (int i = 0; i < 5; i++) {
-                                                if (!isFilled[i]) {
-                                                  count++;
-                                                }
-                                              }
-                                              if (count == 5) {
-                                                print('object');
-                                                setState(() {
-                                                  isSelected
-                                                      .asMap()
-                                                      .forEach((index, value) {
-                                                    isSelected[index] = true;
-                                                  });
-                                                  isFilled[0] = true;
-                                                  isSelected[1] = false;
-                                                });
-                                              }
+                                          if (isFilled[0]) {
+                                            isFilled[0] = false;
+                                          }
+                                          if (!isFilled[2]) {
+                                            isSelected[2] = !isSelected[2];
+                                          }
+                                          isSelected.asMap().forEach((index, value) {
+                                            if (isFilled[index] == false) {
+                                              isSelected[index] = false;
+                                            } else {
+                                              isSelected[index] = true;
                                             }
                                           });
-                                          setmarkers();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          decoration: !isFilled[2]
-                                              ? BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color:
-                                                          const Color.fromRGBO(
-                                                              66, 103, 178, 1),
-                                                      width: 2.0),
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                )
-                                              : selectedDecoration,
-                                          child: Center(
-                                            child: Text(
-                                              "LinkSpaces",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: !isFilled[2]
-                                                    ? const Color.fromRGBO(
-                                                        66, 103, 178, 1)
-                                                    : Colors.white,
-                                              ),
+
+                                          if (isSelected[2]) {
+                                            isSelected[0] = false;
+                                            isFilled[0] = false;
+                                          }
+                                          if (!isFilled[2]) {
+                                            for (int i = 0; i < 5; i++) {
+                                              if (!isFilled[i]) {
+                                                count++;
+                                              }
+                                            }
+                                            if (count == 5) {
+                                              setState(() {
+                                                isSelected.asMap().forEach((index, value) {
+                                                  isSelected[index] = true;
+                                                });
+                                                isFilled[0] = true;
+                                                isSelected[1] = false;
+                                              });
+                                            }
+                                          }
+                                        });
+                                        setmarkers();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.only(left: 10, right: 10),
+                                        decoration: !isFilled[2]
+                                            ? BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(color: const Color.fromRGBO(66, 103, 178, 1), width: 1.5),
+                                                borderRadius: BorderRadius.circular(20),
+                                              )
+                                            : selectedDecoration,
+                                        child: Center(
+                                          child: Text(
+                                            "LinkSpaces",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: !isFilled[2] ? const Color.fromRGBO(66, 103, 178, 1) : Colors.white,
                                             ),
                                           ),
                                         ),
-                                      )
-                                    : Container(),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    int count = 0;
-                                    setState(() {
-                                      print(isSelected[3]);
-                                      isFilled[3] = !isFilled[3];
-                                      if (isFilled[0]) {
-                                        isFilled[0] = false;
-                                      }
-                                      if (!isFilled[3]) {
-                                        isSelected[3] = !isSelected[3];
-                                      }
-                                      isSelected
-                                          .asMap()
-                                          .forEach((index, value) {
-                                        if (isFilled[index] == false) {
-                                          isSelected[index] = false;
-                                        } else {
-                                          isSelected[index] = true;
-                                        }
-                                      });
-
-                                      if (isSelected[3]) {
-                                        isSelected[0] = false;
-                                        isFilled[0] = false;
-                                      }
-                                      if (!isFilled[3]) {
-                                        for (int i = 0; i < 5; i++) {
-                                          if (!isFilled[i]) {
-                                            count++;
-                                          }
-                                        }
-                                        if (count == 5) {
-                                          print('object');
-                                          setState(() {
-                                            isSelected
-                                                .asMap()
-                                                .forEach((index, value) {
-                                              isSelected[index] = true;
-                                            });
-                                            isFilled[0] = true;
-
-                                            isSelected[1] = false;
-                                          });
-                                        }
+                                      ),
+                                    )
+                                  : Container(),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  int count = 0;
+                                  setState(() {
+                                    print(isSelected[3]);
+                                    isFilled[3] = !isFilled[3];
+                                    if (isFilled[0]) {
+                                      isFilled[0] = false;
+                                    }
+                                    if (!isFilled[3]) {
+                                      isSelected[3] = !isSelected[3];
+                                    }
+                                    isSelected.asMap().forEach((index, value) {
+                                      if (isFilled[index] == false) {
+                                        isSelected[index] = false;
+                                      } else {
+                                        isSelected[index] = true;
                                       }
                                     });
-                                    setmarkers();
-                                  },
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    decoration: !isFilled[3]
-                                        ? BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: const Color.fromRGBO(
-                                                    66, 103, 178, 1),
-                                                width: 2.0),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          )
-                                        : selectedDecoration,
-                                    child: Center(
-                                      child: Text(
-                                        "Item Requests",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: !isFilled[3]
-                                              ? const Color.fromRGBO(
-                                                  66, 103, 178, 1)
-                                              : Colors.white,
-                                        ),
+
+                                    if (isSelected[3]) {
+                                      isSelected[0] = false;
+                                      isFilled[0] = false;
+                                    }
+                                    if (!isFilled[3]) {
+                                      for (int i = 0; i < 5; i++) {
+                                        if (!isFilled[i]) {
+                                          count++;
+                                        }
+                                      }
+                                      if (count == 5) {
+                                        setState(() {
+                                          isSelected.asMap().forEach((index, value) {
+                                            isSelected[index] = true;
+                                          });
+                                          isFilled[0] = true;
+
+                                          isSelected[1] = false;
+                                        });
+                                      }
+                                    }
+                                  });
+                                  setmarkers();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 10, right: 10),
+                                  decoration: !isFilled[3]
+                                      ? BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(color: const Color.fromRGBO(66, 103, 178, 1), width: 1.5),
+                                          borderRadius: BorderRadius.circular(20),
+                                        )
+                                      : selectedDecoration,
+                                  child: Center(
+                                    child: Text(
+                                      "Item Requests",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: !isFilled[3] ? const Color.fromRGBO(66, 103, 178, 1) : Colors.white,
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    int count = 0;
-                                    setState(() {
-                                      print(isSelected[4]);
-                                      isFilled[4] = !isFilled[4];
-                                      if (isFilled[0]) {
-                                        isFilled[0] = false;
-                                      }
-                                      if (!isFilled[4]) {
-                                        isSelected[4] = !isSelected[4];
-                                      }
-                                      isSelected
-                                          .asMap()
-                                          .forEach((index, value) {
-                                        if (isFilled[index] == false) {
-                                          isSelected[index] = false;
-                                        } else {
-                                          isSelected[index] = true;
-                                        }
-                                      });
-
-                                      if (isSelected[4]) {
-                                        isSelected[0] = false;
-                                        isFilled[0] = false;
-                                      }
-                                      if (!isFilled[4]) {
-                                        for (int i = 0; i < 5; i++) {
-                                          if (!isFilled[i]) {
-                                            count++;
-                                          }
-                                        }
-                                        if (count == 5) {
-                                          print('object');
-                                          setState(() {
-                                            isSelected
-                                                .asMap()
-                                                .forEach((index, value) {
-                                              isSelected[index] = true;
-                                            });
-                                            isFilled[0] = true;
-
-                                            isSelected[1] = false;
-                                          });
-                                        }
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  int count = 0;
+                                  setState(() {
+                                    print(isSelected[4]);
+                                    isFilled[4] = !isFilled[4];
+                                    if (isFilled[0]) {
+                                      isFilled[0] = false;
+                                    }
+                                    if (!isFilled[4]) {
+                                      isSelected[4] = !isSelected[4];
+                                    }
+                                    isSelected.asMap().forEach((index, value) {
+                                      if (isFilled[index] == false) {
+                                        isSelected[index] = false;
+                                      } else {
+                                        isSelected[index] = true;
                                       }
                                     });
-                                    setmarkers();
-                                  },
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    decoration: !isFilled[4]
-                                        ? BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: const Color.fromRGBO(
-                                                    66, 103, 178, 1),
-                                                width: 2.0),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          )
-                                        : selectedDecoration,
-                                    child: Center(
-                                      child: Text(
-                                        "Job Requests",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: !isFilled[4]
-                                              ? const Color.fromRGBO(
-                                                  66, 103, 178, 1)
-                                              : Colors.white,
-                                        ),
+
+                                    if (isSelected[4]) {
+                                      isSelected[0] = false;
+                                      isFilled[0] = false;
+                                    }
+                                    if (!isFilled[4]) {
+                                      for (int i = 0; i < 5; i++) {
+                                        if (!isFilled[i]) {
+                                          count++;
+                                        }
+                                      }
+                                      if (count == 5) {
+                                        setState(() {
+                                          isSelected.asMap().forEach((index, value) {
+                                            isSelected[index] = true;
+                                          });
+                                          isFilled[0] = true;
+
+                                          isSelected[1] = false;
+                                        });
+                                      }
+                                    }
+                                  });
+                                  setmarkers();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 10, right: 10),
+                                  decoration: !isFilled[4]
+                                      ? BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(color: const Color.fromRGBO(66, 103, 178, 1), width: 1.5),
+                                          borderRadius: BorderRadius.circular(20),
+                                        )
+                                      : selectedDecoration,
+                                  child: Center(
+                                    child: Text(
+                                      "Job Requests",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: !isFilled[4] ? const Color.fromRGBO(66, 103, 178, 1) : Colors.white,
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Maptoggle
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          int count = 0;
-                                          setState(() {
-                                            print(isSelected[1]);
-                                            isFilled[1] = !isFilled[1];
-                                            if (isFilled[0]) {
-                                              isFilled[0] = false;
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Maptoggle
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        int count = 0;
+                                        setState(() {
+                                          print(isSelected[1]);
+                                          isFilled[1] = !isFilled[1];
+                                          if (isFilled[0]) {
+                                            isFilled[0] = false;
+                                          }
+                                          if (!isFilled[1]) {
+                                            isSelected[1] = !isSelected[1];
+                                          }
+                                          isSelected.asMap().forEach((index, value) {
+                                            if (isFilled[index] == false) {
+                                              isSelected[index] = false;
+                                            } else {
+                                              isSelected[index] = true;
                                             }
-                                            if (!isFilled[1]) {
-                                              isSelected[1] = !isSelected[1];
-                                            }
-                                            isSelected
-                                                .asMap()
-                                                .forEach((index, value) {
-                                              if (isFilled[index] == false) {
-                                                isSelected[index] = false;
-                                              } else {
-                                                isSelected[index] = true;
-                                              }
-                                            });
+                                          });
 
-                                            if (isSelected[1]) {
-                                              isSelected[0] = false;
-                                              isFilled[0] = false;
-                                            }
-                                            if (!isFilled[1]) {
-                                              for (int i = 0; i < 5; i++) {
-                                                if (!isFilled[i]) {
-                                                  count++;
-                                                }
+                                          if (isSelected[1]) {
+                                            isSelected[0] = false;
+                                            isFilled[0] = false;
+                                          }
+                                          if (!isFilled[1]) {
+                                            for (int i = 0; i < 5; i++) {
+                                              if (!isFilled[i]) {
+                                                count++;
                                               }
-                                              if (count == 5) {
-                                                print('object');
-                                                setState(() {
-                                                  isSelected
-                                                      .asMap()
-                                                      .forEach((index, value) {
-                                                    isSelected[index] = true;
-                                                  });
-                                                  isFilled[0] = true;
-
-                                                  isSelected[1] = false;
+                                            }
+                                            if (count == 5) {
+                                              setState(() {
+                                                isSelected.asMap().forEach((index, value) {
+                                                  isSelected[index] = true;
                                                 });
-                                              }
+                                                isFilled[0] = true;
+
+                                                isSelected[1] = false;
+                                              });
                                             }
-                                          });
-                                          setmarkers();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          decoration: !isFilled[1]
-                                              ? BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color:
-                                                          const Color.fromRGBO(
-                                                              66, 103, 178, 1),
-                                                      // change width to 1.5
-                                                      width: 1.5),
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                )
-                                              : selectedDecoration,
-                                          child: Center(
-                                            child: Text(
-                                              "Community Service",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: !isFilled[1]
-                                                    ? const Color.fromRGBO(
-                                                        66, 103, 178, 1)
-                                                    : Colors.white,
-                                              ),
+                                          }
+                                        });
+                                        setmarkers();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.only(left: 10, right: 10),
+                                        decoration: !isFilled[1]
+                                            ? BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(color: const Color.fromRGBO(66, 103, 178, 1), width: 1.5),
+                                                borderRadius: BorderRadius.circular(20),
+                                              )
+                                            : selectedDecoration,
+                                        child: Center(
+                                          child: Text(
+                                            "Community Service",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: !isFilled[1] ? const Color.fromRGBO(66, 103, 178, 1) : Colors.white,
                                             ),
                                           ),
                                         ),
-                                      )
-                                    : Container(),
-                              ]),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ExpandablePanel(
-                                    header: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20.0, top: 10),
-                                      child: Text(
-                                        remdist + " (" + remtime + ")",
-                                        style: const TextStyle(
-                                            color:
-                                                Color.fromRGBO(66, 103, 178, 1),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
-                                    collapsed: Container(),
-                                    expanded: Text("Destination : " + endadd),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.4,
-                                          child: OutlinedButton(
-                                              onPressed: () {},
-                                              child:
-                                                  const Text("Next Direction")),
+                                    )
+                                  : Container(),
+                            ]),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ExpandablePanel(
+                                      header: Padding(
+                                        padding: const EdgeInsets.only(left: 20.0, top: 10),
+                                        child: Text(
+                                          remdist + " (" + remtime + ")",
+                                          style: const TextStyle(color: Color.fromRGBO(66, 103, 178, 1), fontSize: 18, fontWeight: FontWeight.bold),
                                         ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.4,
-                                          child: ElevatedButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _drive = !_drive;
-                                                  _polylines = {};
-                                                });
-                                              },
-                                              child: Text("Cancel Drive")),
-                                        ),
-                                      ],
+                                      ),
+                                      collapsed: Container(),
+                                      expanded: Text("Destination : " + endadd),
                                     ),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.4,
+                                            child: OutlinedButton(onPressed: () {}, child: const Text("Next Direction")),
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.4,
+                                            child: ElevatedButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _drive = !_drive;
+                                                    _polylines = {};
+                                                  });
+                                                },
+                                                child: Text("Cancel Drive")),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ), // ondrive widget
-                ),
+                          ), // ondrive widget
+                  );
+                }),
               ),
               (isSelected[1])
                   ? Padding(
@@ -954,8 +847,7 @@ class _MapScreenState extends State<MapScreen> {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => StatefulBuilder(
-                                    builder: (context, setState) {
+                                builder: (context) => StatefulBuilder(builder: (context, setState) {
                                   return AlertDialog(
                                     title: const Center(
                                       child: Text(
@@ -965,8 +857,7 @@ class _MapScreenState extends State<MapScreen> {
                                     ),
                                     content: Column(
                                       // mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         CheckboxListTile(
@@ -976,8 +867,7 @@ class _MapScreenState extends State<MapScreen> {
                                             'Orphanages',
                                             style: TextStyle(fontSize: 20),
                                           ),
-                                          controlAffinity:
-                                              ListTileControlAffinity.leading,
+                                          controlAffinity: ListTileControlAffinity.leading,
                                           value: check[0],
                                           onChanged: (bool? value) {
                                             setState(() {
@@ -992,8 +882,7 @@ class _MapScreenState extends State<MapScreen> {
                                             'Old Age Homes',
                                             style: TextStyle(fontSize: 20),
                                           ),
-                                          controlAffinity:
-                                              ListTileControlAffinity.leading,
+                                          controlAffinity: ListTileControlAffinity.leading,
                                           value: check[1],
                                           onChanged: (bool? value) {
                                             setState(() {
@@ -1008,8 +897,7 @@ class _MapScreenState extends State<MapScreen> {
                                             'NGO\'s',
                                             style: TextStyle(fontSize: 20),
                                           ),
-                                          controlAffinity:
-                                              ListTileControlAffinity.leading,
+                                          controlAffinity: ListTileControlAffinity.leading,
                                           value: check[2],
                                           onChanged: (bool? value) {
                                             setState(() {
@@ -1024,9 +912,7 @@ class _MapScreenState extends State<MapScreen> {
                                         child: Text(
                                           "Cancel",
                                           style: TextStyle(
-                                            fontFamily:
-                                                GoogleFonts.varelaRound()
-                                                    .fontFamily,
+                                            fontFamily: GoogleFonts.varelaRound().fontFamily,
                                           ),
                                         ),
                                         onPressed: () {
@@ -1040,9 +926,7 @@ class _MapScreenState extends State<MapScreen> {
                                         child: Text(
                                           "Apply",
                                           style: TextStyle(
-                                            fontFamily:
-                                                GoogleFonts.varelaRound()
-                                                    .fontFamily,
+                                            fontFamily: GoogleFonts.varelaRound().fontFamily,
                                           ),
                                         ),
                                         onPressed: () {
@@ -1051,8 +935,7 @@ class _MapScreenState extends State<MapScreen> {
                                         },
                                       ),
                                     ],
-                                    actionsAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    actionsAlignment: MainAxisAlignment.spaceAround,
                                   );
                                 }),
                               );
@@ -1080,15 +963,28 @@ class _MapScreenState extends State<MapScreen> {
                         Maptoggle = !Maptoggle;
                       });
                     },
-                    child: Maptoggle
-                        ? const Icon(
-                            Icons.add_location_rounded,
-                            size: 30,
-                          )
-                        : const Icon(
-                            Icons.map_rounded,
-                            size: 30,
-                          ),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 350),
+                      switchInCurve: Curves.easeInOut,
+                      switchOutCurve: Curves.easeInOut,
+                      transitionBuilder: (Widget child, Animation<double> animation) {
+                        return ScaleTransition(
+                          scale: animation,
+                          child: child,
+                        );
+                      },
+                      child: Maptoggle
+                          ? const Icon(
+                              Icons.subject_rounded,
+                              size: 30,
+                              key: ValueKey('list'),
+                            )
+                          : const Icon(
+                              Icons.map_rounded,
+                              size: 30,
+                              key: ValueKey('map'),
+                            ),
+                    ),
                   ),
                 ),
               ),
@@ -1102,30 +998,29 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
                     onPressed: () {
-                      _currentIcon ? getLocation() : null;
+                      _gpsIcons ? getLocation() : null;
                       setState(() {
-                        _currentIcon = !_currentIcon;
+                        _gpsIcons = !_gpsIcons;
                       });
                     },
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 350),
                       switchInCurve: Curves.easeInOut,
                       switchOutCurve: Curves.easeInOut,
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
+                      transitionBuilder: (Widget child, Animation<double> animation) {
                         return ScaleTransition(
                           scale: animation,
                           child: child,
                         );
                       },
-                      child: _currentIcon
+                      child: _gpsIcons
                           ? const Icon(
                               Icons.gps_not_fixed_rounded,
-                              key: ValueKey('download'),
+                              key: ValueKey('no_gps'),
                             )
                           : const Icon(
                               Icons.gps_fixed_rounded,
-                              key: ValueKey('done'),
+                              key: ValueKey('gps'),
                             ),
                     ),
                   ),
@@ -1146,7 +1041,7 @@ class _MapScreenState extends State<MapScreen> {
                                 });
                               } else if (details.delta.dy < -sensitivity) {
                                 setState(() {
-                                  _height = 300;
+                                  _height = 250;
                                 });
                               }
                             },
@@ -1162,172 +1057,122 @@ class _MapScreenState extends State<MapScreen> {
                                       topRight: Radius.circular(20.0),
                                     )),
                                 child: SingleChildScrollView(
+                                  physics: const NeverScrollableScrollPhysics(),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: GestureDetector(
-                                        onTap: () {
-                                          if (_open) {
+                                        onVerticalDragUpdate: (details) {
+                                          int sensitivity = 8;
+                                          if (details.delta.dy > sensitivity) {
                                             setState(() {
                                               _height = 100;
-                                              _open = false;
                                             });
-                                          } else {
+                                          } else if (details.delta.dy < -sensitivity) {
                                             setState(() {
-                                              _height = 300;
-                                              _open = true;
+                                              _height = 250;
                                             });
                                           }
                                         },
-                                        child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                16.0,
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Center(
-                                                    child: !_open
-                                                        ? const Icon(
-                                                            Icons
-                                                                .keyboard_arrow_up,
-                                                            size: 30,
-                                                          )
-                                                        : const Icon(
-                                                            Icons
-                                                                .keyboard_arrow_down,
-                                                            size: 30,
-                                                          ),
+                                        child: SizedBox(
+                                            width: MediaQuery.of(context).size.width - 16.0,
+                                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                              const Center(
+                                                child: Icon(Icons.drag_handle_rounded, size: 30),
+                                              ),
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              const Center(
+                                                child: Text(
+                                                  ' Add Item or Job Request',
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    color: Color.fromRGBO(66, 103, 178, 1),
+                                                    fontWeight: FontWeight.w600,
                                                   ),
-                                                  const Text(
-                                                    ' Add Item or Job Request',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      color: Color.fromRGBO(
-                                                          66, 103, 178, 1),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 30,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  DottedBorder(
+                                                    borderType: BorderType.RRect,
+                                                    strokeWidth: 2,
+                                                    radius: const Radius.circular(10),
+                                                    color: Colors.grey,
+                                                    dashPattern: const [5, 5],
+                                                    child: InkWell(
+                                                      onTap: () {},
+                                                      child: SizedBox(
+                                                        width: 160,
+                                                        height: 100,
+                                                        child: Center(
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: const [
+                                                              Icon(
+                                                                Icons.add,
+                                                                size: 30,
+                                                                color: Color.fromRGBO(66, 103, 178, 1),
+                                                              ),
+                                                              SizedBox(height: 10),
+                                                              Text(
+                                                                'Add item Request',
+                                                                style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: Color.fromRGBO(66, 103, 178, 1),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 50,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      DottedBorder(
-                                                        borderType:
-                                                            BorderType.RRect,
-                                                        strokeWidth: 2,
-                                                        radius: const Radius
-                                                            .circular(10),
-                                                        color: Colors.grey,
-                                                        dashPattern: const [
-                                                          5,
-                                                          5
-                                                        ],
-                                                        child: SizedBox(
-                                                          width: 160,
-                                                          height: 160,
-                                                          child: Center(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: const [
-                                                                Icon(
-                                                                  Icons.add,
-                                                                  size: 30,
-                                                                  color: Color
-                                                                      .fromRGBO(
-                                                                          66,
-                                                                          103,
-                                                                          178,
-                                                                          1),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 10),
-                                                                Text(
-                                                                  'Add item Request',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        18,
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                            66,
-                                                                            103,
-                                                                            178,
-                                                                            1),
+                                                  DottedBorder(
+                                                    borderType: BorderType.RRect,
+                                                    strokeWidth: 2,
+                                                    radius: const Radius.circular(10),
+                                                    color: Colors.grey,
+                                                    dashPattern: const [5, 5],
+                                                    child: InkWell(
+                                                      onTap: () {},
+                                                      child: SizedBox(
+                                                        height: 100,
+                                                        width: 160,
+                                                        child: Center(
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: const [
+                                                              Icon(
+                                                                Icons.add,
+                                                                size: 30,
+                                                                color: Color.fromRGBO(66, 103, 178, 1),
+                                                              ),
+                                                              SizedBox(height: 10),
+                                                              Center(
+                                                                child: Text(
+                                                                  'Add job Request',
+                                                                  style: TextStyle(
+                                                                    fontSize: 18,
+                                                                    color: Color.fromRGBO(66, 103, 178, 1),
                                                                   ),
                                                                 ),
-                                                              ],
-                                                            ),
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
                                                       ),
-                                                      DottedBorder(
-                                                        borderType:
-                                                            BorderType.RRect,
-                                                        strokeWidth: 2,
-                                                        radius: const Radius
-                                                            .circular(10),
-                                                        color: Colors.grey,
-                                                        dashPattern: const [
-                                                          5,
-                                                          5
-                                                        ],
-                                                        child: SizedBox(
-                                                          height: 160,
-                                                          width: 160,
-                                                          child: Center(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: const [
-                                                                Icon(
-                                                                  Icons.add,
-                                                                  size: 30,
-                                                                  color: Color
-                                                                      .fromRGBO(
-                                                                          66,
-                                                                          103,
-                                                                          178,
-                                                                          1),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 10),
-                                                                Center(
-                                                                  child: Text(
-                                                                    'Add job Request',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          18,
-                                                                      color: Color.fromRGBO(
-                                                                          66,
-                                                                          103,
-                                                                          178,
-                                                                          1),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                ]))),
+                                                ],
+                                              ),
+                                            ]))),
                                   ),
                                 )),
                           ),
@@ -1336,30 +1181,23 @@ class _MapScreenState extends State<MapScreen> {
                           stream: isLinkedspace
                               ? FirebaseFirestore.instance
                                   .collection('Linkspace')
-                                  .where('locality',
-                                      isEqualTo: GeoPoint(destination.latitude,
-                                          destination.longitude))
+                                  .where('locality', isEqualTo: GeoPoint(destination.latitude, destination.longitude))
                                   .snapshots()
                               : FirebaseFirestore.instance
                                   .collection('Posts')
-                                  .where('location',
-                                      isEqualTo: GeoPoint(destination.latitude,
-                                          destination.longitude))
+                                  .where('location', isEqualTo: GeoPoint(destination.latitude, destination.longitude))
                                   .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (snapshot.hasError) {
                               return const Text("Something went wrong");
                             }
                             if (!snapshot.hasData) {
-                              return LoadingCard(); // change to vector image
+                              return Container(); // change to vector image
                             }
-                            if (snapshot.connectionState ==
-                                ConnectionState.active) {
+                            if (snapshot.connectionState == ConnectionState.active) {
                               var snap = snapshot.data!.docs;
 
-                              return StatefulBuilder(
-                                  builder: (context, setState) {
+                              return StatefulBuilder(builder: (context, setState) {
                                 return Positioned(
                                   bottom: 0,
                                   left: 0,
@@ -1371,8 +1209,7 @@ class _MapScreenState extends State<MapScreen> {
                                         setState(() {
                                           _height = 100;
                                         });
-                                      } else if (details.delta.dy <
-                                          -sensitivity) {
+                                      } else if (details.delta.dy < -sensitivity) {
                                         setState(() {
                                           _height = 300;
                                         });
@@ -1390,311 +1227,295 @@ class _MapScreenState extends State<MapScreen> {
                                             topRight: Radius.circular(20.0),
                                           )),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            if (_open) {
-                                              setState(() {
-                                                _height = 100;
-                                                _open = false;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                _height = 300;
-                                                _open = true;
-                                              });
-                                            }
-                                          },
-                                          child: CarouselSlider.builder(
-                                            itemCount: snap.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index, int pageViewIndex) {
-                                              return SingleChildScrollView(
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      16.0,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Center(
-                                                        child: !_open
-                                                            ? const Icon(
-                                                                Icons
-                                                                    .keyboard_arrow_up,
-                                                                size: 30,
-                                                              )
-                                                            : const Icon(
-                                                                Icons
-                                                                    .keyboard_arrow_down,
-                                                                size: 30,
-                                                              ),
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Text(
-                                                                isLinkedspace
-                                                                    ? snap[index]
-                                                                        ['name']
-                                                                    : snap[index]
-                                                                        [
-                                                                        'title'],
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Color
-                                                                      .fromRGBO(
-                                                                          66,
-                                                                          103,
-                                                                          178,
-                                                                          1),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 20,
-                                                              ),
-                                                              !isLinkedspace
-                                                                  ? Container(
-                                                                      padding:
-                                                                          const EdgeInsets
-                                                                              .symmetric(
-                                                                        horizontal:
-                                                                            8,
-                                                                        vertical:
-                                                                            4,
-                                                                      ),
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: const Color.fromRGBO(
-                                                                            66,
-                                                                            103,
-                                                                            178,
-                                                                            1),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(20),
-                                                                      ),
-                                                                      child:
-                                                                          Text(
-                                                                        snap[index]
-                                                                            [
-                                                                            'post-type'],
-                                                                        style:
-                                                                            const TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                          fontSize:
-                                                                              12,
-                                                                        ),
-                                                                      ),
-                                                                    )
-                                                                  : Container()
-                                                            ],
-                                                          ),
-                                                          GestureDetector(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: SingleChildScrollView(
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Center(
+                                                child: Icon(
+                                                  Icons.drag_handle_rounded,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                              snap.length == 1
+                                                  ? isLinkedspace
+                                                      ? MapDataCard(
+                                                          title: '${snap[0]['name']} LinkSpace',
+                                                          actions: GestureDetector(
                                                             child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          8.0),
-                                                              child: favselect
-                                                                  ? fav
-                                                                  : fav2,
+                                                              padding: const EdgeInsets.only(left: 8.0),
+                                                              child: favselect ? fav : fav2,
                                                             ),
                                                             onTap: () {
                                                               setState(() {
-                                                                favselect =
-                                                                    !favselect;
+                                                                favselect = !favselect;
                                                               });
                                                             },
-                                                          )
-                                                        ],
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      const Text(
-                                                        "Description",
-                                                        style: TextStyle(
-                                                          color: Color.fromRGBO(
-                                                              66, 103, 178, 1),
-                                                        ),
-                                                      ),
-                                                      Text(snap[index]
-                                                          ['description']),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Container(
-                                                        height: 110,
-                                                        child: ListView(
-                                                          scrollDirection:
-                                                              Axis.horizontal,
-                                                          shrinkWrap: true,
-                                                          children: [
-                                                            Container(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.4,
-                                                              height: 100,
-                                                              child:
-                                                                  const Center(
-                                                                child: Text(
-                                                                    "IMAGE 1"),
-                                                              ),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: const Color
-                                                                        .fromRGBO(
-                                                                    211,
-                                                                    211,
-                                                                    211,
-                                                                    1),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Container(
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    0.4,
-                                                                height: 100,
-                                                                child:
-                                                                    const Center(
-                                                                  child: Text(
-                                                                      "IMAGE 2"),
-                                                                ),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: const Color
-                                                                          .fromRGBO(
-                                                                      211,
-                                                                      211,
-                                                                      211,
-                                                                      1),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                )),
-                                                            const SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Container(
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    0.4,
-                                                                height: 100,
-                                                                child:
-                                                                    const Center(
-                                                                  child: Text(
-                                                                      "IMAGE 3"),
-                                                                ),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: const Color
-                                                                          .fromRGBO(
-                                                                      211,
-                                                                      211,
-                                                                      211,
-                                                                      1),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                )),
+                                                          ),
+                                                          description: snap[0]['description'].toString(),
+                                                          moreInfo:
+                                                              snap[0]['member'].length == 1 ? '1 member' : '${snap[0]['member'].length} members',
+                                                          moreActions: [
+                                                            snap[0]['member'].contains(user!.userid.toString())
+                                                                ? Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context).size.width * 0.45,
+                                                                        child: OutlinedButton.icon(
+                                                                          onPressed: () {
+                                                                            Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                                    builder: (context) => Forum(
+                                                                                          id: snap[0].id,
+                                                                                        )));
+                                                                          },
+                                                                          icon: const Icon(Icons.groups_rounded),
+                                                                          label: const Text('Open Space'),
+                                                                        ),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width: 10,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context).size.width * 0.3,
+                                                                        child: ElevatedButton.icon(
+                                                                          onPressed: () async {
+                                                                            setState(() {
+                                                                              _markerclicked = false;
+                                                                              _drive = true;
+                                                                              _polylines = {};
+                                                                            });
+                                                                            var temp = await getDirections(_current, destination);
+                                                                            _setPolyline(directions);
+                                                                          },
+                                                                          icon: const Icon(Icons.directions_car_filled_rounded),
+                                                                          label: const Text('Drive'),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : SizedBox(
+                                                                    width: MediaQuery.of(context).size.width * 0.6,
+                                                                    child: ElevatedButton.icon(
+                                                                      // TODO: Join Space
+                                                                      onPressed: () {},
+                                                                      icon: const Icon(Icons.groups_rounded),
+                                                                      label: const Text('Join Space'),
+                                                                    ),
+                                                                  ),
                                                           ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            ElevatedButton(
-                                                                onPressed: () {
-                                                                  createchat(
-                                                                      user!
-                                                                          .userid
-                                                                          .toString(),
-                                                                      senderuid,
-                                                                      sendername);
-                                                                  // Navigator.push( //ADITYA JEETESH
-                                                                  //     context,
-                                                                  //     MaterialPageRoute(
-                                                                  //         builder: (context) => IndividualChat(
-                                                                  //             user: {},
-                                                                  //             id: snap[index]['chat-id'])));
-                                                                },
-                                                                child:
-                                                                    const Text(
-                                                                        "Chat")),
-                                                            const SizedBox(
-                                                              width: 20,
+                                                        )
+                                                      : MapDataCard(
+                                                          title: '${snap[0]['title']}',
+                                                          actions: GestureDetector(
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.only(left: 8.0),
+                                                              child: favselect ? fav : fav2,
                                                             ),
-                                                            ElevatedButton(
-                                                                onPressed:
-                                                                    () async {
+                                                            onTap: () {
+                                                              setState(() {
+                                                                favselect = !favselect;
+                                                              });
+                                                            },
+                                                          ),
+                                                          description: snap[0]['description'].toString(),
+                                                          chip: snap[0]['post-type'].toString(),
+                                                          moreActions: [
+                                                            SizedBox(
+                                                              width: MediaQuery.of(context).size.width * 0.4,
+                                                              child: OutlinedButton.icon(
+                                                                // TODO: Chat
+                                                                onPressed: () {},
+                                                                icon: const Icon(Icons.forum_rounded),
+                                                                label: const Text('Chat'),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            SizedBox(
+                                                              width: MediaQuery.of(context).size.width * 0.4,
+                                                              child: ElevatedButton.icon(
+                                                                onPressed: () async {
                                                                   setState(() {
-                                                                    _markerclicked =
-                                                                        false;
-                                                                    _drive =
-                                                                        true;
-                                                                    _polylines =
-                                                                        {};
+                                                                    _markerclicked = false;
+                                                                    _drive = true;
+                                                                    _polylines = {};
                                                                   });
-                                                                  var temp = await getDirections(
-                                                                      _current,
-                                                                      destination);
-                                                                  _setPolyline(
-                                                                      directions);
+                                                                  var temp = await getDirections(_current, destination);
+                                                                  _setPolyline(directions);
                                                                 },
-                                                                child:
-                                                                    const Text(
-                                                                        "Drive"))
+                                                                icon: const Icon(Icons.directions_car_filled_rounded),
+                                                                label: const Text('Drive'),
+                                                              ),
+                                                            ),
                                                           ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            options: CarouselOptions(
-                                              autoPlay: false,
-                                              enlargeCenterPage: true,
-                                              viewportFraction: 0.9,
-                                              aspectRatio: 2.0,
-                                              initialPage: 0,
-                                              enableInfiniteScroll: false,
-                                            ),
+                                                        )
+                                                  : CarouselSlider.builder(
+                                                      carouselController: _carouselcontroller,
+                                                      itemCount: snap.length,
+                                                      itemBuilder: (BuildContext context, int index, int pageViewIndex) {
+                                                        if (isLinkedspace) {
+                                                          return MapDataCard(
+                                                            elevation: 1.5,
+                                                            title: '${snap[index]['name']} LinkSpace',
+                                                            actions: GestureDetector(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(left: 8.0),
+                                                                child: favselect ? fav : fav2,
+                                                              ),
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  favselect = !favselect;
+                                                                });
+                                                              },
+                                                            ),
+                                                            description: snap[index]['description'].toString(),
+                                                            moreInfo: snap[index]['member'].length == 1
+                                                                ? '1 member'
+                                                                : '${snap[0]['member'].length} members',
+                                                            moreActions: [
+                                                              snap[index]['member'].contains(user!.userid.toString())
+                                                                  ? Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        SizedBox(
+                                                                          width: MediaQuery.of(context).size.width * 0.45,
+                                                                          child: OutlinedButton.icon(
+                                                                            onPressed: () {
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                      builder: (context) => Forum(
+                                                                                            id: snap[0].id,
+                                                                                          )));
+                                                                            },
+                                                                            icon: const Icon(Icons.groups_rounded),
+                                                                            label: const Text('Open Space'),
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          width: 10,
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width: MediaQuery.of(context).size.width * 0.3,
+                                                                          child: ElevatedButton.icon(
+                                                                            onPressed: () async {
+                                                                              setState(() {
+                                                                                _markerclicked = false;
+                                                                                _drive = true;
+                                                                                _polylines = {};
+                                                                              });
+                                                                              var temp = await getDirections(_current, destination);
+                                                                              _setPolyline(directions);
+                                                                            },
+                                                                            icon: const Icon(Icons.directions_car_filled_rounded),
+                                                                            label: const Text('Drive'),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    )
+                                                                  : SizedBox(
+                                                                      width: MediaQuery.of(context).size.width * 0.6,
+                                                                      child: ElevatedButton.icon(
+                                                                        // TODO: Join Space
+                                                                        onPressed: () {},
+                                                                        icon: const Icon(Icons.groups_rounded),
+                                                                        label: const Text('Join Space'),
+                                                                      ),
+                                                                    ),
+                                                            ],
+                                                          );
+                                                        } else {
+                                                          return MapDataCard(
+                                                            elevation: 1.5,
+                                                            title: '${snap[index]['title']}',
+                                                            actions: GestureDetector(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(left: 8.0),
+                                                                child: favselect ? fav : fav2,
+                                                              ),
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  favselect = !favselect;
+                                                                });
+                                                              },
+                                                            ),
+                                                            description: snap[index]['description'].toString(),
+                                                            chip: snap[index]['post-type'].toString(),
+                                                            moreActions: [
+                                                              SizedBox(
+                                                                width: MediaQuery.of(context).size.width * 0.4,
+                                                                child: OutlinedButton.icon(
+                                                                  // TODO: Chat
+                                                                  onPressed: () {},
+                                                                  icon: const Icon(Icons.forum_rounded),
+                                                                  label: const Text('Chat'),
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 10,
+                                                              ),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(context).size.width * 0.4,
+                                                                child: ElevatedButton.icon(
+                                                                  onPressed: () async {
+                                                                    setState(() {
+                                                                      _markerclicked = false;
+                                                                      _drive = true;
+                                                                      _polylines = {};
+                                                                    });
+                                                                    var temp = await getDirections(_current, destination);
+                                                                    _setPolyline(directions);
+                                                                  },
+                                                                  icon: const Icon(Icons.directions_car_filled_rounded),
+                                                                  label: const Text('Drive'),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        }
+                                                      },
+                                                      options: CarouselOptions(
+                                                        autoPlay: false,
+                                                        enlargeCenterPage: true,
+                                                        viewportFraction: 1.0,
+                                                        initialPage: 0,
+                                                        enableInfiniteScroll: false,
+                                                        onPageChanged: (index, reason) {
+                                                          setState(() {
+                                                            _activeItem = index;
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                              snap.length == 1
+                                                  ? Container()
+                                                  : Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: snap.asMap().entries.map((entry) {
+                                                        return GestureDetector(
+                                                          onTap: () => _carouselcontroller.animateToPage(entry.key),
+                                                          child: Container(
+                                                            width: 12.0,
+                                                            height: 12.0,
+                                                            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                                                            decoration: BoxDecoration(
+                                                              shape: BoxShape.circle,
+                                                              color: _activeItem == entry.key ? const Color.fromRGBO(66, 103, 178, 1) : Colors.grey,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -1703,7 +1524,7 @@ class _MapScreenState extends State<MapScreen> {
                                 );
                               });
                             }
-                            return LoadingCard();
+                            return Container();
                           })
                   : Container(),
             ],
@@ -1724,16 +1545,13 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
     final GoogleMapController controller = await _controller.future;
-    final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
+    final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
-    controller.animateCamera(
-        CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)));
+    controller.animateCamera(CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)));
 
     setState(() {
       _current = LatLng(position.latitude, position.longitude);
@@ -1756,16 +1574,15 @@ class _MapScreenState extends State<MapScreen> {
 
 // PLACES API
   getLoc(String query, double lat, double lng, double radius) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
-            query +
-            '&location=' +
-            lat.toString() +
-            ',' +
-            lng.toString() +
-            '&radius=' +
-            radius.toString() +
-            '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
+    final response = await http.get(Uri.parse('https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
+        query +
+        '&location=' +
+        lat.toString() +
+        ',' +
+        lng.toString() +
+        '&radius=' +
+        radius.toString() +
+        '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
     final jsonStudent = await jsonDecode(response.body);
     print(query + jsonStudent["results"].length.toString());
     return jsonStudent["results"];
@@ -1773,10 +1590,8 @@ class _MapScreenState extends State<MapScreen> {
 
 //DIRECTIONS API
   getDirections(LatLng origin, LatLng destination) async {
-    String originstring =
-        origin.toString().replaceAll("LatLng(", "").replaceAll(")", "");
-    String destinationstring =
-        destination.toString().replaceAll("LatLng(", "").replaceAll(")", "");
+    String originstring = origin.toString().replaceAll("LatLng(", "").replaceAll(")", "");
+    String destinationstring = destination.toString().replaceAll("LatLng(", "").replaceAll(")", "");
 
     //print(originstring);
     final String url =
@@ -1794,8 +1609,7 @@ class _MapScreenState extends State<MapScreen> {
       'distance': json['routes'][0]['legs'][0]['distance']['text'],
       'duration': json['routes'][0]['legs'][0]['duration']['text'],
       'end_address': json['routes'][0]['legs'][0]['end_address'],
-      'polyline_decode': PolylinePoints()
-          .decodePolyline(json['routes'][0]['overview_polyline']['points']),
+      'polyline_decode': PolylinePoints().decodePolyline(json['routes'][0]['overview_polyline']['points']),
     };
 
     setState(() {
@@ -1812,33 +1626,23 @@ double getraddist(LatLng element, LatLng current) {
   var c = cos;
   var a = 0.5 -
       c((current.latitude - element.latitude) * p) / 2 +
-      c(element.latitude * p) *
-          c(current.latitude * p) *
-          (1 - c((current.longitude - element.longitude) * p)) /
-          2;
+      c(element.latitude * p) * c(current.latitude * p) * (1 - c((current.longitude - element.longitude) * p)) / 2;
   return 12742 * 1.609344 * asin(sqrt(a));
 }
 
 createchat(String currUserId, String othUserId, String name1) async {
   int y = 0;
-  final DocumentSnapshot<Map<String, dynamic>> _username =
-      await FirebaseFirestore.instance
-          .collection('Userdata')
-          .doc(currUserId)
-          .get();
+  final DocumentSnapshot<Map<String, dynamic>> _username = await FirebaseFirestore.instance.collection('Userdata').doc(currUserId).get();
 
   String name2 = _username.data()!["name"];
   Map othuserdata = {"name": name1, "id": othUserId, "imgUrl": ""};
   Map currUserData = {"name": name2, "id": currUserId, "imgUrl": ""};
-  CollectionReference chatCollection =
-      await FirebaseFirestore.instance.collection('chats');
-  var x =
-      chatCollection.where('users', isEqualTo: [othUserId, currUserId]).get();
+  CollectionReference chatCollection = await FirebaseFirestore.instance.collection('chats');
+  var x = chatCollection.where('users', isEqualTo: [othUserId, currUserId]).get();
   x.then((value) {
     y = value.docs.length;
     if (y == 0) {
-      var x = chatCollection
-          .where('users', isEqualTo: [currUserId, othUserId]).get();
+      var x = chatCollection.where('users', isEqualTo: [currUserId, othUserId]).get();
       x.then((value) async {
         y = value.docs.length;
         if (y == 0) {
@@ -1860,9 +1664,7 @@ Widget Builditemjoblist(Map userList, BuildContext context) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Container(
-      decoration: BoxDecoration(
-          color: const Color.fromRGBO(232, 236, 241, 1),
-          borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: const Color.fromRGBO(232, 236, 241, 1), borderRadius: BorderRadius.circular(20)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1874,18 +1676,12 @@ Widget Builditemjoblist(Map userList, BuildContext context) {
                   children: [
                     Text(""),
                     Text("IMG"),
-                    Text("[" +
-                        userList["location"].latitude.toString() +
-                        " " +
-                        userList["location"].longitude.toString() +
-                        "]"),
+                    Text("[" + userList["location"].latitude.toString() + " " + userList["location"].longitude.toString() + "]"),
                   ],
                 ),
                 width: MediaQuery.of(context).size.width * 0.4,
                 height: 150,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
               ),
             ],
           ),
@@ -1898,22 +1694,14 @@ Widget Builditemjoblist(Map userList, BuildContext context) {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(
-                        color: const Color.fromRGBO(66, 103, 178, 1),
-                        width: 2.0),
+                    border: Border.all(color: const Color.fromRGBO(66, 103, 178, 1), width: 2.0),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
                     child: Text(
-                      userList["category"]
-                          .toString()
-                          .replaceAll("[", "")
-                          .replaceAll("]", "")
-                          .replaceAll(",", " | "),
-                      style: const TextStyle(
-                          color: Color.fromRGBO(66, 103, 178, 1),
-                          fontWeight: FontWeight.bold),
+                      userList["category"].toString().replaceAll("[", "").replaceAll("]", "").replaceAll(",", " | "),
+                      style: const TextStyle(color: Color.fromRGBO(66, 103, 178, 1), fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

@@ -55,8 +55,7 @@ class _HomeState extends State<Home> {
   //QR Scanner
   String result = "";
   Future qrscan() async {
-    String scan = await FlutterBarcodeScanner.scanBarcode(
-        '#336699', 'Cancel', true, ScanMode.QR);
+    String scan = await FlutterBarcodeScanner.scanBarcode('#336699', 'Cancel', true, ScanMode.QR);
 
     setState(() {
       result = scan;
@@ -66,14 +65,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
-    final Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance
-        .collection('Userdata')
-        .doc(user!.userid)
-        .snapshots();
+    final Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance.collection('Userdata').doc(user!.userid).snapshots();
     return StreamBuilder<DocumentSnapshot>(
         stream: _usersStream,
-        builder: (BuildContext context,
-            AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
           if (userSnapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }
@@ -115,8 +110,7 @@ class _HomeState extends State<Home> {
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         userSnapshot.data!['name'],
@@ -145,8 +139,7 @@ class _HomeState extends State<Home> {
                               ),
                               InkWell(
                                 borderRadius: BorderRadius.circular(50),
-                                splashColor:
-                                    const Color.fromRGBO(79, 129, 188, 1),
+                                splashColor: const Color.fromRGBO(79, 129, 188, 1),
                                 onTap: () {
                                   //TODO: Make Points history page
                                   if (kDebugMode) {
@@ -155,12 +148,10 @@ class _HomeState extends State<Home> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 115, 177, 247),
+                                    color: const Color.fromARGB(255, 115, 177, 247),
                                     borderRadius: BorderRadius.circular(50),
                                   ),
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 4, horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                                   child: Text(
                                     "${userSnapshot.data!['points']} Link Points",
                                     style: const TextStyle(
@@ -224,9 +215,7 @@ class _HomeState extends State<Home> {
                       ),
                       StatefulBuilder(builder: (context, setState) {
                         return ListTile(
-                          leading: view
-                              ? const Icon(Icons.dark_mode_rounded)
-                              : const Icon(Icons.light_mode_rounded),
+                          leading: view ? const Icon(Icons.dark_mode_rounded) : const Icon(Icons.light_mode_rounded),
                           title: const Text(
                             'Darkmode',
                             style: TextStyle(fontSize: 18),
@@ -391,103 +380,6 @@ class _HomeState extends State<Home> {
                                 // iconTheme: const IconThemeData(color: Colors.black),
                                 actions: <Widget>[
                                   IconButton(
-                                    tooltip: 'QR Code',
-                                    icon: const Icon(
-                                      Icons.qr_code_rounded,
-                                      size: 24,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => StatefulBuilder(
-                                            builder: (context, setState) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                              "QR Code",
-                                            ),
-                                            actions: <Widget>[
-                                              Column(
-                                                children: [
-                                                  qrgenerated == false
-                                                      ? const Image(
-                                                          fit: BoxFit.cover,
-                                                          image: AssetImage(
-                                                              'assets/qr_code.jpg'),
-                                                        )
-                                                      : SizedBox(
-                                                          height: 200,
-                                                          width: 200,
-                                                          child: QrImage(
-                                                            data:
-                                                                'eb3WylJkoTRbKqShhaqMfLs9Lzh1',
-                                                          ),
-                                                        ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      OutlinedButton(
-                                                        child: Text(
-                                                          !qrgenerated
-                                                              ? "Generate"
-                                                              : "Generated",
-                                                          style: TextStyle(
-                                                            color: !qrgenerated
-                                                                ? Colors
-                                                                    .blueGrey
-                                                                : Colors.blueGrey[
-                                                                    200],
-                                                          ),
-                                                        ),
-                                                        onPressed:
-                                                            qrgenerated == false
-                                                                ? () {
-                                                                    setState(
-                                                                        () {
-                                                                      qrgenerated =
-                                                                          true;
-                                                                    });
-                                                                    if (kDebugMode) {
-                                                                      print(
-                                                                          qrgenerated);
-                                                                    }
-                                                                  }
-                                                                : null,
-                                                      ),
-                                                      ElevatedButton(
-                                                        child: Row(
-                                                          children: const [
-                                                            Icon(
-                                                              Icons
-                                                                  .qr_code_scanner_rounded,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Text("Scan"),
-                                                          ],
-                                                        ),
-                                                        onPressed: () {
-                                                          // qrscan();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                            actionsAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                          );
-                                        }),
-                                      );
-                                    },
-                                  ),
-                                  IconButton(
                                     tooltip: 'Notifications',
                                     icon: const Icon(
                                       Icons.notifications_rounded,
@@ -495,44 +387,15 @@ class _HomeState extends State<Home> {
                                       color: Colors.white,
                                     ),
                                     onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Notify()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Notify()));
                                     },
                                   ),
                                 ],
-                                backgroundColor:
-                                    const Color.fromRGBO(66, 103, 178, 1),
+                                // backgroundColor: Colors.transparent,
+                                backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
                               )
                             // Appbar for dashboard
-                            : null /* AppBar(
-                                elevation: 0,
-                                
-                                iconTheme:
-                                    const IconThemeData(color: Colors.white),
-                                actions: <Widget>[
-                                  IconButton(
-                                    tooltip: 'Notifications',
-                                    icon: const Icon(
-                                      Icons.notifications_rounded,
-                                      size: 24,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Notify()));
-                                    },
-                                  ),
-                                ],
-                                // backgroundColor: Colors.blue[50],
-                                backgroundColor:
-                                    const Color.fromRGBO(66, 103, 178, 1),
-                              ) */
+                            : null
                         : null,
                     // Drawer styling from theme is left
                     drawer: _drawer,
@@ -558,8 +421,7 @@ class _HomeState extends State<Home> {
                           animationDuration: const Duration(seconds: 1),
                           selectedIndex: _index,
                           onDestinationSelected: (_index) {
-                            bloc.changeNavigationIndex(
-                                Navigation.values[_index]);
+                            bloc.changeNavigationIndex(Navigation.values[_index]);
                           },
                           destinations: const [
                             NavigationDestination(

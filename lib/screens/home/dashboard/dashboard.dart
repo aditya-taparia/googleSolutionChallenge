@@ -11,6 +11,7 @@ import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Dashboard extends StatefulWidget {
   final NavigationBloc bloc;
@@ -36,32 +37,24 @@ class _DashboardState extends State<Dashboard> {
 
   // Can use this to get the region
   Future<String>? getPlace(GeoPoint point) async {
-    final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
+    final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
-            position.latitude.toString() +
-            ',' +
-            position.longitude.toString() +
-            '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
+    final response = await http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
+        position.latitude.toString() +
+        ',' +
+        position.longitude.toString() +
+        '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
 
     final json = await jsonDecode(response.body);
-    String location =
-        json["results"][0]["address_components"][5]["long_name"].toString() +
-            ', ' +
-            json["results"][0]["address_components"][6]["long_name"].toString();
-
+    String location = json["results"][0]["address_components"][5]["long_name"].toString();
     return location;
   }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
-    final Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance
-        .collection('Userdata')
-        .doc(user!.userid)
-        .snapshots();
+    final controller = FloatingSearchBarController();
+    final Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance.collection('Userdata').doc(user!.userid).snapshots();
     return Stack(
       children: [
         Image.asset(
@@ -70,9 +63,27 @@ class _DashboardState extends State<Dashboard> {
           fit: BoxFit.cover,
         ),
         FloatingSearchBar(
-          // TODO: Make animated text here
-          // title: Text('Search'),
+          controller: controller,
+          title: DefaultTextStyle(
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+            ),
+            child: AnimatedTextKit(
+              onTap: () {
+                controller.open();
+              },
+              animatedTexts: [
+                RotateAnimatedText('Search for items near you'),
+                RotateAnimatedText('Search for people near you'),
+                RotateAnimatedText('Search for linkspaces near you'),
+              ],
+              repeatForever: true,
+            ),
+          ),
           clearQueryOnClose: true,
+          transition: CircularFloatingSearchBarTransition(),
           transitionDuration: const Duration(milliseconds: 800),
           transitionCurve: Curves.easeInOutCubic,
           physics: const BouncingScrollPhysics(),
@@ -94,7 +105,6 @@ class _DashboardState extends State<Dashboard> {
           backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
           openAxisAlignment: 0.0,
           axisAlignment: 0.0,
-          transition: CircularFloatingSearchBarTransition(),
           actions: [
             FloatingSearchBarAction(
               showIfOpened: false,
@@ -105,8 +115,7 @@ class _DashboardState extends State<Dashboard> {
                   color: Colors.grey[800],
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Notify()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Notify()));
                 },
               ),
             ),
@@ -122,17 +131,60 @@ class _DashboardState extends State<Dashboard> {
                 elevation: 4.0,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: Colors.accents.map((color) {
-                    return Container(height: 112, color: color);
-                  }).toList(),
+                  children: [
+                    ListTile(
+                      onTap: () {
+                        controller.query = "Surat";
+                      },
+                      leading: Icon(
+                        Icons.history_rounded,
+                        color: Colors.grey[600],
+                      ),
+                      title: Text(
+                        'Surat',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.history_rounded,
+                        color: Colors.grey[600],
+                      ),
+                      title: Text(
+                        'Search History - 2',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.history_rounded,
+                        color: Colors.grey[600],
+                      ),
+                      title: Text(
+                        'Search History - 3',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
           },
           body: StreamBuilder<DocumentSnapshot>(
               stream: _userStream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
+              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
                   return const Loading();
                 }
@@ -146,12 +198,10 @@ class _DashboardState extends State<Dashboard> {
                     body: DefaultTabController(
                       length: 2,
                       child: NestedScrollView(
-                        headerSliverBuilder:
-                            (BuildContext context, bool innerBoxIsScrolled) {
+                        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                           return <Widget>[
                             SliverOverlapAbsorber(
-                              handle: NestedScrollView
-                                  .sliverOverlapAbsorberHandleFor(context),
+                              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                               sliver: SliverAppBar(
                                 stretch: true,
                                 automaticallyImplyLeading: false,
@@ -167,38 +217,31 @@ class _DashboardState extends State<Dashboard> {
                                   title: FittedBox(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Hello ${userSnapshot.data!['name']}',
                                           style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
-                                            color:
-                                                Color.fromRGBO(66, 103, 178, 1),
+                                            color: Color.fromRGBO(66, 103, 178, 1),
                                           ),
                                         ),
                                         const SizedBox(
                                           height: 5,
                                         ),
                                         FutureBuilder<String>(
-                                            future: getPlace(
-                                                userSnapshot.data!['location']),
+                                            future: getPlace(userSnapshot.data!['location']),
                                             initialData: 'No Location',
                                             builder: (context, geodata) {
                                               try {
-                                                if (geodata.connectionState ==
-                                                    ConnectionState.waiting) {
+                                                if (geodata.connectionState == ConnectionState.waiting) {
                                                   return Row(
                                                     children: const [
                                                       SizedBox(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          color: Color.fromRGBO(
-                                                              66, 103, 178, 1),
+                                                        child: CircularProgressIndicator(
+                                                          color: Color.fromRGBO(66, 103, 178, 1),
                                                           strokeWidth: 1.5,
                                                         ),
                                                         height: 10,
@@ -209,23 +252,20 @@ class _DashboardState extends State<Dashboard> {
                                                         'Getting Location...',
                                                         style: TextStyle(
                                                           fontSize: 12,
-                                                          color: Color.fromRGBO(
-                                                              102, 102, 102, 1),
+                                                          color: Color.fromRGBO(102, 102, 102, 1),
                                                         ),
                                                       ),
                                                     ],
                                                   );
                                                 }
-                                                if (geodata.connectionState ==
-                                                    ConnectionState.done) {
+                                                if (geodata.connectionState == ConnectionState.done) {
                                                   try {
                                                     if (geodata.hasData) {
                                                       return Text(
                                                         geodata.data!,
                                                         style: const TextStyle(
                                                           fontSize: 12,
-                                                          color: Color.fromRGBO(
-                                                              102, 102, 102, 1),
+                                                          color: Color.fromRGBO(102, 102, 102, 1),
                                                         ),
                                                       );
                                                     } else {
@@ -233,8 +273,7 @@ class _DashboardState extends State<Dashboard> {
                                                         'Location Not Found',
                                                         style: TextStyle(
                                                           fontSize: 12,
-                                                          color: Color.fromRGBO(
-                                                              102, 102, 102, 1),
+                                                          color: Color.fromRGBO(102, 102, 102, 1),
                                                         ),
                                                       );
                                                     }
@@ -245,10 +284,8 @@ class _DashboardState extends State<Dashboard> {
                                                   return Row(
                                                     children: const [
                                                       SizedBox(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          color: Color.fromRGBO(
-                                                              66, 103, 178, 1),
+                                                        child: CircularProgressIndicator(
+                                                          color: Color.fromRGBO(66, 103, 178, 1),
                                                           strokeWidth: 2.5,
                                                         ),
                                                         height: 15,
@@ -259,8 +296,7 @@ class _DashboardState extends State<Dashboard> {
                                                         'Getting Location...',
                                                         style: TextStyle(
                                                           fontSize: 18,
-                                                          color: Color.fromRGBO(
-                                                              102, 102, 102, 1),
+                                                          color: Color.fromRGBO(102, 102, 102, 1),
                                                         ),
                                                       ),
                                                     ],
@@ -286,15 +322,13 @@ class _DashboardState extends State<Dashboard> {
                                     child: TabBar(
                                       isScrollable: true,
                                       unselectedLabelColor: Colors.white,
-                                      indicatorPadding:
-                                          const EdgeInsets.symmetric(
+                                      indicatorPadding: const EdgeInsets.symmetric(
                                         vertical: 6.0,
                                       ),
                                       indicatorSize: TabBarIndicatorSize.label,
                                       indicator: BoxDecoration(
                                         borderRadius: BorderRadius.circular(5),
-                                        color: const Color.fromRGBO(
-                                            239, 239, 239, 1),
+                                        color: const Color.fromRGBO(239, 239, 239, 1),
                                       ),
                                       tabs: const [
                                         Tab(

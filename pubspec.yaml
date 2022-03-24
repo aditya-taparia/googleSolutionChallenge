@@ -81,6 +81,7 @@ dependencies:
   # Dashboard
   dotted_border: ^2.0.0+2
   shimmer_animation: ^2.1.0+1
+  animated_text_kit: ^4.2.1
 
   # OTP
   sms_autofill: ^2.2.0

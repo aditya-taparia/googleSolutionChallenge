@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 import 'package:googlesolutionchallenge/screens/home/linkspace/addlinkspace.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/forum.dart';
+import 'package:googlesolutionchallenge/screens/home/linkspace/forum.dart';
 import 'package:googlesolutionchallenge/screens/utils/randomcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +26,7 @@ class _LinkspaceState extends State<Linkspace> {
   @override
   late bool view = false;
 
-  CollectionReference Linkspacecollection =
-      FirebaseFirestore.instance.collection('Linkspace');
+  CollectionReference Linkspacecollection = FirebaseFirestore.instance.collection('Linkspace');
 
 // all data
 /*
@@ -44,10 +43,8 @@ class _LinkspaceState extends State<Linkspace> {
 
     return StreamBuilder<QuerySnapshot>(
       stream: _isspaceowned
-          ? Linkspacecollection.where('member', arrayContains: user.userid)
-              .snapshots()
-          : Linkspacecollection.where('ownerid', isNotEqualTo: user.userid)
-              .snapshots(),
+          ? Linkspacecollection.where('member', arrayContains: user.userid).snapshots()
+          : Linkspacecollection.where('ownerid', isNotEqualTo: user.userid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text("Something went wrong");
@@ -70,10 +67,7 @@ class _LinkspaceState extends State<Linkspace> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Text("LinkSpace",
-                            style: TextStyle(
-                                color: Color.fromRGBO(66, 103, 178, 1),
-                                fontSize: 25)),
+                        Text("LinkSpace", style: TextStyle(color: Color.fromRGBO(66, 103, 178, 1), fontSize: 25)),
                         SizedBox(
                           width: 5,
                         ),
@@ -88,18 +82,13 @@ class _LinkspaceState extends State<Linkspace> {
                   Lottie.asset('assets/team.json'),
                   SizedBox(
                     width: 300,
-                    child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Find Your LinkSpaces")),
+                    child: ElevatedButton(onPressed: () {}, child: const Text("Find Your LinkSpaces")),
                   )
                 ],
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Addlinkspace()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Addlinkspace()));
                 },
                 child: const Icon(Icons.group_add),
               ),
@@ -108,7 +97,7 @@ class _LinkspaceState extends State<Linkspace> {
             return Scaffold(
               // appBar: AppBar(),
               body: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
                   child: Column(
@@ -136,8 +125,7 @@ class _LinkspaceState extends State<Linkspace> {
                                     _isspaceowned = !_isspaceowned;
                                   });
                                 },
-                                activeColor:
-                                    const Color.fromRGBO(66, 103, 178, 1),
+                                activeColor: const Color.fromRGBO(66, 103, 178, 1),
                                 inactiveTrackColor: Colors.grey,
                                 inactiveThumbColor: Colors.grey,
                               ),
@@ -150,13 +138,11 @@ class _LinkspaceState extends State<Linkspace> {
                         child: _isspaceowned
                             ? const Text(
                                 "Check out what happening in your space",
-                                style:
-                                    TextStyle(fontSize: 14, color: Colors.grey),
+                                style: TextStyle(fontSize: 14, color: Colors.grey),
                               )
                             : const Text(
                                 "Explore and find your ideal space",
-                                style:
-                                    TextStyle(fontSize: 14, color: Colors.grey),
+                                style: TextStyle(fontSize: 14, color: Colors.grey),
                               ),
                       ),
                       const SizedBox(
@@ -196,44 +182,36 @@ class _LinkspaceState extends State<Linkspace> {
                                   constraints: const BoxConstraints(
                                     maxHeight: double.infinity,
                                   ),
-                                  decoration: BoxDecoration(
-                                      color: color,
-                                      borderRadius: const BorderRadius.all(
-                                          // topLeft: Radius.circular(10),
-                                          Radius.circular(15))),
+                                  decoration: BoxDecoration(color: color, borderRadius: const BorderRadius.all(
+                                      // topLeft: Radius.circular(10),
+                                      Radius.circular(15))),
                                   padding: const EdgeInsets.all(4.0),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
+                                              padding: const EdgeInsets.symmetric(
                                                 horizontal: 8,
                                                 vertical: 4,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: Color.fromARGB(
-                                                    255, 92, 216, 96),
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
+                                                color: Color.fromARGB(255, 92, 216, 96),
+                                                borderRadius: BorderRadius.circular(20),
                                               ),
                                               child: Row(
                                                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: const [
                                                   Padding(
-                                                    padding:
-                                                        EdgeInsets.all(4.0),
+                                                    padding: EdgeInsets.all(4.0),
                                                     child: Text(
                                                       "Active",
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        fontWeight: FontWeight.bold,
                                                         fontSize: 15,
                                                       ),
                                                     ),
@@ -242,15 +220,13 @@ class _LinkspaceState extends State<Linkspace> {
                                               ),
                                             ),
                                             Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
+                                              padding: const EdgeInsets.symmetric(
                                                 horizontal: 8,
                                                 vertical: 8,
                                               ),
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
+                                                borderRadius: BorderRadius.circular(20),
                                               ),
                                               child: Row(
                                                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -268,35 +244,21 @@ class _LinkspaceState extends State<Linkspace> {
                                           ],
                                         ),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8.0),
+                                          padding: const EdgeInsets.only(top: 8.0),
                                           child: ListTile(
                                             leading: Column(
                                               children: [
                                                 Container(
                                                   width: 60,
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          8, 8, 8, 7),
+                                                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 7),
                                                   decoration:
-                                                      const BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10))),
+                                                      const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10))),
                                                   child: Column(
                                                     children: [
                                                       const Icon(Icons.group),
                                                       Text(
-                                                        "${linkdata["member"].length}"
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                            color: color,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                        "${linkdata["member"].length}".toString(),
+                                                        style: TextStyle(color: color, fontWeight: FontWeight.bold),
                                                       ),
                                                     ],
                                                   ),
@@ -304,40 +266,29 @@ class _LinkspaceState extends State<Linkspace> {
                                               ],
                                             ),
                                             title: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${linkdata["name"]}",
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 19,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold),
                                               ),
                                             ),
                                             subtitle: SingleChildScrollView(
                                               scrollDirection: Axis.vertical,
                                               child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0),
-                                                child: Text(
-                                                    "${linkdata["description"]}",
+                                                padding: const EdgeInsets.only(left: 8.0),
+                                                child: Text("${linkdata["description"]}",
                                                     maxLines: 4,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 13)),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(color: Colors.white, fontSize: 13)),
                                               ),
                                             ),
                                           ),
                                         ),
                                         const Spacer(),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [
                                             Container(
                                               child: Row(
@@ -360,8 +311,7 @@ class _LinkspaceState extends State<Linkspace> {
                                             SizedBox(
                                               width: 150,
                                               child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
+                                                  style: ElevatedButton.styleFrom(
                                                     primary: Colors.white,
                                                     onPrimary: Colors.white,
                                                     // shadowColor: Colors.red,
@@ -372,86 +322,53 @@ class _LinkspaceState extends State<Linkspace> {
                                                       : () {
                                                           showDialog(
                                                             context: context,
-                                                            builder:
-                                                                (context) =>
-                                                                    AlertDialog(
+                                                            builder: (context) => AlertDialog(
                                                               title: const Text(
                                                                 "Send Request",
                                                               ),
                                                               content: Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
+                                                                mainAxisSize: MainAxisSize.min,
                                                                 children: [
                                                                   const Text(
                                                                     "Purpose of joining the LinkSpace?",
                                                                   ),
                                                                   TextFormField(
-                                                                    autofocus:
-                                                                        false,
-                                                                    keyboardType:
-                                                                        TextInputType
-                                                                            .text,
-                                                                    onSaved:
-                                                                        (value) {},
-                                                                    textInputAction:
-                                                                        TextInputAction
-                                                                            .done,
-                                                                    decoration:
-                                                                        const InputDecoration(
-                                                                      fillColor:
-                                                                          Colors
-                                                                              .white,
-                                                                      filled:
-                                                                          true,
-                                                                      prefixIcon:
-                                                                          Icon(Icons
-                                                                              .group),
-                                                                      contentPadding:
-                                                                          EdgeInsets.fromLTRB(
-                                                                              20,
-                                                                              15,
-                                                                              20,
-                                                                              15),
-                                                                      hintText:
-                                                                          "Answer",
+                                                                    autofocus: false,
+                                                                    keyboardType: TextInputType.text,
+                                                                    onSaved: (value) {},
+                                                                    textInputAction: TextInputAction.done,
+                                                                    decoration: const InputDecoration(
+                                                                      fillColor: Colors.white,
+                                                                      filled: true,
+                                                                      prefixIcon: Icon(Icons.group),
+                                                                      contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                                                      hintText: "Answer",
                                                                     ),
                                                                   ),
                                                                 ],
                                                               ),
                                                               actions: <Widget>[
                                                                 OutlinedButton(
-                                                                  child:
-                                                                      const Text(
-                                                                          "Send"),
-                                                                  onPressed:
-                                                                      () {},
+                                                                  child: const Text("Send"),
+                                                                  onPressed: () {},
                                                                 ),
                                                                 const SizedBox(
                                                                   width: 5,
                                                                 ),
                                                                 ElevatedButton(
-                                                                  child:
-                                                                      const Text(
-                                                                          "Exit"),
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.pop(
-                                                                        context);
+                                                                  child: const Text("Exit"),
+                                                                  onPressed: () {
+                                                                    Navigator.pop(context);
                                                                   },
                                                                 ),
                                                               ],
-                                                              actionsAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceAround,
+                                                              actionsAlignment: MainAxisAlignment.spaceAround,
                                                             ),
                                                           );
                                                         },
                                                   child: _isspaceowned
                                                       ? Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
+                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                           children: [
                                                             Icon(
                                                               Icons.check,
@@ -460,14 +377,10 @@ class _LinkspaceState extends State<Linkspace> {
                                                             Text(
                                                               "Joined",
                                                               style: TextStyle(
-                                                                fontFamily: GoogleFonts
-                                                                        .varelaRound()
-                                                                    .fontFamily,
+                                                                fontFamily: GoogleFonts.varelaRound().fontFamily,
                                                                 color: color,
                                                                 fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
+                                                                fontWeight: FontWeight.w700,
                                                               ),
                                                             ),
                                                             const SizedBox(
@@ -478,13 +391,10 @@ class _LinkspaceState extends State<Linkspace> {
                                                       : Text(
                                                           "Join this space",
                                                           style: TextStyle(
-                                                            fontFamily: GoogleFonts
-                                                                    .varelaRound()
-                                                                .fontFamily,
+                                                            fontFamily: GoogleFonts.varelaRound().fontFamily,
                                                             color: color,
                                                             fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w700,
+                                                            fontWeight: FontWeight.w700,
                                                           ),
                                                         )),
                                             ),
@@ -510,10 +420,7 @@ class _LinkspaceState extends State<Linkspace> {
 
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Addlinkspace()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Addlinkspace()));
                 },
                 child: const Icon(Icons.group_add),
               ),
