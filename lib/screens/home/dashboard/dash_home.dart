@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/dashboard/dash_community.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/history_page.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/request_form.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/your_request_page.dart';
@@ -305,7 +306,12 @@ class _DashHomeState extends State<DashHome> {
                     backgroundColor: Colors.red[50]!,
                     icon: Icons.volunteer_activism_rounded,
                     iconColor: const Color.fromRGBO(250, 103, 117, 1),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CommunityService()));
+                    },
                   ),
                   ExploreItem(
                     title: 'Make a Request',
