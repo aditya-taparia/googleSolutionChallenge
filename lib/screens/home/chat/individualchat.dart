@@ -99,6 +99,11 @@ class _IndividualChatState extends State<IndividualChat> {
     );
   }
 
+  final ScrollController _controller = ScrollController();
+  void _scrollDown() {
+    _controller.jumpTo(_controller.position.maxScrollExtent);
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
@@ -126,6 +131,7 @@ class _IndividualChatState extends State<IndividualChat> {
             }
             ReadMsg(widget.id, read);
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
               appBar: AppBar(
                 title: Text(sender["name"]),
@@ -148,9 +154,11 @@ class _IndividualChatState extends State<IndividualChat> {
                               topRight: Radius.circular(30)),
                           child: ListView.builder(
                               padding: const EdgeInsets.only(top: 15),
+                              controller: _controller,
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
-                                print(data[index.toString()]);
+                                WidgetsBinding.instance!
+                                    .addPostFrameCallback((_) => _scrollDown());
 
                                 final bool isUser =
                                     data[index.toString()][0] == user.userid;
