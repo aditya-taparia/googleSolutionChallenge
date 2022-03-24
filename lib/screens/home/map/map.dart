@@ -336,12 +336,24 @@ class _MapScreenState extends State<MapScreen> {
         radius: radius * 1000,
       )
     };
+
+    // CarouselController
     int _activeItem = 0;
     final CarouselController _carouselcontroller = CarouselController();
+
+    // Search Contoller
+    final searchcontroller = FloatingSearchBarController();
+    List<String> _searchList = [
+      'Surat',
+      'Indore',
+      'Kerala',
+      'Andhra Pradesh',
+    ];
 
     return Stack(
       children: [
         FloatingSearchBar(
+          controller: searchcontroller,
           clearQueryOnClose: true,
           transitionDuration: const Duration(milliseconds: 800),
           transitionCurve: Curves.easeInOutCubic,
@@ -383,6 +395,10 @@ class _MapScreenState extends State<MapScreen> {
               showIfClosed: false,
             ),
           ],
+          // TODO: Search Bar
+          onQueryChanged: (value) {},
+          onSubmitted: (value) {},
+          progress: false,
           builder: (context, transition) {
             return ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -391,8 +407,32 @@ class _MapScreenState extends State<MapScreen> {
                 elevation: 4.0,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: Colors.accents.map((color) {
-                    return Container(height: 112, color: color);
+                  children: _searchList.map((place) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          onTap: () {
+                            searchcontroller.query = place;
+                          },
+                          leading: Icon(
+                            Icons.history_rounded,
+                            color: Colors.grey[600],
+                          ),
+                          title: Text(
+                            place,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          color: Colors.grey[300],
+                        ),
+                      ],
+                    );
                   }).toList(),
                 ),
               ),
@@ -836,12 +876,12 @@ class _MapScreenState extends State<MapScreen> {
                 }),
               ),
               (isSelected[1])
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Align(
-                        alignment: Alignment.topRight,
+                  ? Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 120, 0, 0),
+                          margin: const EdgeInsets.fromLTRB(0, 156, 0, 0),
                           child: FloatingActionButton(
                             backgroundColor: Colors.white,
                             onPressed: () {
@@ -947,8 +987,30 @@ class _MapScreenState extends State<MapScreen> {
                             ),
                           ),
                         ),
-                      ))
+                      ),
+                    )
                   : Container(),
+
+              // Map Radius Button
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: FloatingActionButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                    onPressed: () {},
+                    child: const Icon(
+                      Icons.filter_tilt_shift_rounded,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ),
+
+              // Map List Button
               Padding(
                 padding: const EdgeInsets.only(bottom: 70.0, right: 8.0),
                 child: Align(

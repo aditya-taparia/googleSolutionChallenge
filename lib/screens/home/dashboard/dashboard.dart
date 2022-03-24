@@ -53,7 +53,14 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
-    final controller = FloatingSearchBarController();
+    final searchcontroller = FloatingSearchBarController();
+    List<String> _searchList = [
+      'Surat',
+      'Indore',
+      'Kerala',
+      'Andhra Pradesh',
+    ];
+
     final Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance.collection('Userdata').doc(user!.userid).snapshots();
     return Stack(
       children: [
@@ -63,7 +70,7 @@ class _DashboardState extends State<Dashboard> {
           fit: BoxFit.cover,
         ),
         FloatingSearchBar(
-          controller: controller,
+          controller: searchcontroller,
           title: DefaultTextStyle(
             style: TextStyle(
               color: Colors.grey[600],
@@ -72,7 +79,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             child: AnimatedTextKit(
               onTap: () {
-                controller.open();
+                searchcontroller.open();
               },
               animatedTexts: [
                 RotateAnimatedText('Search for items near you'),
@@ -83,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           clearQueryOnClose: true,
-          transition: CircularFloatingSearchBarTransition(),
+          transition: ExpandingFloatingSearchBarTransition(),
           transitionDuration: const Duration(milliseconds: 800),
           transitionCurve: Curves.easeInOutCubic,
           physics: const BouncingScrollPhysics(),
@@ -102,7 +109,7 @@ class _DashboardState extends State<Dashboard> {
             fontWeight: FontWeight.w500,
             color: Color.fromRGBO(102, 102, 102, 1),
           ),
-          backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
+          backgroundColor: Colors.white,
           openAxisAlignment: 0.0,
           axisAlignment: 0.0,
           actions: [
@@ -123,62 +130,36 @@ class _DashboardState extends State<Dashboard> {
               showIfClosed: false,
             ),
           ],
+          autocorrect: true,
+          backdropColor: Colors.white,
+          // TODO: Search for items
+          onQueryChanged: (value) {},
+          onSubmitted: (value) {},
+          progress: false,
           builder: (context, transition) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Material(
-                color: Colors.white,
-                elevation: 4.0,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      onTap: () {
-                        controller.query = "Surat";
-                      },
-                      leading: Icon(
-                        Icons.history_rounded,
-                        color: Colors.grey[600],
-                      ),
-                      title: Text(
-                        'Surat',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[800],
-                        ),
+            return Material(
+              color: Colors.white,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: _searchList.map((place) {
+                  return ListTile(
+                    onTap: () {
+                      searchcontroller.query = place;
+                    },
+                    leading: Icon(
+                      Icons.history_rounded,
+                      color: Colors.grey[600],
+                    ),
+                    title: Text(
+                      place,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[800],
                       ),
                     ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.history_rounded,
-                        color: Colors.grey[600],
-                      ),
-                      title: Text(
-                        'Search History - 2',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.history_rounded,
-                        color: Colors.grey[600],
-                      ),
-                      title: Text(
-                        'Search History - 3',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ),
             );
           },
