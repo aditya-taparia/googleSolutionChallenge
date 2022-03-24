@@ -22,7 +22,8 @@ class _LinkspacechatState extends State<Linkspacechat> {
   final ImageData img = ImageData();
 
   Future<Map> getuserdata() async {
-    final QuerySnapshot<Map<String, dynamic>> _usersStream = await FirebaseFirestore.instance.collection('Userdata').get();
+    final QuerySnapshot<Map<String, dynamic>> _usersStream =
+        await FirebaseFirestore.instance.collection('Userdata').get();
 
     var temp = _usersStream.docs;
 
@@ -73,6 +74,11 @@ class _LinkspacechatState extends State<Linkspacechat> {
     );
   }
 
+  final ScrollController _controller = ScrollController();
+  void _scrollDown() {
+    _controller.jumpTo(_controller.position.maxScrollExtent);
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
@@ -92,8 +98,12 @@ class _LinkspacechatState extends State<Linkspacechat> {
 
               if (userdata.hasData) {
                 return StreamBuilder<DocumentSnapshot>(
-                    stream: FirebaseFirestore.instance.collection('Linkspace').doc(widget.id).snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    stream: FirebaseFirestore.instance
+                        .collection('Linkspace')
+                        .doc(widget.id)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         const Loading();
                       }
@@ -109,27 +119,54 @@ class _LinkspacechatState extends State<Linkspacechat> {
                                   child: Container(
                                     decoration: const BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(30),
+                                            topRight: Radius.circular(30))),
                                     child: ListView.builder(
-                                        itemCount: snapshot.data!['groupchat'].length,
+                                        itemCount:
+                                            snapshot.data!['groupchat'].length,
+                                        controller: _controller,
                                         shrinkWrap: true,
                                         itemBuilder: ((context, index) {
-                                          return user!.userid == snapshot.data!['groupchat'][index.toString()][0]
+                                          WidgetsBinding.instance!
+                                              .addPostFrameCallback(
+                                                  (_) => _scrollDown());
+                                          return user!.userid ==
+                                                  snapshot.data!['groupchat']
+                                                      [index.toString()][0]
                                               ? Padding(
-                                                  padding: const EdgeInsets.all(4.0),
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
                                                     children: [
                                                       Container(
-                                                        decoration: const BoxDecoration(
-                                                          color: Color.fromRGBO(66, 103, 178, 1),
-                                                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          color: Color.fromRGBO(
+                                                              66, 103, 178, 1),
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20)),
                                                         ),
-                                                        width: MediaQuery.of(context).size.width * 0.5,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.5,
                                                         child: ListTile(
                                                           title: Text(
-                                                            snapshot.data!['groupchat'][index.toString()][1],
-                                                            style: const TextStyle(color: Colors.white, fontSize: 18),
+                                                            snapshot.data![
+                                                                    'groupchat']
+                                                                [index
+                                                                    .toString()][1],
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 18),
                                                           ),
                                                         ),
                                                       ),
@@ -137,28 +174,65 @@ class _LinkspacechatState extends State<Linkspacechat> {
                                                   ),
                                                 )
                                               : Padding(
-                                                  padding: const EdgeInsets.all(4.0),
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
                                                     children: [
                                                       Container(
-                                                        decoration: const BoxDecoration(
-                                                          color: Color.fromARGB(255, 235, 232, 232),
-                                                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              235,
+                                                              232,
+                                                              232),
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20)),
                                                         ),
-                                                        width: MediaQuery.of(context).size.width * 0.5,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.5,
                                                         child: ListTile(
                                                           title: Text(
-                                                            userList[snapshot.data!['groupchat'][index.toString()][0]],
-                                                            style: const TextStyle(
-                                                              color: Color.fromRGBO(66, 103, 178, 1),
+                                                            userList[snapshot
+                                                                        .data![
+                                                                    'groupchat']
+                                                                [index
+                                                                    .toString()][0]],
+                                                            style:
+                                                                const TextStyle(
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      66,
+                                                                      103,
+                                                                      178,
+                                                                      1),
                                                             ),
                                                           ),
                                                           subtitle: Padding(
-                                                            padding: const EdgeInsets.only(top: 4.0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 4.0),
                                                             child: Text(
-                                                              snapshot.data!['groupchat'][index.toString()][1],
-                                                              style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 18, color: Colors.black),
+                                                              snapshot.data![
+                                                                      'groupchat']
+                                                                  [index
+                                                                      .toString()][1],
+                                                              style: const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .black),
                                                             ),
                                                           ),
                                                         ),
@@ -169,7 +243,8 @@ class _LinkspacechatState extends State<Linkspacechat> {
                                         })),
                                   ),
                                 ),
-                                buildMessageComposer(user!.userid, snapshot.data!['groupchat'].length),
+                                buildMessageComposer(user!.userid,
+                                    snapshot.data!['groupchat'].length),
                               ],
                             ),
                           ),
@@ -187,7 +262,8 @@ class _LinkspacechatState extends State<Linkspacechat> {
   }
 
   Future addmsgDB(String msg, String id, userid, length) async {
-    final linkspace = FirebaseFirestore.instance.collection("Linkspace").doc(id);
+    final linkspace =
+        FirebaseFirestore.instance.collection("Linkspace").doc(id);
 
     linkspace.set({
       "groupchat": {

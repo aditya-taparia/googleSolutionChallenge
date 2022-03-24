@@ -31,7 +31,43 @@ class _ForumScreenState extends State<ForumScreen> {
             var feedinfo = snapshot.data!.docs;
 
             if (feedinfo.isEmpty) {
-              return Text('no Feed');
+              return Stack(children: [
+                const Center(
+                    child: Image(image: AssetImage("assets/nofeed.png"))),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: SpeedDial(
+                        animatedIcon: AnimatedIcons.menu_home,
+                        children: [
+                          SpeedDialChild(
+                              backgroundColor:
+                                  const Color.fromRGBO(66, 103, 178, 1),
+                              label: "Post",
+                              child: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        Addforum(id: widget.id),
+                                  ),
+                                );
+                              }),
+                          SpeedDialChild(
+                              backgroundColor:
+                                  const Color.fromRGBO(66, 103, 178, 1),
+                              label: "Open",
+                              child:
+                                  const Icon(Icons.add, color: Colors.white)),
+                        ],
+                      )),
+                )
+              ]);
             } else {
               return Stack(
                 children: [
@@ -53,12 +89,15 @@ class _ForumScreenState extends State<ForumScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
                                           CircleAvatar(
-                                            backgroundColor: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                                            backgroundColor: Colors.primaries[
+                                                Random().nextInt(
+                                                    Colors.primaries.length)],
                                             child: Text(
                                               feedinfo[index]['Name'][0],
                                               style: const TextStyle(
@@ -71,15 +110,19 @@ class _ForumScreenState extends State<ForumScreen> {
                                             width: 5,
                                           ),
                                           Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 feedinfo[index]['Name'],
-                                                style: const TextStyle(fontSize: 18),
+                                                style: const TextStyle(
+                                                    fontSize: 18),
                                               ),
                                               const Text(
                                                 'Location',
-                                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey),
                                               ),
                                             ],
                                           ),
@@ -99,20 +142,31 @@ class _ForumScreenState extends State<ForumScreen> {
                                   ),
                                   Text(
                                     feedinfo[index]['postbody'],
-                                    style: const TextStyle(fontSize: 15, color: Colors.black),
+                                    style: const TextStyle(
+                                        fontSize: 15, color: Colors.black),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: SizedBox(
                                       height: 20,
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            feedinfo[index]['Likes'].toString() + ' Likes',
-                                            style: const TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.bold),
+                                            feedinfo[index]['Likes']
+                                                    .toString() +
+                                                ' Likes',
+                                            style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          const Text('5 Comments', style: TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.bold)),
+                                          const Text('5 Comments',
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                     ),
@@ -122,17 +176,20 @@ class _ForumScreenState extends State<ForumScreen> {
                                     color: Colors.black,
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       GestureDetector(
                                         onTap: () {},
-                                        child: Icon(Icons.favorite, color: Colors.pink),
+                                        child: Icon(Icons.favorite,
+                                            color: Colors.pink),
                                       ),
                                       GestureDetector(
                                         onTap: () {},
                                         child: const Icon(
                                           Icons.comment,
-                                          color: Color.fromRGBO(66, 103, 178, 1),
+                                          color:
+                                              Color.fromRGBO(66, 103, 178, 1),
                                         ),
                                       ),
                                       GestureDetector(
@@ -160,7 +217,8 @@ class _ForumScreenState extends State<ForumScreen> {
                           animatedIcon: AnimatedIcons.menu_home,
                           children: [
                             SpeedDialChild(
-                                backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                                backgroundColor:
+                                    const Color.fromRGBO(66, 103, 178, 1),
                                 label: "Post",
                                 child: const Icon(
                                   Icons.add,
@@ -170,14 +228,17 @@ class _ForumScreenState extends State<ForumScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => Addforum(id: widget.id),
+                                      builder: (context) =>
+                                          Addforum(id: widget.id),
                                     ),
                                   );
                                 }),
                             SpeedDialChild(
-                                backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
+                                backgroundColor:
+                                    const Color.fromRGBO(66, 103, 178, 1),
                                 label: "Open",
-                                child: const Icon(Icons.add, color: Colors.white)),
+                                child:
+                                    const Icon(Icons.add, color: Colors.white)),
                           ],
                         )),
                   )
