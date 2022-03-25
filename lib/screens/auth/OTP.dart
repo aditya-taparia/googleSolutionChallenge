@@ -81,7 +81,7 @@ class _OTPState extends State<OTP> {
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromRGBO(0, 89, 67, 1),
+                                color: Color.fromRGBO(66, 103, 178, 1),
                               ),
                             ))),
                     const SizedBox(
@@ -195,7 +195,7 @@ class _OTPState extends State<OTP> {
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary:
-                                                Color.fromRGBO(0, 89, 67, 1),
+                                                Color.fromRGBO(66, 103, 178, 1),
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 20,
                                               vertical: 10,
@@ -257,8 +257,8 @@ class _OTPState extends State<OTP> {
                                           child: const Text(
                                             'Resend Code',
                                             style: TextStyle(
-                                              color:
-                                                  Color.fromRGBO(0, 89, 67, 1),
+                                              color: Color.fromRGBO(
+                                                  66, 103, 178, 1),
                                               fontSize: 20.0,
                                             ),
                                           ),
@@ -316,8 +316,8 @@ Widget otp_field(context, {required bool first, last}) {
                 borderRadius: BorderRadius.circular(12),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(width: 2, color: Color.fromRGBO(0, 89, 67, 1)),
+                borderSide: BorderSide(
+                    width: 2, color: Color.fromRGBO(66, 103, 178, 1)),
                 borderRadius: BorderRadius.circular(12),
               )),
         ),

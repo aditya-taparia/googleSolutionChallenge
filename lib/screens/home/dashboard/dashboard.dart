@@ -37,16 +37,19 @@ class _DashboardState extends State<Dashboard> {
 
   // Can use this to get the region
   Future<String>? getPlace(GeoPoint point) async {
-    final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
 
-    final response = await http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
-        position.latitude.toString() +
-        ',' +
-        position.longitude.toString() +
-        '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
+    final response = await http.get(Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
+            position.latitude.toString() +
+            ',' +
+            position.longitude.toString() +
+            '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
 
     final json = await jsonDecode(response.body);
-    String location = json["results"][0]["address_components"][5]["long_name"].toString();
+    String location =
+        json["results"][0]["address_components"][5]["long_name"].toString();
     return location;
   }
 
@@ -54,7 +57,10 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
     final controller = FloatingSearchBarController();
-    final Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance.collection('Userdata').doc(user!.userid).snapshots();
+    final Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance
+        .collection('Userdata')
+        .doc(user!.userid)
+        .snapshots();
     return Stack(
       children: [
         Image.asset(
@@ -115,7 +121,8 @@ class _DashboardState extends State<Dashboard> {
                   color: Colors.grey[800],
                 ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Notify()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Notify()));
                 },
               ),
             ),
@@ -184,7 +191,8 @@ class _DashboardState extends State<Dashboard> {
           },
           body: StreamBuilder<DocumentSnapshot>(
               stream: _userStream,
-              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
                   return const Loading();
                 }
@@ -198,10 +206,12 @@ class _DashboardState extends State<Dashboard> {
                     body: DefaultTabController(
                       length: 2,
                       child: NestedScrollView(
-                        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                        headerSliverBuilder:
+                            (BuildContext context, bool innerBoxIsScrolled) {
                           return <Widget>[
                             SliverOverlapAbsorber(
-                              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                              handle: NestedScrollView
+                                  .sliverOverlapAbsorberHandleFor(context),
                               sliver: SliverAppBar(
                                 stretch: true,
                                 automaticallyImplyLeading: false,
@@ -217,31 +227,38 @@ class _DashboardState extends State<Dashboard> {
                                   title: FittedBox(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Hello ${userSnapshot.data!['name']}',
                                           style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
-                                            color: Color.fromRGBO(66, 103, 178, 1),
+                                            color:
+                                                Color.fromRGBO(66, 103, 178, 1),
                                           ),
                                         ),
                                         const SizedBox(
                                           height: 5,
                                         ),
                                         FutureBuilder<String>(
-                                            future: getPlace(userSnapshot.data!['location']),
+                                            future: getPlace(
+                                                userSnapshot.data!['location']),
                                             initialData: 'No Location',
                                             builder: (context, geodata) {
                                               try {
-                                                if (geodata.connectionState == ConnectionState.waiting) {
+                                                if (geodata.connectionState ==
+                                                    ConnectionState.waiting) {
                                                   return Row(
                                                     children: const [
                                                       SizedBox(
-                                                        child: CircularProgressIndicator(
-                                                          color: Color.fromRGBO(66, 103, 178, 1),
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Color.fromRGBO(
+                                                              66, 103, 178, 1),
                                                           strokeWidth: 1.5,
                                                         ),
                                                         height: 10,
@@ -252,20 +269,23 @@ class _DashboardState extends State<Dashboard> {
                                                         'Getting Location...',
                                                         style: TextStyle(
                                                           fontSize: 12,
-                                                          color: Color.fromRGBO(102, 102, 102, 1),
+                                                          color: Color.fromRGBO(
+                                                              102, 102, 102, 1),
                                                         ),
                                                       ),
                                                     ],
                                                   );
                                                 }
-                                                if (geodata.connectionState == ConnectionState.done) {
+                                                if (geodata.connectionState ==
+                                                    ConnectionState.done) {
                                                   try {
                                                     if (geodata.hasData) {
                                                       return Text(
                                                         geodata.data!,
                                                         style: const TextStyle(
                                                           fontSize: 12,
-                                                          color: Color.fromRGBO(102, 102, 102, 1),
+                                                          color: Color.fromRGBO(
+                                                              102, 102, 102, 1),
                                                         ),
                                                       );
                                                     } else {
@@ -273,7 +293,8 @@ class _DashboardState extends State<Dashboard> {
                                                         'Location Not Found',
                                                         style: TextStyle(
                                                           fontSize: 12,
-                                                          color: Color.fromRGBO(102, 102, 102, 1),
+                                                          color: Color.fromRGBO(
+                                                              102, 102, 102, 1),
                                                         ),
                                                       );
                                                     }
@@ -284,8 +305,10 @@ class _DashboardState extends State<Dashboard> {
                                                   return Row(
                                                     children: const [
                                                       SizedBox(
-                                                        child: CircularProgressIndicator(
-                                                          color: Color.fromRGBO(66, 103, 178, 1),
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Color.fromRGBO(
+                                                              66, 103, 178, 1),
                                                           strokeWidth: 2.5,
                                                         ),
                                                         height: 15,
@@ -296,7 +319,8 @@ class _DashboardState extends State<Dashboard> {
                                                         'Getting Location...',
                                                         style: TextStyle(
                                                           fontSize: 18,
-                                                          color: Color.fromRGBO(102, 102, 102, 1),
+                                                          color: Color.fromRGBO(
+                                                              102, 102, 102, 1),
                                                         ),
                                                       ),
                                                     ],
@@ -322,13 +346,15 @@ class _DashboardState extends State<Dashboard> {
                                     child: TabBar(
                                       isScrollable: true,
                                       unselectedLabelColor: Colors.white,
-                                      indicatorPadding: const EdgeInsets.symmetric(
+                                      indicatorPadding:
+                                          const EdgeInsets.symmetric(
                                         vertical: 6.0,
                                       ),
                                       indicatorSize: TabBarIndicatorSize.label,
                                       indicator: BoxDecoration(
                                         borderRadius: BorderRadius.circular(5),
-                                        color: const Color.fromRGBO(239, 239, 239, 1),
+                                        color: const Color.fromRGBO(
+                                            239, 239, 239, 1),
                                       ),
                                       tabs: const [
                                         Tab(
