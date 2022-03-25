@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
@@ -15,7 +14,6 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<Users?>(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -60,11 +58,8 @@ class _RequestHistoryState extends State<RequestHistory> {
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('Posts')
-          .orderBy('expected-completion-time')
-          .where('given-by', isEqualTo: user!.userid)
-          .snapshots(),
+      stream:
+          FirebaseFirestore.instance.collection('Posts').orderBy('expected-completion-time').where('given-by', isEqualTo: user!.userid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text(snapshot.error.toString());
@@ -74,8 +69,9 @@ class _RequestHistoryState extends State<RequestHistory> {
         }
 
         if (snapshot.data!.docs.isEmpty) {
-          // TODO: No History
-          return const Text('No History');
+          return const NoFound(
+            text: 'No Request History Found',
+          );
         }
         return ListView.builder(
           shrinkWrap: true,
@@ -83,9 +79,16 @@ class _RequestHistoryState extends State<RequestHistory> {
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Card(
                 child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.grey[100],
+                    child: const Icon(
+                      Icons.history_rounded,
+                      color: Color.fromRGBO(66, 103, 178, 1),
+                    ),
+                  ),
                   onTap: () {},
                   tileColor: Colors.white,
                   title: Text(snapshot.data!.docs[index]['title']),
@@ -93,6 +96,10 @@ class _RequestHistoryState extends State<RequestHistory> {
                     snapshot.data!.docs[index]['description'],
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: const Icon(
+                    Icons.keyboard_arrow_right_rounded,
+                    color: Color.fromRGBO(66, 103, 178, 1),
                   ),
                 ),
               ),
@@ -131,8 +138,9 @@ class _ServiceHistoryState extends State<ServiceHistory> {
         }
 
         if (snapshot.data!.docs.isEmpty) {
-          // TODO: No History
-          return const Text('No History');
+          return const NoFound(
+            text: 'No Services History Found',
+          );
         }
         return ListView.builder(
           shrinkWrap: true,
@@ -140,9 +148,16 @@ class _ServiceHistoryState extends State<ServiceHistory> {
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Card(
                 child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.grey[100],
+                    child: const Icon(
+                      Icons.history_rounded,
+                      color: Color.fromRGBO(66, 103, 178, 1),
+                    ),
+                  ),
                   onTap: () {},
                   tileColor: Colors.white,
                   title: Text(snapshot.data!.docs[index]['title']),
@@ -150,6 +165,10 @@ class _ServiceHistoryState extends State<ServiceHistory> {
                     snapshot.data!.docs[index]['description'],
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: const Icon(
+                    Icons.keyboard_arrow_right_rounded,
+                    color: Color.fromRGBO(66, 103, 178, 1),
                   ),
                 ),
               ),
@@ -188,8 +207,9 @@ class _CharityHistoryState extends State<CharityHistory> {
         }
 
         if (snapshot.data!.docs.isEmpty) {
-          // TODO: No History
-          return const Text('No History');
+          return const NoFound(
+            text: 'No Charity History Found',
+          );
         }
         return ListView.builder(
           shrinkWrap: true,
@@ -197,9 +217,16 @@ class _CharityHistoryState extends State<CharityHistory> {
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Card(
                 child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.grey[100],
+                    child: const Icon(
+                      Icons.history_rounded,
+                      color: Color.fromRGBO(66, 103, 178, 1),
+                    ),
+                  ),
                   onTap: () {},
                   tileColor: Colors.white,
                   title: Text(snapshot.data!.docs[index]['title']),
@@ -208,12 +235,46 @@ class _CharityHistoryState extends State<CharityHistory> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  trailing: const Icon(
+                    Icons.keyboard_arrow_right_rounded,
+                    color: Color.fromRGBO(66, 103, 178, 1),
+                  ),
                 ),
               ),
             );
           },
         );
       },
+    );
+  }
+}
+
+class NoFound extends StatelessWidget {
+  final String text;
+  const NoFound({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Image(
+          image: AssetImage(
+            'assets/no_found.png',
+          ),
+          height: 250,
+          width: 300,
+          alignment: Alignment.center,
+        ),
+        const SizedBox(height: 20),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 20,
+          ),
+        ),
+      ],
     );
   }
 }
