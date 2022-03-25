@@ -209,7 +209,10 @@ class _WrapperState extends State<Wrapper> {
     if (user == null) {
       return isviewed != 0 ? const Start() : const Login();
     } else {
-      final Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance.collection('Userdata').doc(user.userid).snapshots();
+      final Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance
+          .collection('Userdata')
+          .doc(user.userid)
+          .snapshots();
       return StreamBuilder<DocumentSnapshot>(
         stream: _usersStream,
         builder: (context, snapshot) {
