@@ -15,12 +15,7 @@ class Analytics extends StatefulWidget {
 
 List<String> fromname = ["Sagar", "Aditya", "Kowsik", "Jeetesh"];
 List<int> fromamount = [1000, 456, 23453, 25423];
-List<String> fromtime = [
-  "February 13,2022 at 5:30 AM",
-  "April 13,2022 at 5:30 PM",
-  "December 13,2021 at 5:30 AM",
-  "May 23,2000 at 7:30 PM"
-];
+List<String> fromtime = ["February 13,2022 at 5:30 AM", "April 13,2022 at 5:30 PM", "December 13,2021 at 5:30 AM", "May 23,2000 at 7:30 PM"];
 List<int> done = [1, 0, 0, 1];
 List<int> fromto = [1, 1, 0, 1];
 
@@ -44,8 +39,7 @@ points(List<dynamic> points) {
   return total.toString();
 }
 
-class _AnalyticsState extends State<Analytics>
-    with SingleTickerProviderStateMixin {
+class _AnalyticsState extends State<Analytics> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
@@ -57,23 +51,117 @@ class _AnalyticsState extends State<Analytics>
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
-    final Stream<DocumentSnapshot> doc = FirebaseFirestore.instance
-        .collection('Analytics')
-        .doc(user!.userid)
-        .snapshots();
+    final Stream<DocumentSnapshot> doc = FirebaseFirestore.instance.collection('Analytics').doc(user!.userid).snapshots();
     return StreamBuilder<DocumentSnapshot>(
         stream: doc,
-        builder: (BuildContext context,
-            AsyncSnapshot<DocumentSnapshot<Object?>> AnalyticsSnapShot) {
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<Object?>> AnalyticsSnapShot) {
+          if (AnalyticsSnapShot.hasError) {
+            return const Text("Something went wrong");
+          }
+
+          if (AnalyticsSnapShot.hasData && !AnalyticsSnapShot.data!.exists) {
+            return Scaffold(
+              body: NestedScrollView(
+                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      expandedHeight: 125,
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  Icons.account_balance_wallet,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Net Earnings : 0",
+                                  style: TextStyle(color: Colors.white, fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 15,
+                            ),
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  Icons.handshake,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Link points : 0",
+                                  style: TextStyle(color: Colors.white, fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      pinned: true,
+                      floating: true,
+                      forceElevated: innerBoxIsScrolled,
+                      bottom: TabBar(
+                        indicatorColor: Colors.transparent,
+                        tabs: const <Tab>[
+                          Tab(
+                            child: Text(
+                              'Analytics',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                        controller: _tabController,
+                      ),
+                    ),
+                  ];
+                },
+                body: TabBarView(
+                  controller: _tabController,
+                  children: <Widget>[
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 28.0),
+                          child: Text(
+                            'Nothing to see here yet',
+                            style: TextStyle(fontSize: 17),
+                          ),
+                        ),
+                        Center(
+                            child: Image(
+                          image: AssetImage('assets/nofeed.png'),
+                        )),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
           if (AnalyticsSnapShot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }
+
           if (AnalyticsSnapShot.hasData) {
             print(AnalyticsSnapShot.data!['Earnings']);
             return Scaffold(
               body: NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
+                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
                       expandedHeight: 125,
@@ -97,8 +185,7 @@ class _AnalyticsState extends State<Analytics>
                                         AnalyticsSnapShot.data!['Earnings'],
                                         AnalyticsSnapShot.data!['Spendings'],
                                       ),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 15),
+                                  style: const TextStyle(color: Colors.white, fontSize: 15),
                                 ),
                               ],
                             ),
@@ -120,11 +207,8 @@ class _AnalyticsState extends State<Analytics>
                                   width: 10,
                                 ),
                                 Text(
-                                  "Link points : " +
-                                      points(AnalyticsSnapShot
-                                          .data!['Linkpoints']),
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15),
+                                  "Link points : " + points(AnalyticsSnapShot.data!['Linkpoints']),
+                                  style: TextStyle(color: Colors.white, fontSize: 15),
                                 ),
                               ],
                             ),
@@ -140,8 +224,7 @@ class _AnalyticsState extends State<Analytics>
                           Tab(
                             child: Text(
                               'Analytics',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],

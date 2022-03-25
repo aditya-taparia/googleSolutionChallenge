@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
@@ -32,10 +34,8 @@ class _ChatScreenState extends State<ChatScreen> {
           }
           if (userSnapshot.hasData) {
             var data = userSnapshot.data!.docs as List;
-            print(data.toString());
 
             if (data.isEmpty) {
-              print('No chats');
               return Scaffold(
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -75,6 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: chatList.length,
                     itemBuilder: (BuildContext context, int index) {
                       final chat = chatList[index].data();
+                      Color randomcolor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
                       Map sender;
                       int read;
                       if (chat["name"][0]["id"] == user.userid.toString()) {
@@ -84,11 +85,18 @@ class _ChatScreenState extends State<ChatScreen> {
                         sender = chat["name"][0];
                         read = chat["read"][1];
                       }
-                      print(read);
-                      String img = sender["imgUrl"];
+
+                      // String img = sender["imgUrl"];
                       //print(sender);
-                      return GestureDetector(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => IndividualChat(user: sender, id: chatList[index].id))),
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => IndividualChat(user: sender, id: chatList[index].id),
+                            ),
+                          );
+                        },
                         child: Padding(
                           padding: const EdgeInsets.only(left: 3.0),
                           child: Container(
@@ -106,8 +114,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                 Row(
                                   children: [
                                     CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage: AssetImage(''),
+                                      radius: 25,
+                                      backgroundColor: randomcolor,
+                                      child: Text(
+                                        sender["name"][0].toString().toUpperCase(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
                                     ),
                                     const SizedBox(
                                       width: 10,
@@ -124,10 +140,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                         ),
                                         SizedBox(
                                           width: MediaQuery.of(context).size.width * 0.6,
-                                          child: Text(
+                                          child: const Text(
                                             "Hii There !!!",
                                             overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(fontSize: 15, color: Colors.grey),
+                                            style: TextStyle(fontSize: 15, color: Colors.grey),
                                           ),
                                         )
                                       ],
@@ -136,9 +152,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ),
                                 Column(
                                   children: [
-                                    Text(
-                                      "chat.time",
-                                      style: const TextStyle(
+                                    const Text(
+                                      "12:30",
+                                      style: TextStyle(
                                         fontSize: 11,
                                       ),
                                     ),
