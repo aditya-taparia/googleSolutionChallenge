@@ -2,12 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/individualchat.dart';
-import 'dart:math';
+import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  final NavigationBloc bloc;
+  const ChatScreen({
+    Key? key,
+    required this.bloc,
+  }) : super(key: key);
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -27,21 +31,32 @@ class _ChatScreenState extends State<ChatScreen> {
             return const Loading();
           }
           if (userSnapshot.hasData) {
-
             var data = userSnapshot.data!.docs as List;
+            print(data.toString());
 
             if (data.isEmpty) {
+              print('No chats');
               return Scaffold(
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image(image: AssetImage("assets/nochat.png")),
+                    const Image(image: AssetImage("assets/nochat.png")),
+                    const Text(
+                      'No chats',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     SizedBox(
                       width: 300,
                       child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text("Roam the neighbourhood")),
+                        onPressed: () {
+                          widget.bloc.changeNavigationIndex(Navigation.map);
+                        },
+                        child: const Text("Roam the neighbourhood"),
+                      ),
                     )
                   ],
                 ),
@@ -73,24 +88,17 @@ class _ChatScreenState extends State<ChatScreen> {
                       String img = sender["imgUrl"];
                       //print(sender);
                       return GestureDetector(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => IndividualChat(
-                                    user: sender, id: chatList[index].id))),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => IndividualChat(user: sender, id: chatList[index].id))),
                         child: Padding(
                           padding: const EdgeInsets.only(left: 3.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: read > 0
-                                  ? const Color.fromRGBO(66, 103, 178, 0.29)
-                                  : Colors.white,
+                              color: read > 0 ? const Color.fromRGBO(66, 103, 178, 0.29) : Colors.white,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(20),
                               ),
                             ),
-                            margin:
-                                const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                            margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                             padding: const EdgeInsets.all(15),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,30 +113,21 @@ class _ChatScreenState extends State<ChatScreen> {
                                       width: 10,
                                     ),
                                     Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           sender["name"],
-                                          style: const TextStyle(
-
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15),
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                         ),
                                         const SizedBox(
                                           height: 7,
                                         ),
                                         SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.6,
+                                          width: MediaQuery.of(context).size.width * 0.6,
                                           child: Text(
                                             "Hii There !!!",
                                             overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.grey),
+                                            style: const TextStyle(fontSize: 15, color: Colors.grey),
                                           ),
                                         )
                                       ],
@@ -150,11 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                         ? Container(
                                             width: 40,
                                             height: 20,
-                                            decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(30)),
+                                            decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(30)),
                                             alignment: Alignment.center,
                                             child: const Text(
                                               'NEW',

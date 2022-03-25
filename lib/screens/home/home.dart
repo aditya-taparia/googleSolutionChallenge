@@ -377,7 +377,9 @@ class _HomeState extends State<Home> {
                     ),
                     const MapScreen(),
                     const Linkspace(),
-                    const ChatScreen(),
+                    ChatScreen(
+                      bloc: bloc,
+                    ),
                     const Analytics(),
                   ];
                   _index = snapshot.data!.index;
