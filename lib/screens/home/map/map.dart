@@ -14,6 +14,7 @@ import 'package:googlesolutionchallenge/screens/home/chat/individualchat.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/request_form.dart';
 import 'package:googlesolutionchallenge/screens/home/linkspace/forum.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
+import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:googlesolutionchallenge/widgets/map_data_card.dart';
 import 'package:googlesolutionchallenge/widgets/map_request_cards.dart';
@@ -23,7 +24,11 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:provider/provider.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  final NavigationBloc bloc;
+  const MapScreen({
+    Key? key,
+    required this.bloc,
+  }) : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -75,7 +80,9 @@ class _MapScreenState extends State<MapScreen> {
 
   List<LatLng> ll = [];
   List<Map> userList = [];
+  List<String> userListId = [];
   List<Map> userList2 = [];
+  List<String> userListId2 = [];
   List userList3 = [];
   //map window
   double _height = 100;
@@ -126,6 +133,7 @@ class _MapScreenState extends State<MapScreen> {
         twopointdistance = getraddist(temp, _current);
         if (twopointdistance <= radius) {
           userList.add(val);
+          userListId.add(element.id);
         }
       });
     });
@@ -139,6 +147,7 @@ class _MapScreenState extends State<MapScreen> {
         twopointdistance = getraddist(temp, _current);
         if (twopointdistance <= radius) {
           userList2.add(val);
+          userListId2.add(element.id);
         }
         // print(element.data());
       });
@@ -488,14 +497,14 @@ class _MapScreenState extends State<MapScreen> {
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
                                   if (isSelected[0] || (isSelected[3] && isSelected[4])) {
-                                    return builditemjoblist(userList[index], context);
+                                    return builditemjoblist(userList[index], context, userListId[index], widget.bloc);
                                   } else if (isSelected[3]) {
                                     if (userList[index]["category"].contains("item request")) {
-                                      return builditemjoblist(userList[index], context);
+                                      return builditemjoblist(userList[index], context, userListId[index], widget.bloc);
                                     }
                                   } else {
                                     if (userList[index]["category"].contains("job request")) {
-                                      return builditemjoblist(userList[index], context);
+                                      return builditemjoblist(userList[index], context, userListId[index], widget.bloc);
                                     }
                                   }
                                   return Container();
@@ -1483,12 +1492,68 @@ class _MapScreenState extends State<MapScreen> {
                                                           moreActions: [
                                                             SizedBox(
                                                               width: MediaQuery.of(context).size.width * 0.4,
-                                                              child: OutlinedButton.icon(
-                                                                // TODO: Chat
-                                                                onPressed: () {},
-                                                                icon: const Icon(Icons.forum_rounded),
-                                                                label: const Text('Chat'),
-                                                              ),
+                                                              child: snap[0]['waiting-list'].contains(user!.userid)
+                                                                  ? OutlinedButton.icon(
+                                                                      style: OutlinedButton.styleFrom(
+                                                                        primary: const Color.fromRGBO(66, 103, 178, 1),
+                                                                        onSurface: Colors.grey,
+                                                                      ),
+                                                                      onPressed: snap[0]['chat-id'] == ""
+                                                                          ? null
+                                                                          : () {
+                                                                              Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(builder: (context) {
+                                                                                  return IndividualChat(
+                                                                                    id: snap[0]['chat-id'],
+                                                                                  );
+                                                                                }),
+                                                                              );
+                                                                            },
+                                                                      icon: const Icon(Icons.forum_rounded),
+                                                                      label: const Text('Chat'),
+                                                                    )
+                                                                  : OutlinedButton.icon(
+                                                                      onPressed: () async {
+                                                                        FirebaseFirestore.instance.collection('Posts').doc(snap[0].id).update({
+                                                                          'waiting-list': FieldValue.arrayUnion([user.userid.toString()])
+                                                                        }).then((value) {
+                                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                                            SnackBar(
+                                                                              content: Row(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  Icon(
+                                                                                    Icons.check_rounded,
+                                                                                    color: Colors.green[800],
+                                                                                  ),
+                                                                                  const SizedBox(
+                                                                                    width: 10,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    'Request Sent to the owner',
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.green[800],
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              duration: const Duration(seconds: 2),
+                                                                              backgroundColor: Colors.green[50],
+                                                                              behavior: SnackBarBehavior.floating,
+                                                                              shape: RoundedRectangleBorder(
+                                                                                borderRadius: BorderRadius.circular(10),
+                                                                              ),
+                                                                              elevation: 3,
+                                                                            ),
+                                                                          );
+                                                                          widget.bloc.changeNavigationIndex(Navigation.dashboard);
+                                                                        });
+                                                                      },
+                                                                      icon: const Icon(Icons.check_rounded),
+                                                                      label: const Text('Accept'),
+                                                                    ),
                                                             ),
                                                             const SizedBox(
                                                               width: 10,
@@ -1607,12 +1672,68 @@ class _MapScreenState extends State<MapScreen> {
                                                             moreActions: [
                                                               SizedBox(
                                                                 width: MediaQuery.of(context).size.width * 0.4,
-                                                                child: OutlinedButton.icon(
-                                                                  // TODO: Chat
-                                                                  onPressed: () {},
-                                                                  icon: const Icon(Icons.forum_rounded),
-                                                                  label: const Text('Chat'),
-                                                                ),
+                                                                child: snap[0]['waiting-list'].contains(user!.userid)
+                                                                    ? OutlinedButton.icon(
+                                                                        style: OutlinedButton.styleFrom(
+                                                                          primary: const Color.fromRGBO(66, 103, 178, 1),
+                                                                          onSurface: Colors.grey,
+                                                                        ),
+                                                                        onPressed: snap[0]['chat-id'] == ""
+                                                                            ? null
+                                                                            : () {
+                                                                                Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(builder: (context) {
+                                                                                    return IndividualChat(
+                                                                                      id: snap[0]['chat-id'],
+                                                                                    );
+                                                                                  }),
+                                                                                );
+                                                                              },
+                                                                        icon: const Icon(Icons.forum_rounded),
+                                                                        label: const Text('Chat'),
+                                                                      )
+                                                                    : OutlinedButton.icon(
+                                                                        onPressed: () async {
+                                                                          FirebaseFirestore.instance.collection('Posts').doc(snap[0].id).update({
+                                                                            'waiting-list': FieldValue.arrayUnion([user.userid.toString()])
+                                                                          }).then((value) {
+                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                              SnackBar(
+                                                                                content: Row(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                                  children: [
+                                                                                    Icon(
+                                                                                      Icons.check_rounded,
+                                                                                      color: Colors.green[800],
+                                                                                    ),
+                                                                                    const SizedBox(
+                                                                                      width: 10,
+                                                                                    ),
+                                                                                    Text(
+                                                                                      'Request Sent to the owner',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.green[800],
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                duration: const Duration(seconds: 2),
+                                                                                backgroundColor: Colors.green[50],
+                                                                                behavior: SnackBarBehavior.floating,
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(10),
+                                                                                ),
+                                                                                elevation: 3,
+                                                                              ),
+                                                                            );
+                                                                            widget.bloc.changeNavigationIndex(Navigation.dashboard);
+                                                                          });
+                                                                        },
+                                                                        icon: const Icon(Icons.check_rounded),
+                                                                        label: const Text('Accept'),
+                                                                      ),
                                                               ),
                                                               const SizedBox(
                                                                 width: 10,
@@ -1823,12 +1944,16 @@ createchat(String currUserId, String othUserId, String name1) async {
   });
 }
 
-Widget builditemjoblist(Map userList, BuildContext context) {
+Widget builditemjoblist(Map userList, BuildContext context, String currUserId, NavigationBloc bloc) {
   return MapRequestCard(
+    bloc: bloc,
     title: userList['title'],
     description: userList['description'],
     postType: userList['post-type'].toString().toTitleCase(),
+    postId: currUserId,
     givenBy: userList['given-by-name'],
     promisedAmount: userList['promised-amount'].toDouble(),
+    waitingList: List<String>.from(userList['waiting-list']),
+    chatId: userList['chat-id'],
   );
 }

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/individualchat.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/request_form.dart';
 import 'package:googlesolutionchallenge/screens/utils/payment.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
@@ -666,141 +667,204 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                           height: 5,
                         ),
                         !widget.isRequest
-                            ? Wrap(
-                                alignment: WrapAlignment.center,
-                                runAlignment: WrapAlignment.center,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                spacing: 10,
-                                runSpacing: 4,
-                                children: [
-                                  // Chat
-                                  (snapshot.data!['accepted-by'] == user.userid)
-                                      ? SizedBox(
-                                          width: 175,
-                                          child: OutlinedButton.icon(
-                                            icon: const Icon(
-                                              Icons.forum_rounded,
-                                              size: 20,
-                                            ),
-                                            label: const Text(
-                                              'Chat',
-                                              style: TextStyle(),
-                                            ),
-                                            // TODO: Chat Navigation
-                                            onPressed: () {},
+                            ? !(snapshot.data!['waiting-list'].contains(user.userid))
+                                ? Wrap(
+                                    alignment: WrapAlignment.center,
+                                    runAlignment: WrapAlignment.center,
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    spacing: 10,
+                                    runSpacing: 4,
+                                    children: [
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.75,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: const Color.fromRGBO(66, 103, 178, 1),
                                           ),
-                                        )
-                                      : Container(),
-
-                                  // Mark As Done
-                                  (snapshot.data!['completion-status'] == 'completed' &&
-                                          snapshot.data!['payment-status'] == 'pending' &&
-                                          snapshot.data!['accepted-by'] == user.userid)
-                                      ? SizedBox(
-                                          width: 175,
-                                          child: ElevatedButton.icon(
-                                            icon: const Icon(
-                                              Icons.attach_money_rounded,
-                                              size: 20,
-                                            ),
-                                            label: const Text(
-                                              'Request Pay',
-                                              style: TextStyle(),
-                                            ),
-                                            // TODO: Pay Request
-                                            onPressed: () {},
-                                          ),
-                                        )
-                                      : (snapshot.data!['accepted-by'] == user.userid)
+                                          child: const Text('Accept Request'),
+                                          onPressed: () async {
+                                            FirebaseFirestore.instance.collection('Posts').doc(widget.postid).update({
+                                              'waiting-list': FieldValue.arrayUnion([user.userid.toString()])
+                                            }).then((value) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.check_rounded,
+                                                        color: Colors.green[800],
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        'Request Sent to the owner',
+                                                        style: TextStyle(
+                                                          color: Colors.green[800],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  duration: const Duration(seconds: 2),
+                                                  backgroundColor: Colors.green[50],
+                                                  behavior: SnackBarBehavior.floating,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
+                                                  elevation: 3,
+                                                ),
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Wrap(
+                                    alignment: WrapAlignment.center,
+                                    runAlignment: WrapAlignment.center,
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    spacing: 10,
+                                    runSpacing: 4,
+                                    children: [
+                                      // Chat
+                                      (snapshot.data!['accepted-by'] == user.userid)
                                           ? SizedBox(
                                               width: 175,
-                                              child: ElevatedButton.icon(
+                                              child: OutlinedButton.icon(
                                                 icon: const Icon(
-                                                  Icons.check_circle_outline_rounded,
+                                                  Icons.forum_rounded,
                                                   size: 20,
                                                 ),
                                                 label: const Text(
-                                                  'Mark As Done',
+                                                  'Chat',
                                                   style: TextStyle(),
                                                 ),
-                                                // Complete Request
                                                 onPressed: () {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return AlertDialog(
-                                                          title: const Text(
-                                                            "Confirmation",
-                                                          ),
-                                                          content: const Text(
-                                                            "Are you sure you want to mark the request as complete?",
-                                                          ),
-                                                          actions: <Widget>[
-                                                            OutlinedButton(
-                                                              child: const Text("Yes"),
-                                                              onPressed: () async {
-                                                                FirebaseFirestore.instance.collection('Posts').doc(widget.postid).set(
-                                                                  {
-                                                                    'completion-status': 'completed',
-                                                                  },
-                                                                  SetOptions(
-                                                                    merge: true,
-                                                                  ),
-                                                                ).then((value) {
-                                                                  Navigator.pop(context);
-                                                                  ScaffoldMessenger.of(context).showSnackBar(
-                                                                    SnackBar(
-                                                                      content: Row(
-                                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                                        children: [
-                                                                          Icon(
-                                                                            Icons.check_rounded,
-                                                                            color: Colors.green[800],
-                                                                          ),
-                                                                          const SizedBox(
-                                                                            width: 5,
-                                                                          ),
-                                                                          Text(
-                                                                            'Request marked as complete',
-                                                                            style: TextStyle(
-                                                                              color: Colors.green[800],
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      duration: const Duration(seconds: 2),
-                                                                      backgroundColor: Colors.green[50],
-                                                                      behavior: SnackBarBehavior.floating,
-                                                                      shape: RoundedRectangleBorder(
-                                                                        borderRadius: BorderRadius.circular(10),
-                                                                      ),
-                                                                      elevation: 3,
-                                                                    ),
-                                                                  );
-                                                                });
-                                                              },
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            ElevatedButton(
-                                                              child: const Text("No"),
-                                                              onPressed: () {
-                                                                Navigator.pop(context);
-                                                              },
-                                                            ),
-                                                          ],
-                                                          actionsAlignment: MainAxisAlignment.spaceAround,
-                                                        );
-                                                      });
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) {
+                                                      return IndividualChat(
+                                                        id: snapshot.data!['chat-id'],
+                                                      );
+                                                    }),
+                                                  );
                                                 },
                                               ),
                                             )
                                           : Container(),
-                                  // TODO: Will do later, drive to the location
 
-                                  /* SizedBox(
+                                      // Mark As Done
+                                      (snapshot.data!['completion-status'] == 'completed' &&
+                                              snapshot.data!['payment-status'] == 'pending' &&
+                                              snapshot.data!['accepted-by'] == user.userid)
+                                          ? SizedBox(
+                                              width: 175,
+                                              child: ElevatedButton.icon(
+                                                icon: const Icon(
+                                                  Icons.attach_money_rounded,
+                                                  size: 20,
+                                                ),
+                                                label: const Text(
+                                                  'Request Pay',
+                                                  style: TextStyle(),
+                                                ),
+                                                // TODO: Pay Request
+                                                onPressed: () {},
+                                              ),
+                                            )
+                                          : (snapshot.data!['accepted-by'] == user.userid)
+                                              ? SizedBox(
+                                                  width: 175,
+                                                  child: ElevatedButton.icon(
+                                                    icon: const Icon(
+                                                      Icons.check_circle_outline_rounded,
+                                                      size: 20,
+                                                    ),
+                                                    label: const Text(
+                                                      'Mark As Done',
+                                                      style: TextStyle(),
+                                                    ),
+                                                    // Complete Request
+                                                    onPressed: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: const Text(
+                                                                "Confirmation",
+                                                              ),
+                                                              content: const Text(
+                                                                "Are you sure you want to mark the request as complete?",
+                                                              ),
+                                                              actions: <Widget>[
+                                                                OutlinedButton(
+                                                                  child: const Text("Yes"),
+                                                                  onPressed: () async {
+                                                                    FirebaseFirestore.instance.collection('Posts').doc(widget.postid).set(
+                                                                      {
+                                                                        'completion-status': 'completed',
+                                                                      },
+                                                                      SetOptions(
+                                                                        merge: true,
+                                                                      ),
+                                                                    ).then((value) {
+                                                                      Navigator.pop(context);
+                                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                                        SnackBar(
+                                                                          content: Row(
+                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            children: [
+                                                                              Icon(
+                                                                                Icons.check_rounded,
+                                                                                color: Colors.green[800],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                width: 5,
+                                                                              ),
+                                                                              Text(
+                                                                                'Request marked as complete',
+                                                                                style: TextStyle(
+                                                                                  color: Colors.green[800],
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          duration: const Duration(seconds: 2),
+                                                                          backgroundColor: Colors.green[50],
+                                                                          behavior: SnackBarBehavior.floating,
+                                                                          shape: RoundedRectangleBorder(
+                                                                            borderRadius: BorderRadius.circular(10),
+                                                                          ),
+                                                                          elevation: 3,
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                                  },
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                ElevatedButton(
+                                                                  child: const Text("No"),
+                                                                  onPressed: () {
+                                                                    Navigator.pop(context);
+                                                                  },
+                                                                ),
+                                                              ],
+                                                              actionsAlignment: MainAxisAlignment.spaceAround,
+                                                            );
+                                                          });
+                                                    },
+                                                  ),
+                                                )
+                                              : Container(),
+                                      // TODO: Will do later, drive to the location
+
+                                      /* SizedBox(
                                     width: 175,
                                     child: OutlinedButton.icon(
                                       icon: Icon(
@@ -819,107 +883,107 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                       onPressed: () {},
                                     ),
                                   ), */
-                                  SizedBox(
-                                    width: 175,
-                                    child: ElevatedButton.icon(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: const Color.fromRGBO(250, 103, 117, 1),
-                                      ),
-                                      icon: const Icon(
-                                        Icons.delete_rounded,
-                                        size: 20,
-                                      ),
-                                      label: const Text(
-                                        'Withdraw',
-                                        style: TextStyle(),
-                                      ),
-                                      // Withdraw Request
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: const Text(
-                                                  "Confirmation",
-                                                ),
-                                                content: const Text(
-                                                  "Are you sure you want to withdraw your name from the request?",
-                                                ),
-                                                actions: <Widget>[
-                                                  OutlinedButton(
-                                                    child: const Text("Yes"),
-                                                    onPressed: () async {
-                                                      Map<String, dynamic> json = {};
-                                                      json['waiting-list'] = FieldValue.arrayRemove([user.userid]);
-                                                      if (user.userid == snapshot.data!['accepted-by']) {
-                                                        json['accepted-by'] = '';
-                                                        json['accepted-by-name'] = '';
-                                                        json['chat-id'] = '';
-                                                      }
+                                      SizedBox(
+                                        width: 175,
+                                        child: ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: const Color.fromRGBO(250, 103, 117, 1),
+                                          ),
+                                          icon: const Icon(
+                                            Icons.delete_rounded,
+                                            size: 20,
+                                          ),
+                                          label: const Text(
+                                            'Withdraw',
+                                            style: TextStyle(),
+                                          ),
+                                          // Withdraw Request
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: const Text(
+                                                      "Confirmation",
+                                                    ),
+                                                    content: const Text(
+                                                      "Are you sure you want to withdraw your name from the request?",
+                                                    ),
+                                                    actions: <Widget>[
+                                                      OutlinedButton(
+                                                        child: const Text("Yes"),
+                                                        onPressed: () async {
+                                                          Map<String, dynamic> json = {};
+                                                          json['waiting-list'] = FieldValue.arrayRemove([user.userid]);
+                                                          if (user.userid == snapshot.data!['accepted-by']) {
+                                                            json['accepted-by'] = '';
+                                                            json['accepted-by-name'] = '';
+                                                            json['chat-id'] = '';
+                                                          }
 
-                                                      FirebaseFirestore.instance
-                                                          .collection('Posts')
-                                                          .doc(widget.postid)
-                                                          .set(
-                                                            json,
-                                                            SetOptions(
-                                                              merge: true,
-                                                            ),
-                                                          )
-                                                          .then((value) {
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
-                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                          SnackBar(
-                                                            content: Row(
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                Icon(
-                                                                  Icons.check_rounded,
-                                                                  color: Colors.green[800],
+                                                          FirebaseFirestore.instance
+                                                              .collection('Posts')
+                                                              .doc(widget.postid)
+                                                              .set(
+                                                                json,
+                                                                SetOptions(
+                                                                  merge: true,
                                                                 ),
-                                                                const SizedBox(
-                                                                  width: 5,
+                                                              )
+                                                              .then((value) {
+                                                            Navigator.pop(context);
+                                                            Navigator.pop(context);
+                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                              SnackBar(
+                                                                content: Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+                                                                    Icon(
+                                                                      Icons.check_rounded,
+                                                                      color: Colors.green[800],
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 5,
+                                                                    ),
+                                                                    Text(
+                                                                      'Successfully Removed',
+                                                                      style: TextStyle(
+                                                                        color: Colors.green[800],
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                                Text(
-                                                                  'Successfully Removed',
-                                                                  style: TextStyle(
-                                                                    color: Colors.green[800],
-                                                                  ),
+                                                                duration: const Duration(seconds: 2),
+                                                                backgroundColor: Colors.green[50],
+                                                                behavior: SnackBarBehavior.floating,
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(10),
                                                                 ),
-                                                              ],
-                                                            ),
-                                                            duration: const Duration(seconds: 2),
-                                                            backgroundColor: Colors.green[50],
-                                                            behavior: SnackBarBehavior.floating,
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(10),
-                                                            ),
-                                                            elevation: 3,
-                                                          ),
-                                                        );
-                                                      });
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  ElevatedButton(
-                                                    child: const Text("No"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                                actionsAlignment: MainAxisAlignment.spaceAround,
-                                              );
-                                            });
-                                      },
-                                    ),
+                                                                elevation: 3,
+                                                              ),
+                                                            );
+                                                          });
+                                                        },
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      ElevatedButton(
+                                                        child: const Text("No"),
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                      ),
+                                                    ],
+                                                    actionsAlignment: MainAxisAlignment.spaceAround,
+                                                  );
+                                                });
+                                          },
+                                        ),
+                                      )
+                                    ],
                                   )
-                                ],
-                              )
                             : Wrap(
                                 alignment: WrapAlignment.center,
                                 runAlignment: WrapAlignment.center,
@@ -943,7 +1007,18 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                                 color: snapshot.data!['accepted-by'] != "" ? null : Colors.grey[400],
                                               ),
                                             ),
-                                            onPressed: snapshot.data!['accepted-by'] != "" ? () {} : null,
+                                            onPressed: snapshot.data!['accepted-by'] != ""
+                                                ? () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) {
+                                                        return IndividualChat(
+                                                          id: snapshot.data!['chat-id'],
+                                                        );
+                                                      }),
+                                                    );
+                                                  }
+                                                : null,
                                           ),
                                         )
                                       : Container(),
@@ -1110,9 +1185,41 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
           );
         },
       ),
-      /* floatingActionButton: FittedBox(
-        child: 
-      ), */
     );
   }
+}
+
+createchat(String currUserId, String othUserId, String name1) async {
+  int y = 0;
+  String chatId = "";
+  final DocumentSnapshot<Map<String, dynamic>> _username = await FirebaseFirestore.instance.collection('Userdata').doc(currUserId).get();
+
+  String name2 = _username.data()!["name"];
+  Map othuserdata = {"name": name1, "id": othUserId, "imgUrl": ""};
+  Map currUserData = {"name": name2, "id": currUserId, "imgUrl": ""};
+  CollectionReference chatCollection = await FirebaseFirestore.instance.collection('chats');
+  var x = chatCollection.where('users', isEqualTo: [othUserId, currUserId]).get();
+  x.then((value) {
+    y = value.docs.length;
+    if (y == 0) {
+      var x = chatCollection.where('users', isEqualTo: [currUserId, othUserId]).get();
+      x.then((value) async {
+        y = value.docs.length;
+        if (y == 0) {
+          final addchat = FirebaseFirestore.instance.collection("chats").doc();
+          final json = {
+            'chatdata': {},
+            'users': [currUserId, othUserId],
+            'name': [currUserData, othuserdata],
+            'read': [0, 0]
+          };
+          await addchat.set(json);
+        }
+      });
+    }
+  });
+  chatId =
+      await FirebaseFirestore.instance.collection('chats').where('users', isEqualTo: [currUserId, othUserId]).get().then((value) => value.docs[0].id);
+  print(chatId);
+  // return chatId;
 }

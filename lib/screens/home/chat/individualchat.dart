@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class IndividualChat extends StatefulWidget {
-  const IndividualChat({Key? key, required this.user, required this.id})
-      : super(key: key);
-  final Map user;
+  const IndividualChat({Key? key, required this.id}) : super(key: key);
   final String id;
 
   @override
@@ -32,14 +29,10 @@ class _IndividualChatState extends State<IndividualChat> {
 // 12 Hour format:
     var d12 = DateFormat('MM/dd/yyyy, hh:mm a').format(d);
     return Container(
-      margin: isUser
-          ? const EdgeInsets.only(top: 10, bottom: 8, left: 80)
-          : const EdgeInsets.only(top: 10, bottom: 8, right: 80),
+      margin: isUser ? const EdgeInsets.only(top: 10, bottom: 8, left: 80) : const EdgeInsets.only(top: 10, bottom: 8, right: 80),
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       decoration: BoxDecoration(
-        color: isUser
-            ? const Color.fromRGBO(66, 103, 178, 1)
-            : const Color.fromARGB(255, 235, 232, 232),
+        color: isUser ? const Color.fromRGBO(66, 103, 178, 1) : const Color.fromARGB(255, 235, 232, 232),
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
       child: Column(
@@ -53,8 +46,7 @@ class _IndividualChatState extends State<IndividualChat> {
             alignment: Alignment.bottomRight,
             child: Text(
               d12,
-              style: TextStyle(
-                  color: !isUser ? Colors.grey : Colors.white, fontSize: 12),
+              style: TextStyle(color: !isUser ? Colors.grey : Colors.white, fontSize: 12),
             ),
           ),
         ],
@@ -108,12 +100,8 @@ class _IndividualChatState extends State<IndividualChat> {
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
     return StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('chats')
-            .doc(widget.id)
-            .snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        stream: FirebaseFirestore.instance.collection('chats').doc(widget.id).snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }
@@ -144,32 +132,23 @@ class _IndividualChatState extends State<IndividualChat> {
                     Expanded(
                       child: Container(
                         decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30))),
+                            color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
                         child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30)),
+                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                           child: ListView.builder(
                               padding: const EdgeInsets.only(top: 15),
                               controller: _controller,
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
-                                WidgetsBinding.instance!
-                                    .addPostFrameCallback((_) => _scrollDown());
+                                WidgetsBinding.instance!.addPostFrameCallback((_) => _scrollDown());
 
-                                final bool isUser =
-                                    data[index.toString()][0] == user.userid;
-                                return buildMessage(data[index.toString()][1],
-                                    data[index.toString()][2], isUser);
+                                final bool isUser = data[index.toString()][0] == user.userid;
+                                return buildMessage(data[index.toString()][1], data[index.toString()][2], isUser);
                               }),
                         ),
                       ),
                     ),
-                    buildMessageComposer(
-                        user.userid, snapshot.data!['chatdata'].length, read),
+                    buildMessageComposer(user.userid, snapshot.data!['chatdata'].length, read),
                   ],
                 ),
               ),

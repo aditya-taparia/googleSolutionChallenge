@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
+import 'package:googlesolutionchallenge/screens/home/chat/individualchat.dart';
 import 'package:googlesolutionchallenge/screens/home/dashboard/more_details_page.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -325,8 +326,16 @@ class ServiceDataCard extends StatelessWidget {
                                   'Chat',
                                   style: TextStyle(),
                                 ),
-                                // TODO: Chat Navigation
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return IndividualChat(
+                                        id: chatid,
+                                      );
+                                    }),
+                                  );
+                                },
                               ),
                               status == 'ongoing'
                                   ? ElevatedButton.icon(

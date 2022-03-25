@@ -375,7 +375,9 @@ class _HomeState extends State<Home> {
                     Dashboard(
                       bloc: bloc,
                     ),
-                    const MapScreen(),
+                    MapScreen(
+                      bloc: bloc,
+                    ),
                     const Linkspace(),
                     ChatScreen(
                       bloc: bloc,

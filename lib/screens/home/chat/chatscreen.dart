@@ -93,7 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => IndividualChat(user: sender, id: chatList[index].id),
+                              builder: (_) => IndividualChat(id: chatList[index].id),
                             ),
                           );
                         },
