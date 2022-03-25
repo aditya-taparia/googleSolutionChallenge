@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:http/http.dart' as http;
 
 class CommunityService extends StatefulWidget {
@@ -12,185 +13,17 @@ class CommunityService extends StatefulWidget {
 }
 
 class _CommunityServiceState extends State<CommunityService> {
-  int type = 1;
   late LocationPermission permission;
   bool belongtolinkspace = false;
   late LatLng current;
+  bool _isLoading = true;
 //  late LatLng _current = const LatLng(15.5057, 80.0499);
-  Set<Map> community = {};
-  Set<Map> community1 = {};
-  Set<Map> community2 = {};
-  Set<Map> community3 = {};
   late List nearbymarkers1 = [];
   late List nearbymarkers2 = [];
   late List nearbymarkers3 = [];
 
-  void setmarkers() async {
-    if (type == 1) {
-      List ll =
-          await getLoc('Orphanages', current.latitude, current.longitude, 2000);
-      setState(() {
-        nearbymarkers1 = ll;
-      });
-    }
-    if (type == 2) {
-      List ll = await getLoc(
-          'Old+Age+Homes', current.latitude, current.longitude, 2000);
-      setState(() {
-        nearbymarkers2 = ll;
-      });
-    }
-    if (type == 3) {
-      List ll = await getLoc('NGO', current.latitude, current.longitude, 2000);
-      setState(() {
-        nearbymarkers3 = ll;
-      });
-    }
-
-    if (type == 1) {
-      nearbymarkers1.forEach((element) {
-        community1.add(element);
-      });
-    }
-    if (type == 2) {
-      nearbymarkers2.forEach((element) {
-        community2.add(element);
-      });
-    }
-    if (type == 3) {
-      nearbymarkers3.forEach((element) {
-        community3.add(element);
-      });
-    }
-
-    setState(() {
-      community = {};
-      type == 1 ? community = community.union(community1) : null;
-      type == 2 ? community = community.union(community2) : null;
-      type == 3 ? community = community.union(community3) : null;
-    });
-    // print(community);
-  }
-
-  @override
-  void initState() {
-    getLocation();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List temp = community.toList();
-
-    print(temp.length);
-    return Scaffold(
-        appBar: AppBar(),
-        body: Column(
-          children: [
-            Container(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                children: [
-                  belongtolinkspace
-                      ? GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              type = 0;
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              child: const Text("Neighbourhood"),
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        type = 1;
-                      });
-                      setmarkers();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 20,
-                        width: 150,
-                        child: const Text("Orphanage"),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        type = 2;
-                      });
-                      setmarkers();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        child: const Text("Old Age Homes"),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        type = 3;
-                      });
-                      setmarkers();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        child: const Text("Non-governmental organization"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // UI edit
-
-            // ListView.builder(
-            //     itemCount: temp.length,
-            //     shrinkWrap: true,
-            //     itemBuilder: (context, index) {
-            //       return Container(
-            //         child: Row(
-            //           children: [
-            //             Container(
-            //               height: 80,
-            //               width: 80,
-            //               child: Image.network(temp[index]["icon"]),
-            //             ),
-            //             Container(
-            //               height: 150,
-            //               width: 250,
-            //               child: Column(
-            //                 children: [
-            //                   Text(temp[index]["name"]),
-            //                   Text("hjghgjhkj"),
-            //                   Text(temp[index]["formatted_address"]),
-            //                 ],
-            //               ),
-            //             )
-            //           ],
-            //         ),
-            //       );
-            //     })
-          ],
-        ));
-  }
-
-  getLoc(String query, double lat, double lng, double radius) async {
-    print('https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
+  Future getLoc(String query, double lat, double lng, double radius) async {
+    final response = await http.get(Uri.parse('https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
         query +
         '&location=' +
         lat.toString() +
@@ -198,23 +31,13 @@ class _CommunityServiceState extends State<CommunityService> {
         lng.toString() +
         '&radius=' +
         radius.toString() +
-        '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4');
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
-            query +
-            '&location=' +
-            lat.toString() +
-            ',' +
-            lng.toString() +
-            '&radius=' +
-            radius.toString() +
-            '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
+        '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4'));
     final jsonStudent = await jsonDecode(response.body);
 
     return jsonStudent["results"];
   }
 
-  getLocation() async {
+  void setData() async {
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -222,17 +45,166 @@ class _CommunityServiceState extends State<CommunityService> {
         return Future.error('Location permissions are denied');
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
-    ;
-    final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
+    final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    current = LatLng(position.latitude, position.longitude);
+
+    nearbymarkers1 = await getLoc('Orphanages', current.latitude, current.longitude, 2000);
+    nearbymarkers2 = await getLoc('Old+Age+Homes', current.latitude, current.longitude, 2000);
+    nearbymarkers3 = await getLoc('NGO', current.latitude, current.longitude, 2000);
 
     setState(() {
-      current = LatLng(position.latitude, position.longitude);
+      _isLoading = false;
     });
+  }
+
+  @override
+  void initState() {
+    setData();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Community Service'),
+          bottom: const TabBar(
+            automaticIndicatorColorAdjustment: true,
+            indicatorColor: Colors.white,
+            tabs: [
+              Tab(
+                text: 'Orphanages',
+              ),
+              Tab(
+                text: 'Old Age Homes',
+              ),
+              Tab(
+                text: 'NGO',
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            _isLoading
+                ? const Loading()
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: nearbymarkers1.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Card(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.blue[50],
+                              child: const Icon(
+                                Icons.apartment_rounded,
+                                color: Color.fromRGBO(66, 103, 178, 1),
+                              ),
+                            ),
+                            title: Text(
+                              nearbymarkers1[index]['name'].toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Text(
+                              nearbymarkers1[index]['formatted_address'].toString(),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: const Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+            _isLoading
+                ? const Loading()
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: nearbymarkers2.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Card(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.red[50],
+                              child: const Icon(
+                                Icons.apartment_rounded,
+                                color: Color.fromRGBO(219, 68, 55, 1),
+                              ),
+                            ),
+                            title: Text(
+                              nearbymarkers2[index]['name'].toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Text(
+                              nearbymarkers2[index]['formatted_address'].toString(),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: const Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+            _isLoading
+                ? const Loading()
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: nearbymarkers3.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Card(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.green[50],
+                              child: const Icon(
+                                Icons.apartment_rounded,
+                                color: Color.fromRGBO(15, 157, 88, 1),
+                              ),
+                            ),
+                            title: Text(
+                              nearbymarkers3[index]['name'].toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Text(
+                              nearbymarkers3[index]['formatted_address'].toString(),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: const Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ],
+        ),
+      ),
+    );
   }
 }

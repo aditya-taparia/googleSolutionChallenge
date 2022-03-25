@@ -98,7 +98,7 @@ class _HomeState extends State<Home> {
                                       backgroundColor: Colors.white,
                                       radius: 30,
                                       child: Text(
-                                        userSnapshot.data!['name'][0],
+                                        userSnapshot.data!['name'][0].toString().toUpperCase(),
                                         style: const TextStyle(
                                           fontSize: 25,
                                           color: Color.fromRGBO(66, 103, 178, 1),

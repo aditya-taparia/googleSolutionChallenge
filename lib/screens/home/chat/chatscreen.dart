@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:googlesolutionchallenge/models/user.dart';
 import 'package:googlesolutionchallenge/screens/home/chat/individualchat.dart';
-import 'package:googlesolutionchallenge/screens/home/chat/sample.dart';
+import 'dart:math';
 import 'package:googlesolutionchallenge/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -17,25 +17,20 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
-    final Stream<QuerySnapshot<Object?>> _usersStream = FirebaseFirestore
-        .instance
-        .collection('chats')
-        .where('users', arrayContains: user!.userid)
-        .snapshots();
+    final Stream<QuerySnapshot<Object?>> _usersStream =
+        FirebaseFirestore.instance.collection('chats').where('users', arrayContains: user!.userid).snapshots();
 
     return StreamBuilder<QuerySnapshot>(
         stream: _usersStream,
-        builder: (BuildContext context,
-            AsyncSnapshot<QuerySnapshot<Object?>> userSnapshot) {
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Object?>> userSnapshot) {
           if (userSnapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }
           if (userSnapshot.hasData) {
-            var data = userSnapshot.data!.docs as List;
+            var data = userSnapshot.data!.docs;
             List chatList = [];
             data.forEach((element) {
               chatList.add(element);
-              //  print(element.id);
             });
             return Container(
               decoration: const BoxDecoration(
@@ -45,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: chatList.length,
                   itemBuilder: (BuildContext context, int index) {
                     final chat = chatList[index].data();
+                    Color randomcolor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
                     Map sender;
                     int read;
                     if (chat["name"][0]["id"] == user.userid.toString()) {
@@ -54,22 +50,23 @@ class _ChatScreenState extends State<ChatScreen> {
                       sender = chat["name"][0];
                       read = chat["read"][1];
                     }
-                    print(read);
-                    String img = sender["imgUrl"];
-                    //print(sender);
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => IndividualChat(
-                                  user: sender, id: chatList[index].id))),
+                            builder: (_) => IndividualChat(
+                              user: sender,
+                              id: chatList[index].id,
+                            ),
+                          ),
+                        );
+                      },
                       child: Padding(
                         padding: const EdgeInsets.only(left: 3.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: read > 0
-                                ? const Color.fromRGBO(66, 103, 178, 0.29)
-                                : Colors.white,
+                            color: read > 0 ? const Color.fromRGBO(66, 103, 178, 0.29) : Colors.white,
                             borderRadius: const BorderRadius.all(
                               Radius.circular(20),
                             ),
@@ -82,34 +79,39 @@ class _ChatScreenState extends State<ChatScreen> {
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: AssetImage(''),
+                                    radius: 25,
+                                    backgroundColor: randomcolor,
+                                    child: Text(
+                                      sender["name"][0].toString().toUpperCase(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: 10,
                                   ),
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         sender["name"],
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                       ),
                                       const SizedBox(
                                         height: 7,
                                       ),
                                       SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.6,
-                                        child: Text(
+                                        width: MediaQuery.of(context).size.width * 0.6,
+                                        child: const Text(
                                           "Hii There !!!",
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              fontSize: 15, color: Colors.grey),
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                       )
                                     ],
@@ -118,9 +120,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               ),
                               Column(
                                 children: [
-                                  Text(
-                                    "chat.time",
-                                    style: const TextStyle(
+                                  const Text(
+                                    "12:30",
+                                    style: TextStyle(
                                       fontSize: 11,
                                     ),
                                   ),
@@ -132,10 +134,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                           width: 40,
                                           height: 20,
                                           decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
+                                            color: Theme.of(context).primaryColor,
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
                                           alignment: Alignment.center,
                                           child: const Text(
                                             'NEW',
@@ -157,7 +158,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   }),
             );
           } else {
-            return Loading();
+            return const Loading();
           }
         });
   }
