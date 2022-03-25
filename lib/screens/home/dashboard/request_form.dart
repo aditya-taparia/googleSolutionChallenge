@@ -8,12 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 extension StringCasingExtension on String {
-  String toCapitalized() =>
-      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
-  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
-      .split(' ')
-      .map((str) => str.toCapitalized())
-      .join(' ');
+  String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
 }
 
 class RequestForm extends StatefulWidget {
@@ -53,13 +49,11 @@ class _RequestFormState extends State<RequestForm> {
       _title.text = widget.title!;
       _description.text = widget.description!;
       _dateTimeSend.text = widget.date!.toDate().toString();
-      _dateTimeShow.text =
-          DateFormat.yMMMMd().format(widget.date!.toDate()).toString();
+      _dateTimeShow.text = DateFormat.yMMMMd().format(widget.date!.toDate()).toString();
       _amount.text = widget.amount!.toString();
       _type = widget.postType!.toTitleCase();
     } else {
-      _dateTimeShow.text =
-          DateFormat.yMMMMd().format(DateTime.now()).toString();
+      _dateTimeShow.text = DateFormat.yMMMMd().format(DateTime.now()).toString();
       _dateTimeSend.text = DateTime.now().toString();
     }
     super.initState();
@@ -79,6 +73,9 @@ class _RequestFormState extends State<RequestForm> {
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
     final GlobalKey<FormState> _formKey = GlobalKey();
+    if (widget.postType != null) {
+      _type = widget.postType ?? 'Job Request';
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -150,11 +147,7 @@ class _RequestFormState extends State<RequestForm> {
                       onChanged: (value) {
                         _type = value.toString();
                       },
-                      options: const [
-                        'Job Request',
-                        'Item Request',
-                        'Community Service'
-                      ],
+                      options: const ['Job Request', 'Item Request', 'Community Service'],
                       initialValue: _type,
                     ),
                     const SizedBox(height: 5),
@@ -177,62 +170,44 @@ class _RequestFormState extends State<RequestForm> {
                               : () {
                                   Navigator.pop(context);
                                 },
-                          child:
-                              Text(!widget.isEditRequest ? 'Clear' : 'Cancel'),
+                          child: Text(!widget.isEditRequest ? 'Clear' : 'Cancel'),
                         ),
                         ElevatedButton(
                           onPressed: !widget.isEditRequest
                               ? () async {
-                                  if (_formKey.currentState!.validate() &&
-                                      _type != '') {
-                                    FirebaseFirestore.instance
-                                        .collection('Posts')
-                                        .add({
+                                  if (_formKey.currentState!.validate() && _type != '') {
+                                    FirebaseFirestore.instance.collection('Posts').add({
                                       'accepted-by': '',
                                       'accepted-by-name': '',
                                       'category': [_type.toLowerCase()],
                                       'chat-id': '',
                                       'completion-status': 'ongoing',
                                       'description': _description.text,
-                                      'expected-completion-time':
-                                          Timestamp.fromDate(DateTime.parse(
-                                              _dateTimeSend.text)),
+                                      'expected-completion-time': Timestamp.fromDate(DateTime.parse(_dateTimeSend.text)),
                                       'given-by': user!.userid,
-                                      'given-by-name': await FirebaseFirestore
-                                          .instance
+                                      'given-by-name': await FirebaseFirestore.instance
                                           .collection('Userdata')
                                           .doc(user.userid)
                                           .get()
-                                          .then(
-                                              (value) => value.data()!['name']),
-                                      'location':
-                                          await Geolocator.getCurrentPosition(
-                                                  desiredAccuracy:
-                                                      LocationAccuracy.best)
-                                              .then((value) => GeoPoint(
-                                                  value.latitude,
-                                                  value.longitude)),
+                                          .then((value) => value.data()!['name']),
+                                      'location': await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+                                          .then((value) => GeoPoint(value.latitude, value.longitude)),
                                       'payment-status': 'pending',
                                       'post-type': _type.toLowerCase(),
-                                      'promised-amount':
-                                          num.parse(_amount.text),
+                                      'promised-amount': num.parse(_amount.text),
                                       'title': _title.text,
                                       'waiting-list': [],
                                     }).then((value) {
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                const YourRequestPage(),
+                                            builder: (context) => const YourRequestPage(),
                                           ));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                           content: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 Icons.check_rounded,
@@ -253,8 +228,7 @@ class _RequestFormState extends State<RequestForm> {
                                           backgroundColor: Colors.green[50],
                                           behavior: SnackBarBehavior.floating,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                           elevation: 3,
                                         ),
@@ -264,10 +238,8 @@ class _RequestFormState extends State<RequestForm> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.error_rounded,
@@ -288,8 +260,7 @@ class _RequestFormState extends State<RequestForm> {
                                         backgroundColor: Colors.red[50],
                                         behavior: SnackBarBehavior.floating,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                         elevation: 3,
                                       ),
@@ -297,31 +268,21 @@ class _RequestFormState extends State<RequestForm> {
                                   }
                                 }
                               : () async {
-                                  if (_formKey.currentState!.validate() &&
-                                      _type != '') {
-                                    FirebaseFirestore.instance
-                                        .collection('Posts')
-                                        .doc(widget.postId)
-                                        .update({
+                                  if (_formKey.currentState!.validate() && _type != '') {
+                                    FirebaseFirestore.instance.collection('Posts').doc(widget.postId).update({
                                       'category': [_type.toLowerCase()],
                                       'description': _description.text,
-                                      'expected-completion-time':
-                                          Timestamp.fromDate(DateTime.parse(
-                                              _dateTimeSend.text)),
+                                      'expected-completion-time': Timestamp.fromDate(DateTime.parse(_dateTimeSend.text)),
                                       'post-type': _type.toLowerCase(),
-                                      'promised-amount':
-                                          num.parse(_amount.text),
+                                      'promised-amount': num.parse(_amount.text),
                                       'title': _title.text,
                                     }).then((value) {
                                       Navigator.pop(context);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                           content: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 Icons.check_rounded,
@@ -342,8 +303,7 @@ class _RequestFormState extends State<RequestForm> {
                                           backgroundColor: Colors.green[50],
                                           behavior: SnackBarBehavior.floating,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                           elevation: 3,
                                         ),
@@ -353,10 +313,8 @@ class _RequestFormState extends State<RequestForm> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.error_rounded,
@@ -377,16 +335,14 @@ class _RequestFormState extends State<RequestForm> {
                                         backgroundColor: Colors.red[50],
                                         behavior: SnackBarBehavior.floating,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                         elevation: 3,
                                       ),
                                     );
                                   }
                                 },
-                          child:
-                              Text(!widget.isEditRequest ? 'Submit' : 'Update'),
+                          child: Text(!widget.isEditRequest ? 'Submit' : 'Update'),
                         ),
                       ],
                     ),

@@ -81,7 +81,7 @@ class _OTPState extends State<OTP> {
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromRGBO(0, 89, 67, 1),
+                                color: Color.fromRGBO(66, 103, 178, 1),
                               ),
                             ))),
                     const SizedBox(
@@ -132,35 +132,28 @@ class _OTPState extends State<OTP> {
                                       children: [
                                         GestureDetector(
                                           onLongPress: () {
-                                            print(_formKey.currentState
-                                                ?.validate());
+                                            print(_formKey.currentState?.validate());
                                           },
                                           child: PinPut(
                                             validator: (s) {},
                                             // useNativeKeyboard: false,
-                                            autovalidateMode:
-                                                AutovalidateMode.always,
+                                            autovalidateMode: AutovalidateMode.always,
                                             withCursor: true,
                                             fieldsCount: 6,
-                                            fieldsAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            textStyle: const TextStyle(
-                                                fontSize: 25.0,
-                                                color: Colors.black),
+                                            fieldsAlignment: MainAxisAlignment.spaceAround,
+                                            textStyle: const TextStyle(fontSize: 25.0, color: Colors.black),
                                             eachFieldMargin: EdgeInsets.all(0),
                                             eachFieldWidth: 45.0,
                                             eachFieldHeight: 55.0,
                                             onSubmit: (String pin) => {},
                                             onChanged: (String pin) {
                                               if (pin.length == 6) {
-                                                FocusScope.of(context)
-                                                    .requestFocus(FocusNode());
+                                                FocusScope.of(context).requestFocus(FocusNode());
                                               }
                                             },
                                             focusNode: FocusNode(),
                                             controller: otpController,
-                                            submittedFieldDecoration:
-                                                pinPutDecoration.copyWith(
+                                            submittedFieldDecoration: pinPutDecoration.copyWith(
                                               color: Colors.white,
                                               border: Border.all(
                                                 width: 0.7,
@@ -168,25 +161,21 @@ class _OTPState extends State<OTP> {
                                               ),
                                             ),
 
-                                            selectedFieldDecoration:
-                                                pinPutDecoration.copyWith(
+                                            selectedFieldDecoration: pinPutDecoration.copyWith(
                                               color: Colors.white,
                                               border: Border.all(
                                                 width: 2,
-                                                color: Color.fromRGBO(
-                                                    0, 89, 67, 1),
+                                                color: Color.fromRGBO(0, 89, 67, 1),
                                               ),
                                             ),
-                                            followingFieldDecoration:
-                                                pinPutDecoration.copyWith(
+                                            followingFieldDecoration: pinPutDecoration.copyWith(
                                               color: Colors.white,
                                               border: Border.all(
                                                 width: 0.7,
                                                 color: Colors.black,
                                               ),
                                             ),
-                                            pinAnimationType:
-                                                PinAnimationType.scale,
+                                            pinAnimationType: PinAnimationType.scale,
                                           ),
                                         ),
                                         SizedBox(
@@ -194,15 +183,13 @@ class _OTPState extends State<OTP> {
                                         ),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                            primary:
-                                                Color.fromRGBO(0, 89, 67, 1),
+                                            primary: Color.fromRGBO(66, 103, 178, 1),
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 20,
                                               vertical: 10,
                                             ),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
+                                              borderRadius: BorderRadius.circular(30),
                                             ),
                                             fixedSize: const Size(330.0, 50.0),
                                           ),
@@ -210,15 +197,8 @@ class _OTPState extends State<OTP> {
                                             try {
                                               print('otp screen');
                                               print(verificationIdFinal);
-                                              await _auth.signInwithPhoneNumber(
-                                                  verificationIdFinal,
-                                                  otpController.text,
-                                                  context);
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (builder) =>
-                                                          Wrapper()));
+                                              await _auth.signInwithPhoneNumber(verificationIdFinal, otpController.text, context);
+                                              Navigator.push(context, MaterialPageRoute(builder: (builder) => Wrapper()));
                                             } catch (e) {
                                               if (kDebugMode) {
                                                 print(e);
@@ -240,16 +220,14 @@ class _OTPState extends State<OTP> {
                                             primary: Colors.white,
                                             side: BorderSide(
                                               width: 1.0,
-                                              color: Color.fromARGB(
-                                                  255, 1, 153, 115),
+                                              color: Color.fromARGB(255, 1, 153, 115),
                                             ),
                                             padding: const EdgeInsets.symmetric(
                                               horizontal: 20,
                                               vertical: 10,
                                             ),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
+                                              borderRadius: BorderRadius.circular(30),
                                             ),
                                             fixedSize: const Size(330.0, 50.0),
                                           ),
@@ -257,8 +235,7 @@ class _OTPState extends State<OTP> {
                                           child: const Text(
                                             'Resend Code',
                                             style: TextStyle(
-                                              color:
-                                                  Color.fromRGBO(0, 89, 67, 1),
+                                              color: Color.fromRGBO(66, 103, 178, 1),
                                               fontSize: 20.0,
                                             ),
                                           ),
@@ -316,8 +293,7 @@ Widget otp_field(context, {required bool first, last}) {
                 borderRadius: BorderRadius.circular(12),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(width: 2, color: Color.fromRGBO(0, 89, 67, 1)),
+                borderSide: BorderSide(width: 2, color: Color.fromRGBO(66, 103, 178, 1)),
                 borderRadius: BorderRadius.circular(12),
               )),
         ),

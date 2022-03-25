@@ -149,7 +149,7 @@ class _LinkspaceState extends State<Linkspace> {
                         height: 10,
                       ),
                       ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           scrollDirection: Axis.vertical,
                           itemCount: alldoc.length,
                           shrinkWrap: true,
@@ -167,14 +167,16 @@ class _LinkspaceState extends State<Linkspace> {
                             }
 
                             return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Forum(
-                                              id: alldoc[index].id,
-                                            )));
-                              },
+                              onTap: _isspaceowned
+                                  ? () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Forum(
+                                                    id: alldoc[index].id,
+                                                  )));
+                                    }
+                                  : null,
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Container(

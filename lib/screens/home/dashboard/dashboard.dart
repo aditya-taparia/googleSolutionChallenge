@@ -62,6 +62,7 @@ class _DashboardState extends State<Dashboard> {
     ];
 
     final Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance.collection('Userdata').doc(user!.userid).snapshots();
+    final controller = FloatingSearchBarController();
     return Stack(
       children: [
         Image.asset(

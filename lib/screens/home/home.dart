@@ -9,6 +9,7 @@ import 'package:googlesolutionchallenge/screens/home/dashboard/dashboard.dart';
 import 'package:googlesolutionchallenge/screens/home/map/map.dart';
 import 'package:googlesolutionchallenge/screens/utils/editprofile.dart';
 import 'package:googlesolutionchallenge/screens/utils/notification.dart';
+import 'package:googlesolutionchallenge/screens/utils/viewprofile.dart';
 import 'package:googlesolutionchallenge/services/auth.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:googlesolutionchallenge/services/navigation_bloc.dart';
@@ -88,51 +89,53 @@ class _HomeState extends State<Home> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 30,
-                                    child: Text(
-                                      userSnapshot.data!['name'][0],
-                                      style: const TextStyle(
-                                        fontSize: 25,
-                                        color: Color.fromRGBO(66, 103, 178, 1),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        userSnapshot.data!['name'],
+                              FittedBox(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 30,
+                                      child: Text(
+                                        userSnapshot.data!['name'][0],
                                         style: const TextStyle(
-                                          fontSize: 24,
-                                          color: Colors.white,
+                                          fontSize: 25,
+                                          color: Color.fromRGBO(66, 103, 178, 1),
                                           fontWeight: FontWeight.bold,
                                         ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        userSnapshot.data!['email'],
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          userSnapshot.data!['name'],
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          userSnapshot.data!['email'],
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -251,6 +254,21 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
+                      ListTile(
+                        leading: const Icon(Icons.person),
+                        title: const Text(
+                          'View Profile',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Profile(uid: user.userid),
+                            ),
+                          );
+                        },
+                      ),
                       Divider(
                         height: 1,
                         color: Colors.grey[600],
@@ -363,10 +381,6 @@ class _HomeState extends State<Home> {
                     const Analytics(),
                   ];
                   _index = snapshot.data!.index;
-
-                  // TODO: Now we can checkif the user is provider or
-                  // not and make changes accordingly
-
                   // TODO: check if the userSnapshot is null or not and
                   // show loading screen accorginly
 
@@ -376,7 +390,14 @@ class _HomeState extends State<Home> {
                     appBar: _index != 1
                         ? _index != 0
                             ? AppBar(
-                                elevation: 0,
+                                elevation: _index == 2 || _index == 3 ? 4 : 0,
+                                title: _index == 2
+                                    ? const Text(
+                                        'Linkspace',
+                                      )
+                                    : _index == 3
+                                        ? const Text('Chat')
+                                        : null,
                                 // iconTheme: const IconThemeData(color: Colors.black),
                                 actions: <Widget>[
                                   IconButton(
