@@ -16,6 +16,61 @@ class _CommunityServiceState extends State<CommunityService> {
   late LocationPermission permission;
   bool belongtolinkspace = false;
   late LatLng current;
+//  late LatLng _current = const LatLng(15.5057, 80.0499);
+  Set<Map> community = {};
+  Set<Map> community1 = {};
+  Set<Map> community2 = {};
+  Set<Map> community3 = {};
+  late List nearbymarkers1 = [];
+  late List nearbymarkers2 = [];
+  late List nearbymarkers3 = [];
+
+  void setmarkers() async {
+    if (type == 1) {
+      List ll =
+          await getLoc('Orphanages', current.latitude, current.longitude, 2000);
+      setState(() {
+        nearbymarkers1 = ll;
+      });
+    }
+    if (type == 2) {
+      List ll = await getLoc(
+          'Old+Age+Homes', current.latitude, current.longitude, 2000);
+      setState(() {
+        nearbymarkers2 = ll;
+      });
+    }
+    if (type == 3) {
+      List ll = await getLoc('NGO', current.latitude, current.longitude, 2000);
+      setState(() {
+        nearbymarkers3 = ll;
+      });
+    }
+
+    if (type == 1) {
+      nearbymarkers1.forEach((element) {
+        community1.add(element);
+      });
+    }
+    if (type == 2) {
+      nearbymarkers2.forEach((element) {
+        community2.add(element);
+      });
+    }
+    if (type == 3) {
+      nearbymarkers3.forEach((element) {
+        community3.add(element);
+      });
+    }
+
+    setState(() {
+      community = {};
+      type == 1 ? community = community.union(community1) : null;
+      type == 2 ? community = community.union(community2) : null;
+      type == 3 ? community = community.union(community3) : null;
+    });
+    // print(community);
+  }
 
   @override
   void initState() {
@@ -25,6 +80,9 @@ class _CommunityServiceState extends State<CommunityService> {
 
   @override
   Widget build(BuildContext context) {
+    List temp = community.toList();
+
+    print(temp.length);
     return Scaffold(
         appBar: AppBar(),
         body: Column(
@@ -55,10 +113,13 @@ class _CommunityServiceState extends State<CommunityService> {
                       setState(() {
                         type = 1;
                       });
+                      setmarkers();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
+                        height: 20,
+                        width: 150,
                         child: const Text("Orphanage"),
                       ),
                     ),
@@ -68,6 +129,7 @@ class _CommunityServiceState extends State<CommunityService> {
                       setState(() {
                         type = 2;
                       });
+                      setmarkers();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -81,6 +143,7 @@ class _CommunityServiceState extends State<CommunityService> {
                       setState(() {
                         type = 3;
                       });
+                      setmarkers();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -92,17 +155,50 @@ class _CommunityServiceState extends State<CommunityService> {
                 ],
               ),
             ),
-            ListView.builder(
-                itemCount: 1,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Text("aaa");
-                })
+
+            // UI edit
+
+            // ListView.builder(
+            //     itemCount: temp.length,
+            //     shrinkWrap: true,
+            //     itemBuilder: (context, index) {
+            //       return Container(
+            //         child: Row(
+            //           children: [
+            //             Container(
+            //               height: 80,
+            //               width: 80,
+            //               child: Image.network(temp[index]["icon"]),
+            //             ),
+            //             Container(
+            //               height: 150,
+            //               width: 250,
+            //               child: Column(
+            //                 children: [
+            //                   Text(temp[index]["name"]),
+            //                   Text("hjghgjhkj"),
+            //                   Text(temp[index]["formatted_address"]),
+            //                 ],
+            //               ),
+            //             )
+            //           ],
+            //         ),
+            //       );
+            //     })
           ],
         ));
   }
 
   getLoc(String query, double lat, double lng, double radius) async {
+    print('https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
+        query +
+        '&location=' +
+        lat.toString() +
+        ',' +
+        lng.toString() +
+        '&radius=' +
+        radius.toString() +
+        '&key=AIzaSyBnUiYa_7RlPXxh5szOCfxyj2l9Wlb7HU4');
     final response = await http.get(Uri.parse(
         'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
             query +
