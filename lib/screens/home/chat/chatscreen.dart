@@ -27,136 +27,155 @@ class _ChatScreenState extends State<ChatScreen> {
             return const Loading();
           }
           if (userSnapshot.hasData) {
-            var data = userSnapshot.data!.docs;
-            List chatList = [];
-            data.forEach((element) {
-              chatList.add(element);
-            });
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: ListView.builder(
-                  itemCount: chatList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final chat = chatList[index].data();
-                    Color randomcolor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
-                    Map sender;
-                    int read;
-                    if (chat["name"][0]["id"] == user.userid.toString()) {
-                      sender = chat["name"][1];
-                      read = chat["read"][0];
-                    } else {
-                      sender = chat["name"][0];
-                      read = chat["read"][1];
-                    }
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => IndividualChat(
-                              user: sender,
-                              id: chatList[index].id,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 3.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: read > 0 ? const Color.fromRGBO(66, 103, 178, 0.29) : Colors.white,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                          ),
-                          margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                          padding: const EdgeInsets.all(15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 25,
-                                    backgroundColor: randomcolor,
-                                    child: Text(
-                                      sender["name"][0].toString().toUpperCase(),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        sender["name"],
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                                      ),
-                                      const SizedBox(
-                                        height: 7,
-                                      ),
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.6,
-                                        child: const Text(
-                                          "Hii There !!!",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
+
+            var data = userSnapshot.data!.docs as List;
+
+            if (data.isEmpty) {
+              return Scaffold(
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image(image: AssetImage("assets/nochat.png")),
+                    SizedBox(
+                      width: 300,
+                      child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Text("Roam the neighbourhood")),
+                    )
+                  ],
+                ),
+              );
+            } else {
+              List chatList = [];
+              data.forEach((element) {
+                chatList.add(element);
+                //  print(element.id);
+              });
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: ListView.builder(
+                    itemCount: chatList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final chat = chatList[index].data();
+                      Map sender;
+                      int read;
+                      if (chat["name"][0]["id"] == user.userid.toString()) {
+                        sender = chat["name"][1];
+                        read = chat["read"][0];
+                      } else {
+                        sender = chat["name"][0];
+                        read = chat["read"][1];
+                      }
+                      print(read);
+                      String img = sender["imgUrl"];
+                      //print(sender);
+                      return GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => IndividualChat(
+                                    user: sender, id: chatList[index].id))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 3.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: read > 0
+                                  ? const Color.fromRGBO(66, 103, 178, 0.29)
+                                  : Colors.white,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(20),
                               ),
-                              Column(
-                                children: [
-                                  const Text(
-                                    "12:30",
-                                    style: TextStyle(
-                                      fontSize: 11,
+                            ),
+                            margin:
+                                const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                            padding: const EdgeInsets.all(15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: AssetImage(''),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  read > 0
-                                      ? Container(
-                                          width: 40,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context).primaryColor,
-                                            borderRadius: BorderRadius.circular(30),
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: const Text(
-                                            'NEW',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.white,
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          sender["name"],
+                                          style: const TextStyle(
+
                                               fontWeight: FontWeight.bold,
-                                            ),
+                                              fontSize: 15),
+                                        ),
+                                        const SizedBox(
+                                          height: 7,
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          child: Text(
+                                            "Hii There !!!",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.grey),
                                           ),
                                         )
-                                      : const SizedBox.shrink(),
-                                ],
-                              )
-                            ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "chat.time",
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    read > 0
+                                        ? Container(
+                                            width: 40,
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            alignment: Alignment.center,
+                                            child: const Text(
+                                              'NEW',
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          )
+                                        : const SizedBox.shrink(),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
-            );
+                      );
+                    }),
+              );
+            }
           } else {
             return const Loading();
           }
