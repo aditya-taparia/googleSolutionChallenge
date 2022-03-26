@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 // TextFormField
 class TextInputField extends StatelessWidget {
   final String label;
+  final bool autoFocus;
   final TextEditingController controller;
   final int maxLines;
   final TextInputType? keyboardType;
@@ -12,9 +13,11 @@ class TextInputField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final Widget? prefix;
   final String? Function(String?)? validator;
+  final Function()? onTap;
   const TextInputField({
     Key? key,
     required this.label,
+    this.autoFocus = true,
     required this.controller,
     this.maxLines = 1,
     this.keyboardType,
@@ -23,6 +26,7 @@ class TextInputField extends StatelessWidget {
     this.validator,
     this.textInputAction,
     this.prefix,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -31,7 +35,8 @@ class TextInputField extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
         controller: controller,
-        autofocus: true,
+        autofocus: autoFocus,
+        onTap: onTap,
         enableInteractiveSelection: true,
         enableIMEPersonalizedLearning: true,
         textInputAction: textInputAction ?? TextInputAction.next,
@@ -144,9 +149,7 @@ class DateTimePicker extends StatelessWidget {
         onTap: () async {
           final DateTime? picked = await showDatePicker(
             context: context,
-            initialDate: sendcontroller.text.isNotEmpty
-                ? DateTime.parse(sendcontroller.text)
-                : DateTime.now(),
+            initialDate: sendcontroller.text.isNotEmpty ? DateTime.parse(sendcontroller.text) : DateTime.now(),
             initialDatePickerMode: DatePickerMode.day,
             firstDate: !isEdit ? DateTime.now() : _dateTime,
             lastDate: DateTime(
@@ -156,15 +159,13 @@ class DateTimePicker extends StatelessWidget {
               return Theme(
                 data: Theme.of(context).copyWith(
                   colorScheme: const ColorScheme.light(
-                    primary: Color.fromRGBO(
-                        66, 103, 178, 1), // header background color
+                    primary: Color.fromRGBO(66, 103, 178, 1), // header background color
                     onPrimary: Colors.white, // header text color
                     onSurface: Colors.black, // body text color
                   ),
                   textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
-                      primary: const Color.fromRGBO(
-                          66, 103, 178, 1), // button text color
+                      primary: const Color.fromRGBO(66, 103, 178, 1), // button text color
                     ),
                   ),
                 ),
@@ -239,8 +240,7 @@ class DateTimePicker extends StatelessWidget {
         ),
         onChanged: (value) {
           if (controller.text.isEmpty) {
-            controller.text =
-                DateFormat.yMMMMd().format(DateTime.now()).toString();
+            controller.text = DateFormat.yMMMMd().format(DateTime.now()).toString();
           }
         },
         onFieldSubmitted: (value) {

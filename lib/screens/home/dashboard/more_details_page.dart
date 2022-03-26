@@ -556,7 +556,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                                                                       Map<String, dynamic> json = {};
                                                                                       CollectionReference chatCollection =
                                                                                           FirebaseFirestore.instance.collection('chats');
-                                                                                      // TODO: Confirmation with Jeetesh
+
                                                                                       if (currentuserid.compareTo(otheruserid) <= 0) {
                                                                                         json = {
                                                                                           'chatdata': {},
