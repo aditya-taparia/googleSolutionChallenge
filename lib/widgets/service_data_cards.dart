@@ -306,9 +306,9 @@ class ServiceDataCard extends StatelessWidget {
                 const SizedBox(height: 5),
 
                 // Chat Button And [Mark As Done] Button
-                FittedBox(
-                  child: isAccepted
-                      ? Center(
+                isAccepted
+                    ? Center(
+                        child: FittedBox(
                           child: Wrap(
                             alignment: WrapAlignment.center,
                             spacing: 10,
@@ -440,108 +440,108 @@ class ServiceDataCard extends StatelessWidget {
                                     ),
                             ],
                           ),
-                        )
-                      : Center(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: OutlinedButton.icon(
-                              style: OutlinedButton.styleFrom(
-                                primary: const Color.fromRGBO(250, 103, 117, 1),
-                              ),
-                              icon: const Icon(
-                                Icons.delete_rounded,
-                                size: 20,
-                              ),
-                              label: const Text(
-                                'Withdraw',
-                                style: TextStyle(),
-                              ),
-                              // Withdraw
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                          "Confirmation",
-                                        ),
-                                        content: const Text(
-                                          "Are you sure you want to withdraw your name from the request?",
-                                        ),
-                                        actions: <Widget>[
-                                          OutlinedButton(
-                                            child: const Text("Yes"),
-                                            onPressed: () async {
-                                              Map<String, dynamic> json = {};
-                                              json['waiting-list'] = FieldValue.arrayRemove([user.userid]);
-                                              if (isAccepted) {
-                                                json['accepted-by'] = '';
-                                                json['accepted-by-name'] = '';
-                                                json['chat-id'] = '';
-                                              }
+                        ),
+                      )
+                    : Center(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              primary: const Color.fromRGBO(250, 103, 117, 1),
+                            ),
+                            icon: const Icon(
+                              Icons.delete_rounded,
+                              size: 20,
+                            ),
+                            label: const Text(
+                              'Withdraw',
+                              style: TextStyle(),
+                            ),
+                            // Withdraw
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        "Confirmation",
+                                      ),
+                                      content: const Text(
+                                        "Are you sure you want to withdraw your name from the request?",
+                                      ),
+                                      actions: <Widget>[
+                                        OutlinedButton(
+                                          child: const Text("Yes"),
+                                          onPressed: () async {
+                                            Map<String, dynamic> json = {};
+                                            json['waiting-list'] = FieldValue.arrayRemove([user.userid]);
+                                            if (isAccepted) {
+                                              json['accepted-by'] = '';
+                                              json['accepted-by-name'] = '';
+                                              json['chat-id'] = '';
+                                            }
 
-                                              FirebaseFirestore.instance
-                                                  .collection('Posts')
-                                                  .doc(postid)
-                                                  .set(
-                                                    json,
-                                                    SetOptions(
-                                                      merge: true,
-                                                    ),
-                                                  )
-                                                  .then((value) {
-                                                Navigator.pop(context);
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  SnackBar(
-                                                    content: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        Icon(
-                                                          Icons.check_rounded,
+                                            FirebaseFirestore.instance
+                                                .collection('Posts')
+                                                .doc(postid)
+                                                .set(
+                                                  json,
+                                                  SetOptions(
+                                                    merge: true,
+                                                  ),
+                                                )
+                                                .then((value) {
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.check_rounded,
+                                                        color: Colors.green[800],
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        'Successfully Removed',
+                                                        style: TextStyle(
                                                           color: Colors.green[800],
                                                         ),
-                                                        const SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Text(
-                                                          'Successfully Removed',
-                                                          style: TextStyle(
-                                                            color: Colors.green[800],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    duration: const Duration(seconds: 2),
-                                                    backgroundColor: Colors.green[50],
-                                                    behavior: SnackBarBehavior.floating,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10),
-                                                    ),
-                                                    elevation: 3,
+                                                      ),
+                                                    ],
                                                   ),
-                                                );
-                                              });
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          ElevatedButton(
-                                            child: const Text("No"),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
-                                        actionsAlignment: MainAxisAlignment.spaceAround,
-                                      );
-                                    });
-                              },
-                            ),
+                                                  duration: const Duration(seconds: 2),
+                                                  backgroundColor: Colors.green[50],
+                                                  behavior: SnackBarBehavior.floating,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
+                                                  elevation: 3,
+                                                ),
+                                              );
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        ElevatedButton(
+                                          child: const Text("No"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                      actionsAlignment: MainAxisAlignment.spaceAround,
+                                    );
+                                  });
+                            },
                           ),
                         ),
-                ),
+                      ),
               ],
             ),
           ),

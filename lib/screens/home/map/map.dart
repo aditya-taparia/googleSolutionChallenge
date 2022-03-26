@@ -124,7 +124,9 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       _gpsIcons = false;
     });
-    final Future<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('Posts').get();
+
+    // Calling posts which are open to work
+    final Future<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('Posts').where('accepted-by', isEqualTo: '').get();
 
     _usersStream.then((value) {
       value.docs.forEach((element) {

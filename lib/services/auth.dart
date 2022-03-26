@@ -10,7 +10,7 @@ class AuthService {
 
   // Create user object based on FirebaseUser object
   Users? _userFromFirebase(User? user) {
-    return user != null ? Users(userid: user.uid) : null;
+    return user != null ? Users(userid: user.uid, email: user.email) : null;
   }
 
   // Auth change user stream
@@ -19,8 +19,7 @@ class AuthService {
   }
 
   // Phone number verification
-  Future<void> verifyPhoneNumber(
-      String phoneNumber, BuildContext context) async {
+  Future<void> verifyPhoneNumber(String phoneNumber, BuildContext context) async {
     PhoneVerificationCompleted verificationCompleted;
     verificationCompleted = (PhoneAuthCredential phoneAuthCredential) async {
       showSnackBar(context, "Verification Completed");
@@ -32,10 +31,7 @@ class AuthService {
     PhoneCodeSent codeSent;
     codeSent = (String verificationID, [int? forceResnedingtoken]) {
       showSnackBar(context, "Verification Code sent on the phone number");
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (builder) => OTP(verificationID, phoneNumber)));
+      Navigator.push(context, MaterialPageRoute(builder: (builder) => OTP(verificationID, phoneNumber)));
       if (kDebugMode) {
         print(verificationID);
       }
@@ -59,13 +55,10 @@ class AuthService {
   }
 
   // Sign in with phone number
-  Future<Users?> signInwithPhoneNumber(
-      String verificationId, String smsCode, BuildContext context) async {
+  Future<Users?> signInwithPhoneNumber(String verificationId, String smsCode, BuildContext context) async {
     try {
-      AuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId, smsCode: smsCode);
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+      AuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
       // storeTokenAndData(userCredential);
       showSnackBar(context, "logged In");
       return _userFromFirebase(userCredential.user);
@@ -87,8 +80,7 @@ class AuthService {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
       // Obtain auth details from the GoogleUser object
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
       // Create a new credential
       final AuthCredential credential = GoogleAuthProvider.credential(

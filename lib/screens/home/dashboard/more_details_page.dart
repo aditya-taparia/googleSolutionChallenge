@@ -544,6 +544,71 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                                                                     child: const Text("Yes"),
                                                                                     onPressed: () async {
                                                                                       // TODO: Chat Id Generation
+                                                                                      String chatid = '';
+                                                                                      String currentusername = await FirebaseFirestore.instance
+                                                                                          .collection('Userdata')
+                                                                                          .doc(user.userid)
+                                                                                          .get()
+                                                                                          .then((value) => value.data()!['name']);
+                                                                                      String currentuserid = user.userid;
+                                                                                      String otherusername = usersnapshot.data!['name'];
+                                                                                      String otheruserid = snapshot.data!['waiting-list'][index];
+                                                                                      Map<String, dynamic> json = {};
+                                                                                      CollectionReference chatCollection =
+                                                                                          FirebaseFirestore.instance.collection('chats');
+                                                                                      // TODO: Confirmation with Jeetesh
+                                                                                      if (currentuserid.compareTo(otheruserid) <= 0) {
+                                                                                        json = {
+                                                                                          'chatdata': {},
+                                                                                          'name': [
+                                                                                            {
+                                                                                              'id': currentuserid,
+                                                                                              'imgUrl': '',
+                                                                                              'name': currentusername,
+                                                                                            },
+                                                                                            {
+                                                                                              'id': otheruserid,
+                                                                                              'imgUrl': '',
+                                                                                              'name': otherusername,
+                                                                                            }
+                                                                                          ],
+                                                                                          'read': [0, 0],
+                                                                                          'users': [currentuserid, otheruserid],
+                                                                                        };
+                                                                                        chatid = await chatCollection
+                                                                                            .where('users', isEqualTo: [currentuserid, otheruserid])
+                                                                                            .get()
+                                                                                            .then((value) =>
+                                                                                                value.docs.isNotEmpty ? value.docs[0].id : '');
+                                                                                      } else {
+                                                                                        json = {
+                                                                                          'chatdata': {},
+                                                                                          'name': [
+                                                                                            {
+                                                                                              'id': otheruserid,
+                                                                                              'imgUrl': '',
+                                                                                              'name': otherusername,
+                                                                                            },
+                                                                                            {
+                                                                                              'id': currentuserid,
+                                                                                              'imgUrl': '',
+                                                                                              'name': currentusername,
+                                                                                            }
+                                                                                          ],
+                                                                                          'read': [0, 0],
+                                                                                          'users': [otheruserid, currentuserid],
+                                                                                        };
+                                                                                        chatid = await chatCollection
+                                                                                            .where('users', isEqualTo: [otheruserid, currentuserid])
+                                                                                            .get()
+                                                                                            .then((value) =>
+                                                                                                value.docs.isNotEmpty ? value.docs[0].id : '');
+                                                                                      }
+                                                                                      if (chatid.isEmpty) {
+                                                                                        chatid =
+                                                                                            await chatCollection.add(json).then((value) => value.id);
+                                                                                      }
+
                                                                                       FirebaseFirestore.instance
                                                                                           .collection('Posts')
                                                                                           .doc(widget.postid)
@@ -551,6 +616,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                                                                                         {
                                                                                           'accepted-by': usersnapshot.data!.id,
                                                                                           'accepted-by-name': usersnapshot.data!['name'],
+                                                                                          'chat-id': chatid,
                                                                                         },
                                                                                       ).then((value) {
                                                                                         Navigator.pop(context);
@@ -1187,39 +1253,4 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
       ),
     );
   }
-}
-
-createchat(String currUserId, String othUserId, String name1) async {
-  int y = 0;
-  String chatId = "";
-  final DocumentSnapshot<Map<String, dynamic>> _username = await FirebaseFirestore.instance.collection('Userdata').doc(currUserId).get();
-
-  String name2 = _username.data()!["name"];
-  Map othuserdata = {"name": name1, "id": othUserId, "imgUrl": ""};
-  Map currUserData = {"name": name2, "id": currUserId, "imgUrl": ""};
-  CollectionReference chatCollection = await FirebaseFirestore.instance.collection('chats');
-  var x = chatCollection.where('users', isEqualTo: [othUserId, currUserId]).get();
-  x.then((value) {
-    y = value.docs.length;
-    if (y == 0) {
-      var x = chatCollection.where('users', isEqualTo: [currUserId, othUserId]).get();
-      x.then((value) async {
-        y = value.docs.length;
-        if (y == 0) {
-          final addchat = FirebaseFirestore.instance.collection("chats").doc();
-          final json = {
-            'chatdata': {},
-            'users': [currUserId, othUserId],
-            'name': [currUserData, othuserdata],
-            'read': [0, 0]
-          };
-          await addchat.set(json);
-        }
-      });
-    }
-  });
-  chatId =
-      await FirebaseFirestore.instance.collection('chats').where('users', isEqualTo: [currUserId, othUserId]).get().then((value) => value.docs[0].id);
-  print(chatId);
-  // return chatId;
 }

@@ -75,6 +75,7 @@ class _RequestFormState extends State<RequestForm> {
     final GlobalKey<FormState> _formKey = GlobalKey();
     if (widget.postType != null) {
       _type = widget.postType ?? 'Job Request';
+      _type = _type.toTitleCase();
     }
 
     return Scaffold(
