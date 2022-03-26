@@ -63,17 +63,23 @@ class _StartState extends State<Start> {
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
               child: TextButton(
-                  onPressed: () => pgcontroller.previousPage(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOut),
-                  child: isFirstPage
-                      ? const Text(
-                          "",
-                        )
-                      : const Text(
-                          "Back",
-                          style: TextStyle(fontSize: 18),
-                        )),
+                onPressed: isFirstPage
+                    ? null
+                    : () {
+                        pgcontroller.previousPage(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                      },
+                child: isFirstPage
+                    ? const Text(
+                        "",
+                      )
+                    : const Text(
+                        "Back",
+                        style: TextStyle(fontSize: 18),
+                      ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
@@ -81,9 +87,13 @@ class _StartState extends State<Start> {
                 child: SmoothPageIndicator(
                   controller: pgcontroller,
                   count: 3,
-                  onDotClicked: (index) => pgcontroller.animateToPage(index,
+                  onDotClicked: (index) {
+                    pgcontroller.animateToPage(
+                      index,
                       duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOut),
+                      curve: Curves.easeInOut,
+                    );
+                  },
                 ),
               ),
             ),
@@ -101,15 +111,15 @@ class _StartState extends State<Start> {
                     child: const Text(
                       "Get Started",
                       style: TextStyle(fontSize: 18),
-                    ))
+                    ),
+                  )
                 : TextButton(
-                    onPressed: () => pgcontroller.nextPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut),
+                    onPressed: () => pgcontroller.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeInOut),
                     child: const Text(
-                      "      Next      ",
+                      "Next",
                       style: TextStyle(fontSize: 18),
-                    ))
+                    ),
+                  )
           ],
         ),
       ),
@@ -124,19 +134,20 @@ Widget getstarted() {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
               height: 30,
             ),
             Lottie.asset('assets/online.json'),
-            const SizedBox(
-              height: 10,
+            const Text(
+              "Connect with other linkers near you",
+              style: TextStyle(
+                fontSize: 23,
+              ),
+              textAlign: TextAlign.center,
             ),
-            const Text("Connect with other linkers near you",
-                style: TextStyle(
-                  fontSize: 23,
-                )),
           ],
         ),
       ),
@@ -151,18 +162,15 @@ Widget getstarted2() {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
               height: 30,
             ),
             Lottie.asset('assets/sbc.json'),
-            const SizedBox(
-              height: 20,
-            ),
             const Text(
-              "Lend, Borrow and Donate",
+              "Lend, Borrow or Donate",
               style: TextStyle(
                 fontSize: 23,
               ),
@@ -181,21 +189,19 @@ Widget getstarted3() {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
-              height: 80,
-            ),
-            Lottie.asset('assets/reach.json'),
-            const SizedBox(
               height: 50,
             ),
+            Lottie.asset('assets/search_nearby.json'),
             const Text(
-              "Ontime Delivery",
+              "Find jobs near you",
               style: TextStyle(
                 fontSize: 23,
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
