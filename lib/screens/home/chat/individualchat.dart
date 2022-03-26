@@ -62,7 +62,10 @@ class _IndividualChatState extends State<IndividualChat> {
       child: Row(children: [
         IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.photo),
+          icon: const Icon(
+            Icons.photo_rounded,
+            color: Color.fromRGBO(66, 103, 178, 1),
+          ),
           iconSize: 30,
           color: Theme.of(context).primaryColor,
         ),
@@ -83,7 +86,10 @@ class _IndividualChatState extends State<IndividualChat> {
             addmsgDB(msg, widget.id, userid, length, read);
             _msgcontroller.clear();
           },
-          icon: const Icon(Icons.send),
+          icon: const Icon(
+            Icons.send_rounded,
+            color: Color.fromRGBO(66, 103, 178, 1),
+          ),
           iconSize: 30,
           color: Theme.of(context).primaryColor,
         ),
@@ -119,7 +125,6 @@ class _IndividualChatState extends State<IndividualChat> {
             }
             ReadMsg(widget.id, read);
             return Scaffold(
-              resizeToAvoidBottomInset: false,
               backgroundColor: const Color.fromRGBO(66, 103, 178, 1),
               appBar: AppBar(
                 title: Text(sender["name"]),
