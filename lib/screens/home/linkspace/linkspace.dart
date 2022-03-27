@@ -187,9 +187,16 @@ class _LinkspaceState extends State<Linkspace> {
                                   decoration: BoxDecoration(color: color, borderRadius: const BorderRadius.all(
                                       // topLeft: Radius.circular(10),
                                       Radius.circular(15))),
-                                  padding: const EdgeInsets.all(4.0),
                                   child: Container(
-                                    decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/google-icon.png'))),
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          'assets/linkspace_card.png',
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.all(4.0),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
