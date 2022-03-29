@@ -1438,6 +1438,7 @@ class _MapScreenState extends State<MapScreen> {
                                                                                 MaterialPageRoute(
                                                                                     builder: (context) => Forum(
                                                                                           id: snap[0].id,
+                                                                                          name: snap[0]['name'],
                                                                                         )));
                                                                           },
                                                                           icon: const Icon(Icons.groups_rounded),
@@ -1616,6 +1617,7 @@ class _MapScreenState extends State<MapScreen> {
                                                                                   MaterialPageRoute(
                                                                                       builder: (context) => Forum(
                                                                                             id: snap[0].id,
+                                                                                            name: snap[0]['name'],
                                                                                           )));
                                                                             },
                                                                             icon: const Icon(Icons.groups_rounded),

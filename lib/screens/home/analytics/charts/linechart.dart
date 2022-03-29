@@ -10,8 +10,7 @@ class SplineArea extends StatefulWidget {
   const SplineArea(this.xdata, this.y1data, this.y2data, this.y3data) : super();
 
   @override
-  _SplineAreaState createState() =>
-      _SplineAreaState(xdata, y1data, y2data, y3data);
+  _SplineAreaState createState() => _SplineAreaState(xdata, y1data, y2data, y3data);
 }
 
 /// State class of the spline area chart.
@@ -37,14 +36,12 @@ class _SplineAreaState extends State<SplineArea> {
       ),
       plotAreaBorderWidth: 0,
       primaryXAxis: DateTimeAxis(
-          interval: xdata.length / 12,
+          interval: 24,
           majorGridLines: const MajorGridLines(width: 0),
           dateFormat: DateFormat('''M/yy'''),
           edgeLabelPlacement: EdgeLabelPlacement.shift),
-      primaryYAxis: NumericAxis(
-          numberFormat: NumberFormat.compact(),
-          axisLine: const AxisLine(width: 0),
-          majorTickLines: const MajorTickLines(size: 0)),
+      primaryYAxis:
+          NumericAxis(numberFormat: NumberFormat.compact(), axisLine: const AxisLine(width: 0), majorTickLines: const MajorTickLines(size: 0)),
       series: _getSplieAreaSeries(),
       zoomPanBehavior: ZoomPanBehavior(
 
@@ -77,8 +74,7 @@ class _SplineAreaState extends State<SplineArea> {
   List<ChartSeries<_SplineAreaData, DateTime>> _getSplieAreaSeries() {
     final List<_SplineAreaData> chartData = [];
     for (var i = 0; i < xdata.length; i++) {
-      chartData.add(_SplineAreaData(
-          DateTime.parse(xdata[i]), y1data[i], y2data[i], y3data[i]));
+      chartData.add(_SplineAreaData(DateTime.parse(xdata[i]), y1data[i], y2data[i], y3data[i]));
     }
     return <ChartSeries<_SplineAreaData, DateTime>>[
       SplineAreaSeries<_SplineAreaData, DateTime>(

@@ -47,7 +47,7 @@ class _LinkspaceState extends State<Linkspace> {
           : Linkspacecollection.where('ownerid', isNotEqualTo: user.userid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text("Something went wrong");
+          return const Text("Something went wrong");
         }
 
         if (!snapshot.hasData) {
@@ -174,6 +174,7 @@ class _LinkspaceState extends State<Linkspace> {
                                           MaterialPageRoute(
                                               builder: (context) => Forum(
                                                     id: alldoc[index].id,
+                                                    name: alldoc[index]['name'].toString(),
                                                   )));
                                     }
                                   : null,
@@ -210,7 +211,7 @@ class _LinkspaceState extends State<Linkspace> {
                                                   vertical: 4,
                                                 ),
                                                 decoration: BoxDecoration(
-                                                  color: Color.fromARGB(255, 92, 216, 96),
+                                                  color: const Color.fromARGB(255, 92, 216, 96),
                                                   borderRadius: BorderRadius.circular(20),
                                                 ),
                                                 child: Row(
@@ -282,7 +283,7 @@ class _LinkspaceState extends State<Linkspace> {
                                                   "${linkdata["name"]}",
                                                   maxLines: 2,
                                                   overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold),
+                                                  style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold),
                                                 ),
                                               ),
                                               subtitle: SingleChildScrollView(
@@ -292,7 +293,7 @@ class _LinkspaceState extends State<Linkspace> {
                                                   child: Text("${linkdata["description"]}",
                                                       maxLines: 4,
                                                       overflow: TextOverflow.ellipsis,
-                                                      style: TextStyle(color: Colors.white, fontSize: 13)),
+                                                      style: const TextStyle(color: Colors.white, fontSize: 13)),
                                                 ),
                                               ),
                                             ),
@@ -440,7 +441,7 @@ class _LinkspaceState extends State<Linkspace> {
           }
         }
 
-        return Loading();
+        return const Loading();
       },
     );
   }

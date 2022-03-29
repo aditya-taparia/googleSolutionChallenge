@@ -31,7 +31,15 @@ class AuthService {
     PhoneCodeSent codeSent;
     codeSent = (String verificationID, [int? forceResnedingtoken]) {
       showSnackBar(context, "Verification Code sent on the phone number");
-      Navigator.push(context, MaterialPageRoute(builder: (builder) => OTP(verificationID, phoneNumber)));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (builder) => Otp(
+            number: phoneNumber,
+            verificationIdFinal: verificationID,
+          ),
+        ),
+      );
       if (kDebugMode) {
         print(verificationID);
       }

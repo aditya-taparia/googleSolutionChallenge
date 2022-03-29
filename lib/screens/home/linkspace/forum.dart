@@ -4,7 +4,8 @@ import 'package:googlesolutionchallenge/screens/home/linkspace/linkspacechat.dar
 
 class Forum extends StatefulWidget {
   final String id;
-  const Forum({Key? key, required this.id}) : super(key: key);
+  final String name;
+  const Forum({Key? key, required this.id, required this.name}) : super(key: key);
 
   @override
   _ForumState createState() => _ForumState();
@@ -17,7 +18,7 @@ class _ForumState extends State<Forum> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("LinkSpace Name"),
+          title: Text(widget.name),
           // centerTitle: false,
           bottom: const TabBar(indicatorColor: Colors.white, unselectedLabelColor: Colors.white70, tabs: [
             Tab(
