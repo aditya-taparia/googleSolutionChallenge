@@ -109,9 +109,8 @@ The .apk file produced on building the project will require an Android device/em
   <li>Flutter</li>
   <li>Google Maps SDK</li>
   <li>Google Places API</li>
-  <li>Dart</li>
+  <li>Google Driving API</li>
   <li>Firebase Firestore</li>
-  <li>Firebase Realtime Database</li>
   <li>Firebase Storage</li>
   <li>Firebase Authentication</li>
 </ol>
