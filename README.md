@@ -1,10 +1,10 @@
-<img src="https://github.com/mitrukahitesh/Cosapa/blob/main/app/src/main/res/drawable-xxhdpi/cosapalogo.png?raw=true" height=300/>
+<!-- <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/app/src/main/res/drawable-xxhdpi/cosapalogo.png?raw=true" height=300/> -->
 
-# Cosapa
+# LINK
 
-### A one stop solution for remote health-care and fitness
+### A one step solution for 
 
-## What is Cosapa?
+## What is Link?
 
 ​​Unemployment has been one of the serious challenges across the world especially in this covid hit hard times.To overcome this challenge people need a decent work opportunities and generate income from the skill they possess.
 
