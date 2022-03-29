@@ -38,7 +38,7 @@ The .apk file produced on building the project will require an Android device/em
 # Installation
 
 <ol type='A'>
-<li>Clone the repository on your device, and build the project using Android Studio, VS Code or any other IDE of your chioce and run on the connected Android device/emulator.</li>
+<li>Clone the repository on your device, and build the project using Android Studio, VS Code or any other IDE of your choice and run on the connected Android device/emulator.</li>
 </ol>
 
 # Features
