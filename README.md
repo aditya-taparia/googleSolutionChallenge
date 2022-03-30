@@ -1,8 +1,4 @@
-<!-- <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/app/src/main/res/drawable-xxhdpi/cosapalogo.png?raw=true" height=300/> -->
-
 <p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/logo.jpg?raw=true" height=300/ /> </p>
-
-### A one step solution for 
 
 ## What is Link?
 
@@ -18,10 +14,6 @@ We are using Google Maps where you can see nearby requests, linkspace and places
 
 There is an analytics screen where you can keep track of your earnings and spendings. Analytics screen provides the graphical representation of the transactions made as well as keeps track of monthly earnings and spending.
 
-
-<!-- <p>
-<img height=350px src = "https://github.com/mitrukahitesh/Cosapa/blob/main/videos/cosapa_device.gif" />
-</p> -->
 
 ## Development Setup
 
@@ -41,67 +33,84 @@ The .apk file produced on building the project will require an Android device/em
 <li>Clone the repository on your device, and build the project using Android Studio, VS Code or any other IDE of your choice and run on the connected Android device/emulator.</li>
 </ol>
 
-# Features
+# Screenshots
 
-<!-- <ol>
-  <li><b>Help Posts: </b>Seek medical help from the community</li>
+<ol>
+  <li><b>Get Started</b></li>
   <div>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/1.jpg?raw=true" height=300/>
-     <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/2.jpg?raw=true" height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/gs1.jpeg?raw=true" height=300/>
+     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/gs3.jpeg?raw=true" height=300/>
   </div>
 
-  <li><b>Challenges: </b>Add fitness challenge and complete challenges using IoT device</li>
+  <li><b>Login</b>/li>
   <div>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/1.jpg?raw=true" height=300/>
-     <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/3.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/4.jpg?raw=true" height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/5.jpg?raw=true" height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/6.jpg?raw=true" height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l1.jpeg?raw=true" height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l2.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l3.jpeg?raw=true" height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l4.jpeg?raw=true" height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l5.jpeg?raw=true" height=300/>
   </div>
 
-  <li><b>Health Dashboard: </b>Monitor health with our IoT device and keep it updated on dashboard</li>
+  <li><b>Dashboard</b></li>
   <div style='display:flex;flex-direction:row'>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/7.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/8.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/9.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/11.jpg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d1.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d2.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d2.1.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d3.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d4.jpeg?raw=true"  height=300/>
+  </div>
+	
+<div style='display:flex;flex-direction:row'>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d5.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d6.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d7.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d8.jpeg?raw=true"  height=300/>
+	<img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d9.jpeg?raw=true"  height=300/>
   </div>
 
-  <li><b>Online consultation: </b>Appoint a doctor for online consultation</li>
+  <li><b>Map </b>Appoint a doctor for online consultation</li>
   <div>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/12.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/13.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/14.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/6.jpg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m1.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m2.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m3.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m4.jpeg?raw=true"  height=300/>
   </div>
 
-  <li><b>Rewards and Recognization: </b>Get Cosapa coins for in-app activities</li>
+	<div>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m5.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m6.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m7.jpeg?raw=true"  height=300/>
+  </div>
+
+  <li><b>LinkSpace</b></li>
   <div>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/18.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/6.jpg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/linkspace/l1.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/linkspace/l2.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/linkspace/l3.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/linkspace/l4.jpeg?raw=true"  height=300/>
+	  
   </div>
 
-  <li><b>Nearby Services: </b>Search nearby pharmacies and labs for prescribed medicine and test</li>
+  <li><b>Chat</b></li>
   <div>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/16.jpg?raw=true"  height=300/>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/17.jpg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/chat/c1.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/chat/c2.jpeg?raw=true"  height=300/>
   </div>
 
-</ol> -->
+	<li><b>Analytics</b></li>
+  <div>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/analytics/a1.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/analytics/a1.jpeg?raw=true"  height=300/>
+  </div>
+</ol> 
 
 ## Architecture of App
 
-<!--   <div>
-    <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/videos/architecture.png"  height=480 width=1296/>
-  </div> -->
+
 
 ## Survey Results
 
-<!-- These are the results of survey conducted by us<br>
 
-<div>
-  <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/videos/survey.gif"  height=480 width=1296/>
-</div> -->
 
 ## Technologies that have been used in this project
 
@@ -117,23 +126,3 @@ The .apk file produced on building the project will require an Android device/em
 
 ## Links
 
-<!-- <p align = "center"><h1  align = "center"> ❤️ Our Team </h1> </p>
-<table align = "center">
-<tr>
-<td align="center"><a href="https://github.com/naazkakria"><img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/naaz.png?raw=true" width=100px height=100px /></a></br> 
-	<a href = "https://www.linkedin.com/in/naaz-kakria-b63a30193/" ">Naaz</a>
-</td>
-
-<td align="center" ><a href="https://github.com/shikhar8434"><img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/shikhar.png?raw=true" width=100px height=100px /></a></br> 	<a href = "https://www.linkedin.com/in/shikhar236/" style="color:red;">Shikhar</a>
-</td>
-
-<td align="center"><a href="https://github.com/mitrukahitesh"><img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/hitesh.png?raw=true" width=100px height=100px /></a></br> 
-<a href = "https://www.linkedin.com/in/mitrukahitesh">Hitesh</a>
-</td>
-
-<td align="center"><a href="https://github.com/nxsumityadav"><img src="https://github.com/mitrukahitesh/Cosapa/blob/main/screenshots/sumit.png?raw=true" width=100px height=100px /></a></br> 
-		<a href = "https://www.linkedin.com/in/nxsumityadav/">Sumit</a>
-</td>
-
-</tr>
-</table> -->
