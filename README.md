@@ -1,6 +1,6 @@
 <!-- <img src="https://github.com/mitrukahitesh/Cosapa/blob/main/app/src/main/res/drawable-xxhdpi/cosapalogo.png?raw=true" height=300/> -->
 
-<p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/logo.jpg" /> </p>
+<p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/logo.jpg?raw=true" height=300/ /> </p>
 
 ### A one step solution for 
 
