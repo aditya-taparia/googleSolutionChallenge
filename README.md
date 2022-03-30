@@ -68,18 +68,18 @@ The .apk file produced on building the project will require an Android device/em
 	<img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d9.jpeg?raw=true"  height=300/>
   </div>
 
-  <li><b>Map </b>Appoint a doctor for online consultation</li>
-  <div>
+  <li><b>Map</b></li>
+  <div style='display:flex;flex-direction:row'>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m1.jpeg?raw=true"  height=300/>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m2.jpeg?raw=true"  height=300/>
-	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m3.jpeg?raw=true"  height=300/>
-	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m4.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m3.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m4.jpeg?raw=true"  height=300/>
   </div>
 
-	<div>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m5.jpeg?raw=true"  height=300/>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m6.jpeg?raw=true"  height=300/>
-	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m7.jpeg?raw=true"  height=300/>
+   <div style='display:flex;flex-direction:row'>
+	<img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m5.jpeg?raw=true"  height=300/>
+	<img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m6.jpeg?raw=true"  height=300/>
+	<img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m7.jpeg?raw=true"  height=300/>
   </div>
 
   <li><b>LinkSpace</b></li>
