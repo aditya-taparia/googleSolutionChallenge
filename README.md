@@ -42,7 +42,7 @@ The .apk file produced on building the project will require an Android device/em
      <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/gs3.jpeg?raw=true" height=300/>
   </div>
 
-  <li><b>Login</b>/li>
+  <li><b>Login</b></li>
   <div>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l1.jpeg?raw=true" height=300/>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l2.jpeg?raw=true"  height=300/>
@@ -70,16 +70,16 @@ The .apk file produced on building the project will require an Android device/em
 
   <li><b>Map </b>Appoint a doctor for online consultation</li>
   <div>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m1.jpeg?raw=true"  height=300/>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m2.jpeg?raw=true"  height=300/>
-	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m3.jpeg?raw=true"  height=300/>
-	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m4.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m1.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m2.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m3.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m4.jpeg?raw=true"  height=300/>
   </div>
 
 	<div>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m5.jpeg?raw=true"  height=300/>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m6.jpeg?raw=true"  height=300/>
-	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/m7.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m5.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m6.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m7.jpeg?raw=true"  height=300/>
   </div>
 
   <li><b>LinkSpace</b></li>
@@ -91,16 +91,12 @@ The .apk file produced on building the project will require an Android device/em
 	  
   </div>
 
-  <li><b>Chat</b></li>
+  <li><b>Chat and Analytics</b></li>
   <div>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/chat/c1.jpeg?raw=true"  height=300/>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/chat/c2.jpeg?raw=true"  height=300/>
-  </div>
-
-	<li><b>Analytics</b></li>
-  <div>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/analytics/a1.jpeg?raw=true"  height=300/>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/analytics/a1.jpeg?raw=true"  height=300/>
+	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/analytics/a1.jpeg?raw=true"  height=300/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/analytics/a2.jpeg?raw=true"  height=300/>
   </div>
 </ol> 
 
