@@ -102,7 +102,7 @@ The .apk file produced on building the project will require an Android device/em
 
 ## Architecture of App
 <div>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/architecture.jpg"  height=480 width=1296/>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/architecture.jpg"  height=480 width=1152/>
   </div>
 
 
