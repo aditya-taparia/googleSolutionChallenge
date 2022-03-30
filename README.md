@@ -104,9 +104,6 @@ The .apk file produced on building the project will require an Android device/em
 
 
 
-## Survey Results
-
-
 
 ## Technologies that have been used in this project
 
