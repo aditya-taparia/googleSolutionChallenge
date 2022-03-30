@@ -1,4 +1,4 @@
-<p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/title.jpg?raw=true" /> </p>
+<p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/title.png?raw=true" /> </p>
 
 ## What is Link?
 
