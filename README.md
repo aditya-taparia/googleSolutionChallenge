@@ -1,4 +1,4 @@
-<p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/logo.jpg?raw=true" height=300/ /> </p>
+<p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/title.jpg?raw=true" /> </p>
 
 ## What is Link?
 
@@ -101,10 +101,7 @@ The .apk file produced on building the project will require an Android device/em
 </ol> 
 
 ## Architecture of App
-<div>
-    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/architecture.jpg"  height=480 width=1152/>
-  </div>
-
+<p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/architecture.jpg?raw=true" /> </p>
 
 
 ## Technologies that have been used in this project
