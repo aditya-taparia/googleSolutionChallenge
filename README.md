@@ -100,7 +100,7 @@ The .apk file produced on building the project will require an Android device/em
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/analytics/a2.jpeg?raw=true"  height=300/>
   </div>
 </ol> 
-<br/>
+
 ## Architecture of App
 <p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/architecture.jpg?raw=true" /> </p>
 
