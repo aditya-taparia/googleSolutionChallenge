@@ -40,8 +40,9 @@ The .apk file produced on building the project will require an Android device/em
   <div>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/gs1.jpeg?raw=true" height=300/>
      <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/gs3.jpeg?raw=true" height=300/>
+     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/gs2.jpeg?raw=true" height=300/>  
   </div>
-
+<br/>
   <li><b>Login</b></li>
   <div>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l1.jpeg?raw=true" height=300/>
@@ -50,7 +51,7 @@ The .apk file produced on building the project will require an Android device/em
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l4.jpeg?raw=true" height=300/>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l5.jpeg?raw=true" height=300/>
   </div>
-
+<br/>
   <li><b>Dashboard</b></li>
   <div style='display:flex;flex-direction:row'>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d1.jpeg?raw=true"  height=300/>
@@ -67,7 +68,7 @@ The .apk file produced on building the project will require an Android device/em
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d8.jpeg?raw=true"  height=300/>
 	<img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d9.jpeg?raw=true"  height=300/>
   </div>
-
+<br/>
   <li><b>Map</b></li>
   <div style='display:flex;flex-direction:row'>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m1.jpeg?raw=true"  height=300/>
@@ -81,7 +82,7 @@ The .apk file produced on building the project will require an Android device/em
 	<img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m6.jpeg?raw=true"  height=300/>
 	<img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/map/m7.jpeg?raw=true"  height=300/>
   </div>
-
+<br/>
   <li><b>LinkSpace</b></li>
   <div>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/linkspace/l1.jpeg?raw=true"  height=300/>
@@ -90,7 +91,7 @@ The .apk file produced on building the project will require an Android device/em
 	  <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/linkspace/l4.jpeg?raw=true"  height=300/>
 	  
   </div>
-
+<br/>
   <li><b>Chat and Analytics</b></li>
   <div>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/chat/c1.jpeg?raw=true"  height=300/>
@@ -99,7 +100,7 @@ The .apk file produced on building the project will require an Android device/em
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/analytics/a2.jpeg?raw=true"  height=300/>
   </div>
 </ol> 
-
+<br/>
 ## Architecture of App
 <p align="center" width="100%"> <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/architecture.jpg?raw=true" /> </p>
 
