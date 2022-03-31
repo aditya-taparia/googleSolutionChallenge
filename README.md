@@ -52,6 +52,13 @@ The .apk file produced on building the project will require an Android device/em
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/l5.jpeg?raw=true" height=300/>
   </div>
 <br/>
+	<li><b>Basic Information</b></li>
+  <div>
+    <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/st1.jpeg?raw=true" height=300/>
+     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/st2.jpeg?raw=true" height=300/>
+     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/extra/st3.jpeg?raw=true" height=300/>  
+  </div>
+<br/>
   <li><b>Dashboard</b></li>
   <div style='display:flex;flex-direction:row'>
     <img src="https://github.com/aditya-taparia/googleSolutionChallenge/blob/main/screenshots/Dashboard/d1.jpeg?raw=true"  height=300/>
