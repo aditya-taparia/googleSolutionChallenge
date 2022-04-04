@@ -127,3 +127,4 @@ The .apk file produced on building the project will require an Android device/em
 ## Links
 
 [Youtube](https://youtu.be/04kLPw_wI8o)
+[Download App](https://drive.google.com/file/d/1RxseQv-gjPKJdDqdCB3oTrvici0DVmxz/view?usp=sharing)
